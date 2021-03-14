@@ -43,6 +43,16 @@ public class ImportSlip {
     public ImportSlip() {
     }
 
+    public ImportSlip(Long id, Double money, Long fabricNumber, Timestamp createDate, Employee employee, Set<DyeBatch> dyeBatches, Set<Order> orders) {
+        this.id = id;
+        this.money = money;
+        this.fabricNumber = fabricNumber;
+        this.createDate = createDate;
+        this.employee = employee;
+        this.dyeBatches = dyeBatches;
+        this.orders = orders;
+    }
+
     @Override
     public String toString() {
         return "ImportSlip{" +

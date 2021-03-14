@@ -21,6 +21,9 @@ public class Color {
     @Column(name = "hexa_code", length = 6, nullable = false)
     private String hexaCode;
 
+    @Column
+    private String recipe;
+
     @Column(nullable = false)
     private Double price;
 
@@ -31,7 +34,21 @@ public class Color {
     @OneToMany(mappedBy = "color")
     private Set<DyeBatch> dyeBatches;
 
+    @OneToMany(mappedBy = "color")
+    private Set<Fabric> fabrics;
+
     public Color() {
+    }
+
+    public Color(Long id, String name, String hexaCode, String recipe, Double price, FabricType fabricType, Set<DyeBatch> dyeBatches, Set<Fabric> fabrics) {
+        this.id = id;
+        this.name = name;
+        this.hexaCode = hexaCode;
+        this.recipe = recipe;
+        this.price = price;
+        this.fabricType = fabricType;
+        this.dyeBatches = dyeBatches;
+        this.fabrics = fabrics;
     }
 
     @Override
@@ -40,6 +57,7 @@ public class Color {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", hexaCode='" + hexaCode + '\'' +
+                ", recipe='" + recipe + '\'' +
                 ", price=" + price +
                 ", fabricType=" + fabricType +
                 '}';

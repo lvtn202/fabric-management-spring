@@ -18,6 +18,9 @@ public class Employee {
     @Column(name = "first_name",length = 50)
     private String firstName;
 
+    @Column(name = "middle_name",length = 50)
+    private String middleName;
+
     @Column(name = "last_name", length = 50, nullable = false)
     private String lastName;
 
@@ -39,7 +42,28 @@ public class Employee {
     @OneToMany(mappedBy = "employee")
     private Set<ExportSlip> exportSlips;
 
+    @OneToMany(mappedBy = "employee")
+    private Set<Payment> payments;
+
+    @OneToMany(mappedBy = "employee")
+    private Set<ReturnSlip> returnSlips;
+
     public Employee() {
+    }
+
+    public Employee(Long id, String firstName, String middleName, String lastName, String userName, String email, String password, String sex, Set<ImportSlip> importSlips, Set<ExportSlip> exportSlips, Set<Payment> payments, Set<ReturnSlip> returnSlips) {
+        this.id = id;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.sex = sex;
+        this.importSlips = importSlips;
+        this.exportSlips = exportSlips;
+        this.payments = payments;
+        this.returnSlips = returnSlips;
     }
 
     @Override
@@ -47,6 +71,7 @@ public class Employee {
         return "Employee{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
+                ", middleName='" + middleName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", userName='" + userName + '\'' +
                 ", email='" + email + '\'' +

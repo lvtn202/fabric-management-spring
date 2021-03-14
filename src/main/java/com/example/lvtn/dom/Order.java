@@ -44,6 +44,17 @@ public class Order {
     public Order() {
     }
 
+    public Order(Long id, String status, Timestamp createDate, Double orderLength, Dyehouse dyehouse, Employee employee, Color color, Set<ImportSlip> importSlips) {
+        this.id = id;
+        this.status = status;
+        this.createDate = createDate;
+        this.orderLength = orderLength;
+        this.dyehouse = dyehouse;
+        this.employee = employee;
+        this.color = color;
+        this.importSlips = importSlips;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -54,7 +65,6 @@ public class Order {
                 ", dyehouse=" + dyehouse +
                 ", employee=" + employee +
                 ", color=" + color +
-                ", importSlips=" + importSlips +
                 '}';
     }
 }

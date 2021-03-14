@@ -21,14 +21,17 @@ public class FabricType {
     @OneToMany(mappedBy = "fabricType")
     private Set<Color> colors;
 
-    public FabricType() {}
+    @OneToMany(mappedBy = "fabricType")
+    private Set<Fabric> fabrics;
 
-    public FabricType(String name) {
-        this.name = name;
+    public FabricType() {
     }
-    public FabricType(Long id, String name) {
+
+    public FabricType(Long id, String name, Set<Color> colors, Set<Fabric> fabrics) {
         this.id = id;
         this.name = name;
+        this.colors = colors;
+        this.fabrics = fabrics;
     }
 
     @Override

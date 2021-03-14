@@ -18,11 +18,11 @@ import java.util.List;
 @ControllerAdvice
 public class ApplicationController {
     @Autowired
-    private OrderService orderService;
+    private EmployeeService employeeService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main() {
-        List<Order> list =  orderService.findAll();
+        List<Employee> list =  employeeService.findAll();
         for (int i = 0; i < list.size(); i++){
             System.out.println(list.get(i));
         }

@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
 @Table(name = "dye_batch")
@@ -30,7 +31,19 @@ public class DyeBatch {
     @JoinColumn(name = "import_slip_id", nullable = false)
     private ImportSlip importSlip;
 
+    @OneToMany(mappedBy = "dyeBatch")
+    private Set<Fabric> fabrics;
+
     public DyeBatch() {
+    }
+
+    public DyeBatch(Long id, Timestamp dyeDate, Color color, Dyehouse dyehouse, ImportSlip importSlip, Set<Fabric> fabrics) {
+        this.id = id;
+        this.dyeDate = dyeDate;
+        this.color = color;
+        this.dyehouse = dyehouse;
+        this.importSlip = importSlip;
+        this.fabrics = fabrics;
     }
 
     @Override

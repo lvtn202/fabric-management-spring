@@ -36,8 +36,7 @@ public class ExportSlip {
     public ExportSlip() {
     }
 
-    public ExportSlip(Long id, Long fabricNumber, Timestamp createDate, Dyehouse dyehouse, Employee employee, Set<Fabric> fabrics) {
-        this.id = id;
+    public ExportSlip(Long fabricNumber, Timestamp createDate, Dyehouse dyehouse, Employee employee, Set<Fabric> fabrics) {
         this.fabricNumber = fabricNumber;
         this.createDate = createDate;
         this.dyehouse = dyehouse;

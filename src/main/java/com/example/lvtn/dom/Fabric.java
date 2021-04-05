@@ -1,5 +1,6 @@
 package com.example.lvtn.dom;
 
+import com.example.lvtn.utils.FabricStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,7 +22,8 @@ public class Fabric {
     private  Double finishedLength;
 
     @Column(length = 20, nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private FabricStatus status;
 
     @Column(name = "color_name", length = 50)
     private String colorName;
@@ -52,8 +54,7 @@ public class Fabric {
     public Fabric() {
     }
 
-    public Fabric(Long id, Double rawLength, Double finishedLength, String status, String colorName, FabricType fabricType, Color color, DyeBatch dyeBatch, ExportSlip exportSlip, Dyehouse dyehouse, Return aReturn) {
-        this.id = id;
+    public Fabric(Double rawLength, Double finishedLength, FabricStatus status, String colorName, FabricType fabricType, Color color, DyeBatch dyeBatch, ExportSlip exportSlip, Dyehouse dyehouse, Return aReturn) {
         this.rawLength = rawLength;
         this.finishedLength = finishedLength;
         this.status = status;

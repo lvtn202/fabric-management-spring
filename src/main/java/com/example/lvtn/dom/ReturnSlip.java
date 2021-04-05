@@ -32,8 +32,7 @@ public class ReturnSlip {
     public ReturnSlip() {
     }
 
-    public ReturnSlip(Long id, Timestamp returnDate, Double money, Dyehouse dyehouse, Employee employee) {
-        this.id = id;
+    public ReturnSlip(Timestamp returnDate, Double money, Dyehouse dyehouse, Employee employee) {
         this.returnDate = returnDate;
         this.money = money;
         this.dyehouse = dyehouse;

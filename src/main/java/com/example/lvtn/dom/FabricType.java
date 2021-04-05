@@ -16,6 +16,9 @@ public class FabricType {
     private Long id;
 
     @Column(length = 20, nullable = false)
+    private String type;
+
+    @Column(length = 20, nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "fabricType")
@@ -27,8 +30,8 @@ public class FabricType {
     public FabricType() {
     }
 
-    public FabricType(Long id, String name, Set<Color> colors, Set<Fabric> fabrics) {
-        this.id = id;
+    public FabricType(String type, String name, Set<Color> colors, Set<Fabric> fabrics) {
+        this.type = type;
         this.name = name;
         this.colors = colors;
         this.fabrics = fabrics;
@@ -38,6 +41,7 @@ public class FabricType {
     public String toString() {
         return "FabricType{" +
                 "id=" + id +
+                ", type='" + type + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

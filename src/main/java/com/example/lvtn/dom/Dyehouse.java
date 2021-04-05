@@ -48,8 +48,7 @@ public class Dyehouse {
     public Dyehouse() {
     }
 
-    public Dyehouse(Long id, String name, String address, String phoneNumber, String email, Double debt, Set<ExportSlip> exportSlips, Set<DyeBatch> dyeBatches, Set<Payment> payments, Set<Fabric> fabrics, Set<ReturnSlip> returnSlips) {
-        this.id = id;
+    public Dyehouse(String name, String address, String phoneNumber, String email, Double debt, Set<ExportSlip> exportSlips, Set<DyeBatch> dyeBatches, Set<Payment> payments, Set<Fabric> fabrics, Set<ReturnSlip> returnSlips) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;

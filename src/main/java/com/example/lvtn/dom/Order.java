@@ -1,5 +1,6 @@
 package com.example.lvtn.dom;
 
+import com.example.lvtn.utils.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,13 +19,17 @@ public class Order {
     private Long id;
 
     @Column(length = 20, nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     @Column(name = "create_date", nullable = false)
     private Timestamp createDate;
 
     @Column(name = "order_length", nullable = false)
     private Double orderLength;
+
+    @Column(name = "done_length", nullable = false)
+    private Double doneLength;
 
     @ManyToOne
     @JoinColumn(name = "dyehouse_id", nullable = false)
@@ -38,17 +43,17 @@ public class Order {
     @JoinColumn(name = "color_id", nullable = false)
     private Color color;
 
-    @ManyToMany(mappedBy = "orders")
-    private Set<ImportSlip> importSlips = new HashSet<>();
+    @OneToMany(mappedBy = "order")
+    Set<ImportSlip> importSlips;
 
     public Order() {
     }
 
-    public Order(Long id, String status, Timestamp createDate, Double orderLength, Dyehouse dyehouse, Employee employee, Color color, Set<ImportSlip> importSlips) {
-        this.id = id;
+    public Order(OrderStatus status, Timestamp createDate, Double orderLength, Double doneLength, Dyehouse dyehouse, Employee employee, Color color, Set<ImportSlip> importSlips) {
         this.status = status;
         this.createDate = createDate;
         this.orderLength = orderLength;
+        this.doneLength = doneLength;
         this.dyehouse = dyehouse;
         this.employee = employee;
         this.color = color;
@@ -59,9 +64,10 @@ public class Order {
     public String toString() {
         return "Order{" +
                 "id=" + id +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 ", createDate=" + createDate +
                 ", orderLength=" + orderLength +
+                ", doneLength=" + doneLength +
                 ", dyehouse=" + dyehouse +
                 ", employee=" + employee +
                 ", color=" + color +

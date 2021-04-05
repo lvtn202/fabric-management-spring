@@ -35,8 +35,7 @@ public class Return {
     public Return() {
     }
 
-    public Return(Long id, Double returnLength, String returnReason, Double money, Fabric fabric, ReturnSlip returnSlip) {
-        this.id = id;
+    public Return(Double returnLength, String returnReason, Double money, Fabric fabric, ReturnSlip returnSlip) {
         this.returnLength = returnLength;
         this.returnReason = returnReason;
         this.money = money;

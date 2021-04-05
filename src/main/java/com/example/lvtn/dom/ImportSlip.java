@@ -28,29 +28,26 @@ public class ImportSlip {
     private Timestamp createDate;
 
     @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
+
+    @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
     @OneToMany(mappedBy = "importSlip")
     private Set<DyeBatch> dyeBatches;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "import_slip_orders",
-                joinColumns = {@JoinColumn(name = "import_slip_id")},
-                inverseJoinColumns = {@JoinColumn(name = "orders_id")})
-    private Set<Order> orders = new HashSet<>();
-
     public ImportSlip() {
     }
 
-    public ImportSlip(Long id, Double money, Long fabricNumber, Timestamp createDate, Employee employee, Set<DyeBatch> dyeBatches, Set<Order> orders) {
-        this.id = id;
+    public ImportSlip(Double money, Long fabricNumber, Timestamp createDate, Order order, Employee employee, Set<DyeBatch> dyeBatches) {
         this.money = money;
         this.fabricNumber = fabricNumber;
         this.createDate = createDate;
+        this.order = order;
         this.employee = employee;
         this.dyeBatches = dyeBatches;
-        this.orders = orders;
     }
 
     @Override
@@ -60,6 +57,7 @@ public class ImportSlip {
                 ", money=" + money +
                 ", fabricNumber=" + fabricNumber +
                 ", createDate=" + createDate +
+                ", order=" + order +
                 ", employee=" + employee +
                 '}';
     }

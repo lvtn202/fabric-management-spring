@@ -37,8 +37,7 @@ public class DyeBatch {
     public DyeBatch() {
     }
 
-    public DyeBatch(Long id, Timestamp dyeDate, Color color, Dyehouse dyehouse, ImportSlip importSlip, Set<Fabric> fabrics) {
-        this.id = id;
+    public DyeBatch(Timestamp dyeDate, Color color, Dyehouse dyehouse, ImportSlip importSlip, Set<Fabric> fabrics) {
         this.dyeDate = dyeDate;
         this.color = color;
         this.dyehouse = dyehouse;

@@ -15,6 +15,9 @@ public class Color {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(length = 10)
+    private String type;
+
     @Column(length = 50)
     private String name;
 
@@ -40,8 +43,8 @@ public class Color {
     public Color() {
     }
 
-    public Color(Long id, String name, String hexaCode, String recipe, Double price, FabricType fabricType, Set<DyeBatch> dyeBatches, Set<Fabric> fabrics) {
-        this.id = id;
+    public Color(String type, String name, String hexaCode, String recipe, Double price, FabricType fabricType, Set<DyeBatch> dyeBatches, Set<Fabric> fabrics) {
+        this.type = type;
         this.name = name;
         this.hexaCode = hexaCode;
         this.recipe = recipe;
@@ -55,6 +58,7 @@ public class Color {
     public String toString() {
         return "Color{" +
                 "id=" + id +
+                ", type='" + type + '\'' +
                 ", name='" + name + '\'' +
                 ", hexaCode='" + hexaCode + '\'' +
                 ", recipe='" + recipe + '\'' +

@@ -37,6 +37,9 @@ public class Employee {
     private String sex;
 
     @OneToMany(mappedBy = "employee")
+    private Set<PersistentLogin> persistentLogins;
+
+    @OneToMany(mappedBy = "employee")
     private Set<ImportSlip> importSlips;
 
     @OneToMany(mappedBy = "employee")
@@ -51,8 +54,7 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(Long id, String firstName, String middleName, String lastName, String userName, String email, String password, String sex, Set<ImportSlip> importSlips, Set<ExportSlip> exportSlips, Set<Payment> payments, Set<ReturnSlip> returnSlips) {
-        this.id = id;
+    public Employee(String firstName, String middleName, String lastName, String userName, String email, String password, String sex, Set<PersistentLogin> persistentLogins, Set<ImportSlip> importSlips, Set<ExportSlip> exportSlips, Set<Payment> payments, Set<ReturnSlip> returnSlips) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -60,6 +62,7 @@ public class Employee {
         this.email = email;
         this.password = password;
         this.sex = sex;
+        this.persistentLogins = persistentLogins;
         this.importSlips = importSlips;
         this.exportSlips = exportSlips;
         this.payments = payments;

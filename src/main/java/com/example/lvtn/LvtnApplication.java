@@ -1,16 +1,15 @@
 package com.example.lvtn;
 
 import com.example.lvtn.web.ApplicationController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -44,11 +43,23 @@ public class LvtnApplication extends SpringBootServletInitializer {
 
 	@Bean
     public DriverManagerDataSource getDataSource() {
-        DriverManagerDataSource dataSourceBuilder = new DriverManagerDataSource();
+		DriverManagerDataSource dataSourceBuilder = new DriverManagerDataSource();
         dataSourceBuilder.setDriverClassName("org.postgresql.Driver");
         dataSourceBuilder.setUrl("jdbc:postgresql://localhost:5432/postgres");
         dataSourceBuilder.setUsername("postgres");
         dataSourceBuilder.setPassword("lvtn");
         return dataSourceBuilder;
     }
+
+//    @Bean
+//	@Lazy
+//	public DriverManagerDataSource getNewDataSource() {
+//		DriverManagerDataSource dataSourceBuilder = new DriverManagerDataSource();
+//		dataSourceBuilder.setDriverClassName("org.postgresql.Driver");
+//		dataSourceBuilder.setUrl("jdbc:postgresql://localhost:5432/postgres");
+//		dataSourceBuilder.setUsername("abc");
+//		dataSourceBuilder.setPassword("lvtn");
+//		return dataSourceBuilder;
+//	}
+
 }

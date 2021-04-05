@@ -42,8 +42,7 @@ public class Payment {
     public Payment() {
     }
 
-    public Payment(Long id, Double money, Timestamp createDate, String bankName, String recipientName, PaymentMethod paymentMethod, Dyehouse dyehouse, Employee employee) {
-        this.id = id;
+    public Payment(Double money, Timestamp createDate, String bankName, String recipientName, PaymentMethod paymentMethod, Dyehouse dyehouse, Employee employee) {
         this.money = money;
         this.createDate = createDate;
         this.bankName = bankName;

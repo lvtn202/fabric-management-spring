@@ -24,8 +24,7 @@ public class PaymentMethod {
     public PaymentMethod() {
     }
 
-    public PaymentMethod(Long id, String name, Set<Payment> payments) {
-        this.id = id;
+    public PaymentMethod(String name, Set<Payment> payments) {
         this.name = name;
         this.payments = payments;
     }

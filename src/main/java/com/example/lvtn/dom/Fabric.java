@@ -48,7 +48,7 @@ public class Fabric {
     @JoinColumn(name = "dyehouse_id")
     private Dyehouse dyehouse;
 
-    @OneToOne(mappedBy = "fabric", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "fabric", cascade = CascadeType.ALL)
     private Return aReturn;
 
     public Fabric() {

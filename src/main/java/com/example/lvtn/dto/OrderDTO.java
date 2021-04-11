@@ -11,6 +11,8 @@ import lombok.Setter;
 public class OrderDTO {
     private Long id;
 
+    private String dyehouse;
+
     private String type;
 
     private String color;
@@ -23,8 +25,9 @@ public class OrderDTO {
 
     private String doneLength;
 
-    public OrderDTO(Long id, String type, String color, OrderStatus status, String createDate, String orderLength, String doneLength) {
+    public OrderDTO(Long id, String dyehouse, String type, String color, OrderStatus status, String createDate, String orderLength, String doneLength) {
         this.id = id;
+        this.dyehouse = dyehouse;
         this.type = type;
         this.color = color;
         this.status = status;
@@ -37,6 +40,7 @@ public class OrderDTO {
     public String toString() {
         return "OrderDTO{" +
                 "id=" + id +
+                ", dyehouse='" + dyehouse + '\'' +
                 ", type='" + type + '\'' +
                 ", color='" + color + '\'' +
                 ", status=" + status +
@@ -49,10 +53,11 @@ public class OrderDTO {
     static public OrderDTO convertOrderToOrderDTO (Order order){
         return new OrderDTO(
                 order.getId(),
+                order.getDyehouse().getName(),
                 order.getColor().getFabricType().getType(),
                 order.getColor().getName(),
                 order.getStatus(),
-                order.getCreateDate().toString(),
+                String.format("%tQ", order.getCreateDate()),
                 String.format("%.1f", order.getOrderLength()),
                 String.format("%.1f", order.getDoneLength())
         );

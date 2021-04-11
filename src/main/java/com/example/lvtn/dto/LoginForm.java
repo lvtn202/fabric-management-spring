@@ -1,4 +1,4 @@
-package com.example.lvtn.utils;
+package com.example.lvtn.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class LoginForm {
     private String username;
+
     private String password;
 
     @Override

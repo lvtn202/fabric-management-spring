@@ -5,7 +5,7 @@ import com.example.lvtn.dom.Dyehouse;
 import java.util.List;
 
 public interface DyehouseRepositoryCustom {
-    List<Dyehouse> findDyehousesWithNameAndPaging(String dyehouseName, Long pageIndex, Long pageSize);
+    List<Dyehouse> findDyehousesByDyehouseNameWithPaging(String dyehouseName, Long pageIndex, Long pageSize);
 
     List<Dyehouse> findDyehousesWithPaging(Long pageIndex, Long pageSize);
 

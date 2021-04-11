@@ -8,6 +8,7 @@ import com.example.lvtn.dom.Fabric;
 import com.example.lvtn.dom.Order;
 import com.example.lvtn.dto.DyehouseDTO;
 import com.example.lvtn.dto.OrderDTO;
+import com.example.lvtn.dto.UpdateDyehouseForm;
 import com.example.lvtn.service.DyehouseService;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class DyehouseServiceImpl implements DyehouseService {
     }
 
     @Override
-    public List<DyehouseDTO> findDyehouseDTOsWithNameAndPaging(String dyehouseName, Long pageIndex, Long pageSize) throws InternalException {
+    public List<DyehouseDTO> findDyehouseDTOsByNameWithPaging(String dyehouseName, Long pageIndex, Long pageSize) throws InternalException {
         try {
             List<DyehouseDTO> dyehouseDTOList = new ArrayList<DyehouseDTO>();
             List<Fabric> listExportedFabrics = fabricRepository.findExportedFabrics();
@@ -45,7 +46,7 @@ public class DyehouseServiceImpl implements DyehouseService {
                     dyehouseDTOList.add(DyehouseDTO.convertDyehouseToDyehouseDTO(dyehouse));
                 }
             } else {
-                List<Dyehouse> dyehouseList = dyehouseRepository.findDyehousesWithNameAndPaging(dyehouseName, pageIndex, pageSize);
+                List<Dyehouse> dyehouseList = dyehouseRepository.findDyehousesByDyehouseNameWithPaging(dyehouseName, pageIndex, pageSize);
                 for(Dyehouse dyehouse: dyehouseList){
                     dyehouseDTOList.add(DyehouseDTO.convertDyehouseToDyehouseDTO(dyehouse));
                 }
@@ -84,15 +85,29 @@ public class DyehouseServiceImpl implements DyehouseService {
             }
             modelMap.addAttribute("inStock", String.format("%.1f", sumInStock));
 
-            List<Order> listCurrentOrder = orderRepository.findOrdersByDyehouseId(id);
-            List<OrderDTO> listOrderDTO = new ArrayList<OrderDTO>();
-            for (Order order: listCurrentOrder){
-                listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
-            }
-            modelMap.addAttribute("orders", listOrderDTO);
+//            List<Order> listCurrentOrder = orderRepository.findOrdersByDyehouseId(id);
+//            List<OrderDTO> listOrderDTO = new ArrayList<OrderDTO>();
+//            for (Order order: listCurrentOrder){
+//                listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
+//            }
+//            modelMap.addAttribute("orders", listOrderDTO);
 
             return modelMap;
         }catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Dyehouse updateDyehouse(UpdateDyehouseForm updateDyehouseForm) throws InternalException {
+        try {
+            Dyehouse currentDyehouse = dyehouseRepository.findDyehouseById(updateDyehouseForm.getId());
+            currentDyehouse.setAddress(updateDyehouseForm.getAddress());
+            currentDyehouse.setPhoneNumber(updateDyehouseForm.getPhoneNumber());
+            currentDyehouse.setEmail(updateDyehouseForm.getEmail());
+            return dyehouseRepository.save(currentDyehouse);
+        } catch (Exception e) {
             e.printStackTrace();
             throw new InternalException(e.getMessage());
         }

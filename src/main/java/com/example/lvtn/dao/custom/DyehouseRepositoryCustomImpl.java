@@ -17,7 +17,7 @@ public class DyehouseRepositoryCustomImpl implements DyehouseRepositoryCustom{
     EntityManager entityManager;
 
     @Override
-    public List<Dyehouse> findDyehousesWithNameAndPaging(String dyehouseName, Long pageIndex, Long pageSize) {
+    public List<Dyehouse> findDyehousesByDyehouseNameWithPaging(String dyehouseName, Long pageIndex, Long pageSize) {
         try {
             String sql = "select d from " + Dyehouse.class.getName() + " d "
                     + "where d.name = :dyehouseName";

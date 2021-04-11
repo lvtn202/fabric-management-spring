@@ -24,7 +24,7 @@ public class Return {
     @Column(nullable = false)
     private Double money;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fabric_id", referencedColumnName = "id", nullable = false)
     private Fabric fabric;
 

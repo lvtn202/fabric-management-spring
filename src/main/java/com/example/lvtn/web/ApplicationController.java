@@ -26,6 +26,8 @@ public class ApplicationController {
     @Autowired
     private DyeBatchService dyeBatchService;
 
+    @Autowired FabricService fabricService;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main() {
         return "hello";
@@ -159,6 +161,48 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", dyeBatchService.findDyeBatches(importSlipId, pageIndex, pageSize));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listStatisticFabric", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListStatisticFabric(@RequestParam("dyehouseId") Long dyehouseId,
+                                           @RequestParam("startDate") Long startDate,
+                                           @RequestParam("endDate") Long endDate,
+                                           @RequestParam("pageIndex") Long pageIndex,
+                                           @RequestParam("pageSize") Long pageSize,
+                                           @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("startDate: " + startDate);
+        System.out.println("endDate: " + endDate);
+        System.out.println("pageIndex: " + pageIndex);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+//        modelMap.addAttribute("result", fabricService.findStatisticFabrics(dyehouseId, startDate, endDate, pageIndex, pageSize));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listStatisticRawFabric", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListStatisticRawFabric(@RequestParam("dyehouseId") Long dyehouseId,
+                                           @RequestParam("pageIndex") Long pageIndex,
+                                           @RequestParam("pageSize") Long pageSize,
+                                           @RequestHeader("token") String token){
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("pageIndex: " + pageIndex);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+//        modelMap.addAttribute("result", );
         return modelMap;
     }
 

@@ -19,10 +19,11 @@ public class DyehouseRepositoryCustomImpl implements DyehouseRepositoryCustom{
     @Override
     public List<Dyehouse> findDyehousesByDyehouseNameWithPaging(String dyehouseName, Long pageIndex, Long pageSize) {
         try {
+
             String sql = "select d from " + Dyehouse.class.getName() + " d "
-                    + "where d.name = :dyehouseName";
+                    + "where lower(d.name) LIKE :dyehouseName";
             Query query = entityManager.createQuery(sql, Dyehouse.class);
-            query.setParameter("dyehouseName", dyehouseName);
+            query.setParameter("dyehouseName", "%"+dyehouseName.toLowerCase()+"%");
             query.setFirstResult((int) (pageIndex * pageSize));
             query.setMaxResults(Math.toIntExact(pageSize));
             return  query.getResultList();

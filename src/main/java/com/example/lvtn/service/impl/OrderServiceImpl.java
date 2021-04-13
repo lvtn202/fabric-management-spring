@@ -53,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
             modelMap.addAttribute("fabricType", order.getColor().getFabricType().getType());
             modelMap.addAttribute("color", order.getColor().getName());
             modelMap.addAttribute("orderLength", String.format("%.1f", order.getOrderLength()));
-            modelMap.addAttribute("createDate", order.getCreateDate());
+            modelMap.addAttribute("createDate", String.format("%tQ", order.getCreateDate()));
             modelMap.addAttribute("employee", order.getEmployee().getLastName());
             return modelMap;
         }catch (Exception e){

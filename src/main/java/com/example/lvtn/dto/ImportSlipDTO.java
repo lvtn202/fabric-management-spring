@@ -55,6 +55,6 @@ public class ImportSlipDTO {
                 importSlip.getFabricNumber().toString(),
                 String.format("%.1f", fabricLength),
                 String.format("%tQ", importSlip.getCreateDate()),
-                importSlip.getEmployee().getLastName());
+                importSlip.getUser().getLastName());
     }
 }

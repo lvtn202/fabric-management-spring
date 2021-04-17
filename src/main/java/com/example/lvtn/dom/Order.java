@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -36,8 +35,8 @@ public class Order {
     private Dyehouse dyehouse;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "color_id", nullable = false)
@@ -49,13 +48,13 @@ public class Order {
     public Order() {
     }
 
-    public Order(OrderStatus status, Timestamp createDate, Double orderLength, Double doneLength, Dyehouse dyehouse, Employee employee, Color color, Set<ImportSlip> importSlips) {
+    public Order(OrderStatus status, Timestamp createDate, Double orderLength, Double doneLength, Dyehouse dyehouse, User user, Color color, Set<ImportSlip> importSlips) {
         this.status = status;
         this.createDate = createDate;
         this.orderLength = orderLength;
         this.doneLength = doneLength;
         this.dyehouse = dyehouse;
-        this.employee = employee;
+        this.user = user;
         this.color = color;
         this.importSlips = importSlips;
     }
@@ -69,7 +68,7 @@ public class Order {
                 ", orderLength=" + orderLength +
                 ", doneLength=" + doneLength +
                 ", dyehouse=" + dyehouse +
-                ", employee=" + employee +
+                ", user=" + user +
                 ", color=" + color +
                 '}';
     }

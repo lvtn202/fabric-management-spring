@@ -26,17 +26,17 @@ public class ReturnSlip {
     private Dyehouse dyehouse;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public ReturnSlip() {
     }
 
-    public ReturnSlip(Timestamp returnDate, Double money, Dyehouse dyehouse, Employee employee) {
+    public ReturnSlip(Timestamp returnDate, Double money, Dyehouse dyehouse, User user) {
         this.returnDate = returnDate;
         this.money = money;
         this.dyehouse = dyehouse;
-        this.employee = employee;
+        this.user = user;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ReturnSlip {
                 ", returnDate=" + returnDate +
                 ", money=" + money +
                 ", dyehouse=" + dyehouse +
-                ", employee=" + employee +
+                ", user=" + user +
                 '}';
     }
 }

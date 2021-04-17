@@ -1,7 +1,7 @@
 package com.example.lvtn.service.impl;
 
 import com.example.lvtn.dao.EmployeeRepository;
-import com.example.lvtn.dom.Employee;
+import com.example.lvtn.dom.User;
 import com.example.lvtn.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository employeeRepository;
 
     @Override
-    public List<Employee> findAll() {
+    public List<User> findAll() {
         return employeeRepository.findAll();
     }
 }

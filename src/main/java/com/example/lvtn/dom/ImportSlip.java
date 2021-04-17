@@ -1,12 +1,10 @@
 package com.example.lvtn.dom;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -32,8 +30,8 @@ public class ImportSlip {
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @OneToMany(mappedBy = "importSlip")
     private Set<DyeBatch> dyeBatches;
@@ -41,12 +39,12 @@ public class ImportSlip {
     public ImportSlip() {
     }
 
-    public ImportSlip(Double money, Long fabricNumber, Timestamp createDate, Order order, Employee employee, Set<DyeBatch> dyeBatches) {
+    public ImportSlip(Double money, Long fabricNumber, Timestamp createDate, Order order, User user, Set<DyeBatch> dyeBatches) {
         this.money = money;
         this.fabricNumber = fabricNumber;
         this.createDate = createDate;
         this.order = order;
-        this.employee = employee;
+        this.user = user;
         this.dyeBatches = dyeBatches;
     }
 
@@ -58,7 +56,7 @@ public class ImportSlip {
                 ", fabricNumber=" + fabricNumber +
                 ", createDate=" + createDate +
                 ", order=" + order +
-                ", employee=" + employee +
+                ", user=" + user +
                 '}';
     }
 }

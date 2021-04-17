@@ -7,10 +7,10 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "employee")
+@Table(name = "users")
 @Getter
 @Setter
-public class Employee {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -36,25 +36,25 @@ public class Employee {
     @Column(length = 10, nullable = false)
     private String sex;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "user")
     private Set<PersistentLogin> persistentLogins;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "user")
     private Set<ImportSlip> importSlips;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "user")
     private Set<ExportSlip> exportSlips;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "user")
     private Set<Payment> payments;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "user")
     private Set<ReturnSlip> returnSlips;
 
-    public Employee() {
+    public User() {
     }
 
-    public Employee(String firstName, String middleName, String lastName, String userName, String email, String password, String sex, Set<PersistentLogin> persistentLogins, Set<ImportSlip> importSlips, Set<ExportSlip> exportSlips, Set<Payment> payments, Set<ReturnSlip> returnSlips) {
+    public User(String firstName, String middleName, String lastName, String userName, String email, String password, String sex, Set<PersistentLogin> persistentLogins, Set<ImportSlip> importSlips, Set<ExportSlip> exportSlips, Set<Payment> payments, Set<ReturnSlip> returnSlips) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -71,7 +71,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Employee{" +
+        return "User{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", middleName='" + middleName + '\'' +

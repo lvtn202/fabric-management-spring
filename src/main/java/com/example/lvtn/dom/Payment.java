@@ -36,20 +36,20 @@ public class Payment {
     private Dyehouse dyehouse;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public Payment() {
     }
 
-    public Payment(Double money, Timestamp createDate, String bankName, String recipientName, PaymentMethod paymentMethod, Dyehouse dyehouse, Employee employee) {
+    public Payment(Double money, Timestamp createDate, String bankName, String recipientName, PaymentMethod paymentMethod, Dyehouse dyehouse, User user) {
         this.money = money;
         this.createDate = createDate;
         this.bankName = bankName;
         this.recipientName = recipientName;
         this.paymentMethod = paymentMethod;
         this.dyehouse = dyehouse;
-        this.employee = employee;
+        this.user = user;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class Payment {
                 ", recipientName='" + recipientName + '\'' +
                 ", paymentMethod=" + paymentMethod +
                 ", dyehouse=" + dyehouse +
-                ", employee=" + employee +
+                ", user=" + user +
                 '}';
     }
 }

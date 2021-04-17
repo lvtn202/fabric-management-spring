@@ -1,6 +1,6 @@
 package com.example.lvtn.dao.custom;
 
-import com.example.lvtn.dom.Employee;
+import com.example.lvtn.dom.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,15 +15,15 @@ public class EmployeeRepositoryCustomImpl implements EmployeeRepositoryCustom{
     @Autowired
     private EntityManager entityManager;
 
-    public Employee findUserAccount(String userName) {
+    public User findUserAccount(String userName) {
         try {
-            String sql = "Select e from " + Employee.class.getName() + " e " //
+            String sql = "Select e from " + User.class.getName() + " e " //
                     + " Where e.userName = :userName ";
 
-            Query query = entityManager.createQuery(sql, Employee.class);
+            Query query = entityManager.createQuery(sql, User.class);
             query.setParameter("userName", userName);
 
-            return (Employee) query.getSingleResult();
+            return (User) query.getSingleResult();
         } catch (NoResultException e) {
             return null;
         }

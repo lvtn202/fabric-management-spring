@@ -16,8 +16,8 @@ public class PersistentLogin {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(length = 100, nullable = false)
     private String token;
@@ -28,8 +28,8 @@ public class PersistentLogin {
     public PersistentLogin() {
     }
 
-    public PersistentLogin(Employee employee, String token, Timestamp lastUpdate) {
-        this.employee = employee;
+    public PersistentLogin(User user, String token, Timestamp lastUpdate) {
+        this.user = user;
         this.token = token;
         this.lastUpdate = lastUpdate;
     }
@@ -38,7 +38,7 @@ public class PersistentLogin {
     public String toString() {
         return "PersistentLogin{" +
                 "id='" + id + '\'' +
-                ", employee=" + employee +
+                ", user=" + user +
                 ", token='" + token + '\'' +
                 ", lastUpdate=" + lastUpdate +
                 '}';

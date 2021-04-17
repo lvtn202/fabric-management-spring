@@ -27,8 +27,8 @@ public class ExportSlip {
     private Dyehouse dyehouse;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @OneToMany(mappedBy = "exportSlip")
     private Set<Fabric> fabrics;
@@ -36,11 +36,11 @@ public class ExportSlip {
     public ExportSlip() {
     }
 
-    public ExportSlip(Long fabricNumber, Timestamp createDate, Dyehouse dyehouse, Employee employee, Set<Fabric> fabrics) {
+    public ExportSlip(Long fabricNumber, Timestamp createDate, Dyehouse dyehouse, User user, Set<Fabric> fabrics) {
         this.fabricNumber = fabricNumber;
         this.createDate = createDate;
         this.dyehouse = dyehouse;
-        this.employee = employee;
+        this.user = user;
         this.fabrics = fabrics;
     }
 
@@ -51,7 +51,7 @@ public class ExportSlip {
                 ", fabricNumber=" + fabricNumber +
                 ", createDate=" + createDate +
                 ", dyehouse=" + dyehouse +
-                ", employee=" + employee +
+                ", user=" + user +
                 '}';
     }
 }

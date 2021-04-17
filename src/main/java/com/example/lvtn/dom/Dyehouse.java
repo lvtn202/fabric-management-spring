@@ -19,6 +19,9 @@ public class Dyehouse {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String nameEN;
+
     @Column
     private String address;
 
@@ -49,8 +52,9 @@ public class Dyehouse {
     public Dyehouse() {
     }
 
-    public Dyehouse(String name, String address, String phoneNumber, String email, Double debt, Set<ExportSlip> exportSlips, Set<DyeBatch> dyeBatches, Set<Payment> payments, Set<Fabric> fabrics, Set<ReturnSlip> returnSlips) {
+    public Dyehouse(String name, String nameEN, String address, String phoneNumber, String email, Double debt, Set<ExportSlip> exportSlips, Set<DyeBatch> dyeBatches, Set<Payment> payments, Set<Fabric> fabrics, Set<ReturnSlip> returnSlips) {
         this.name = name;
+        this.nameEN = nameEN;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
@@ -67,6 +71,7 @@ public class Dyehouse {
         return "Dyehouse{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", nameEN='" + nameEN + '\'' +
                 ", address='" + address + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", email='" + email + '\'' +

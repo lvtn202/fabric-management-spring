@@ -1,6 +1,8 @@
 package com.example.lvtn.dao.custom;
 
 import com.example.lvtn.dom.Dyehouse;
+import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

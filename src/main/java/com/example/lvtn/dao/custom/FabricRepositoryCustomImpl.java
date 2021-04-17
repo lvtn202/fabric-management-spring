@@ -30,10 +30,37 @@ public class FabricRepositoryCustomImpl implements FabricRepositoryCustom{
     }
 
     @Override
-    public List<Fabric> findFabricsByDyehouseId(Long dyehouseId) {
+    public List<Fabric> findRawFabrics() {
+        try {
+            String sql = "select f from " + Fabric.class.getName() + " f "
+                    + "where f.status = '" + FabricStatus.IN_RAW.toString() + "'";
+            Query query = entityManager.createQuery(sql, Fabric.class);
+            return query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    @Override
+    public List<Fabric> findRawFabricsByDyehouseId(Long dyehouseId) {
         try {
             String sql = "select f from " + Fabric.class.getName() + " f "
                     + "where f.status = '" + FabricStatus.EXPORTED.toString() + "' and f.dyehouse.id = :dyehouseId";
+            Query query = entityManager.createQuery(sql, Fabric.class);
+            query.setParameter("dyehouseId", dyehouseId);
+            return query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    @Override
+    public List<Fabric> findCompletedFabricsByDyehouseId(Long dyehouseId) {
+        try {
+            String sql = "select f from " + Fabric.class.getName() + " f "
+                    + "where f.status = '" + FabricStatus.COMPLETED.toString() + "' and f.dyehouse.id = :dyehouseId";
             Query query = entityManager.createQuery(sql, Fabric.class);
             query.setParameter("dyehouseId", dyehouseId);
             return query.getResultList();

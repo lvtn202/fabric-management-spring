@@ -2,7 +2,6 @@ package com.example.lvtn.dao.custom;
 
 import com.example.lvtn.dom.Dyehouse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.parsing.QualifierEntry;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

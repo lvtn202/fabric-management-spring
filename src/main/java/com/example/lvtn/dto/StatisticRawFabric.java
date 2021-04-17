@@ -5,25 +5,25 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StatisticFabric {
+public class StatisticRawFabric {
     private String fabricType;
+
+    private Long rawNumber;
 
     private String rawLength;
 
-    private String doneLength;
-
-    public StatisticFabric(String fabricType, String rawLength, String doneLength) {
+    public StatisticRawFabric(String fabricType, Long rawNumber, String rawLength) {
         this.fabricType = fabricType;
+        this.rawNumber = rawNumber;
         this.rawLength = rawLength;
-        this.doneLength = doneLength;
     }
 
     @Override
     public String toString() {
-        return "StatisticFabric{" +
+        return "StatisticRawFabric{" +
                 "fabricType='" + fabricType + '\'' +
+                ", rawNumber=" + rawNumber +
                 ", rawLength='" + rawLength + '\'' +
-                ", doneLength='" + doneLength + '\'' +
                 '}';
     }
 }

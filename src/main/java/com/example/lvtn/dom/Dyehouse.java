@@ -10,6 +10,7 @@ import java.util.Set;
 @Table(name = "dyehouse")
 @Getter
 @Setter
+//@Document(indexName = "dyehouseindex")
 public class Dyehouse {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

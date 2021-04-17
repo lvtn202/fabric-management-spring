@@ -24,8 +24,8 @@ public class Return {
     @Column(nullable = false)
     private Double money;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fabric_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "fabric_id", nullable = false, unique = true)
     private Fabric fabric;
 
     @ManyToOne

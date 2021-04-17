@@ -8,5 +8,9 @@ import java.util.List;
 public interface FabricRepositoryCustom {
     List<Fabric> findExportedFabrics();
 
-    List<Fabric> findFabricsByDyehouseId (Long dyehouseId);
+    List<Fabric> findRawFabrics();
+
+    List<Fabric> findRawFabricsByDyehouseId(Long dyehouseId);
+
+    List<Fabric> findCompletedFabricsByDyehouseId(Long dyehouseId);
 }

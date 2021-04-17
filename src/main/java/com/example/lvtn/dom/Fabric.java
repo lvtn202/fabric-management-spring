@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "fabric")
@@ -48,13 +49,13 @@ public class Fabric {
     @JoinColumn(name = "dyehouse_id")
     private Dyehouse dyehouse;
 
-    @OneToOne(mappedBy = "fabric", cascade = CascadeType.ALL)
-    private Return aReturn;
+    @OneToMany(mappedBy = "fabric")
+    private Set<Return> aReturn;
 
     public Fabric() {
     }
 
-    public Fabric(Double rawLength, Double finishedLength, FabricStatus status, String colorName, FabricType fabricType, Color color, DyeBatch dyeBatch, ExportSlip exportSlip, Dyehouse dyehouse, Return aReturn) {
+    public Fabric(Double rawLength, Double finishedLength, FabricStatus status, String colorName, FabricType fabricType, Color color, DyeBatch dyeBatch, ExportSlip exportSlip, Dyehouse dyehouse, Set<Return> aReturn) {
         this.rawLength = rawLength;
         this.finishedLength = finishedLength;
         this.status = status;

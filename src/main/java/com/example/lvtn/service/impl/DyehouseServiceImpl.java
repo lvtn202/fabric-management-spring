@@ -5,9 +5,7 @@ import com.example.lvtn.dao.FabricRepository;
 import com.example.lvtn.dao.OrderRepository;
 import com.example.lvtn.dom.Dyehouse;
 import com.example.lvtn.dom.Fabric;
-import com.example.lvtn.dom.Order;
 import com.example.lvtn.dto.DyehouseDTO;
-import com.example.lvtn.dto.OrderDTO;
 import com.example.lvtn.dto.UpdateDyehouseForm;
 import com.example.lvtn.service.DyehouseService;
 import com.example.lvtn.utils.InternalException;
@@ -78,19 +76,12 @@ public class DyehouseServiceImpl implements DyehouseService {
             modelMap.addAttribute("email", currentDyehouse.getEmail());
             modelMap.addAttribute("debt", String.format("%.1f", currentDyehouse.getDebt()));
 
-            List<Fabric> listCurrentFabrics = fabricRepository.findFabricsByDyehouseId(currentDyehouse.getId());
+            List<Fabric> listCurrentFabrics = fabricRepository.findCompletedFabricsByDyehouseId(currentDyehouse.getId());
             Double sumInStock = 0.0;
             for (Fabric fabric: listCurrentFabrics){
                 sumInStock += fabric.getRawLength();
             }
             modelMap.addAttribute("inStock", String.format("%.1f", sumInStock));
-
-//            List<Order> listCurrentOrder = orderRepository.findOrdersByDyehouseId(id);
-//            List<OrderDTO> listOrderDTO = new ArrayList<OrderDTO>();
-//            for (Order order: listCurrentOrder){
-//                listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
-//            }
-//            modelMap.addAttribute("orders", listOrderDTO);
 
             return modelMap;
         }catch (Exception e){

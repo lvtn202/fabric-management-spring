@@ -26,7 +26,11 @@ public class ApplicationController {
     @Autowired
     private DyeBatchService dyeBatchService;
 
-    @Autowired FabricService fabricService;
+    @Autowired
+    FabricService fabricService;
+
+    @Autowired
+    FabricTypeService fabricTypeService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main() {
@@ -96,7 +100,7 @@ public class ApplicationController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/detailDyehouse/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/detailDyehouse/update", method = RequestMethod.PUT)
     @ResponseBody
     public  ModelMap updateDyehouse(@ModelAttribute UpdateDyehouseForm updateDyehouseForm,
                                     @RequestHeader("token") String token) throws InternalException {
@@ -165,11 +169,30 @@ public class ApplicationController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "listStatisticFabric", method = RequestMethod.GET)
+    @RequestMapping(value = "listStatisticRawFabric", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListStatisticRawFabric(@RequestParam("dyehouseId") Long dyehouseId,
+                                              @RequestParam("pageIndex") Long pageIndex,
+                                              @RequestParam("pageSize") Long pageSize,
+                                              @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("pageIndex: " + pageIndex);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricService.findStatisticRawFabrics(dyehouseId, pageIndex, pageSize));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listStatisticCompletedFabricInDyehouse", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap getListStatisticFabric(@RequestParam("dyehouseId") Long dyehouseId,
-                                           @RequestParam("startDate") Long startDate,
-                                           @RequestParam("endDate") Long endDate,
+                                           @RequestParam("startDate") Double startDate,
+                                           @RequestParam("endDate") Double endDate,
                                            @RequestParam("pageIndex") Long pageIndex,
                                            @RequestParam("pageSize") Long pageSize,
                                            @RequestHeader("token") String token) throws InternalException {
@@ -183,26 +206,20 @@ public class ApplicationController {
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
-//        modelMap.addAttribute("result", fabricService.findStatisticFabrics(dyehouseId, startDate, endDate, pageIndex, pageSize));
+        modelMap.addAttribute("result", fabricService.findStatisticCompletedFabricsInDyehouse(dyehouseId, startDate, endDate, pageIndex, pageSize));
         return modelMap;
     }
 
     @CrossOrigin
-    @RequestMapping(value = "listStatisticRawFabric", method = RequestMethod.GET)
+    @RequestMapping(value = "listFabricTypeAndColor", method = RequestMethod.GET)
     @ResponseBody
-    public ModelMap getListStatisticRawFabric(@RequestParam("dyehouseId") Long dyehouseId,
-                                           @RequestParam("pageIndex") Long pageIndex,
-                                           @RequestParam("pageSize") Long pageSize,
-                                           @RequestHeader("token") String token){
-        System.out.println("dyehouseId: " + dyehouseId);
-        System.out.println("pageIndex: " + pageIndex);
-        System.out.println("pageSize: " + pageSize);
+    public ModelMap getListFabricTypeAndColor(@RequestHeader("token") String token) throws InternalException {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
-//        modelMap.addAttribute("result", );
+        modelMap.addAttribute("result", fabricTypeService.findFabricTypesAndColors());
         return modelMap;
     }
 

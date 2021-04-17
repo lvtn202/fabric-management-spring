@@ -3,6 +3,7 @@ package com.example.lvtn.service.impl;
 import com.example.lvtn.dao.FabricRepository;
 import com.example.lvtn.dom.Fabric;
 import com.example.lvtn.dto.StatisticCompletedFabric;
+import com.example.lvtn.dto.StatisticExportedFabric;
 import com.example.lvtn.dto.StatisticRawFabric;
 import com.example.lvtn.service.FabricService;
 import com.example.lvtn.utils.InternalException;
@@ -93,6 +94,40 @@ public class FabricServiceImpl implements FabricService {
             int fromIndex = (int)(pageIndex * pageSize) > listStatisticCompletedFabric.size() ? listStatisticCompletedFabric.size() : (int)(pageIndex * pageSize);
             int toIndex = (int)(pageIndex * pageSize + pageSize) > listStatisticCompletedFabric.size() ? listStatisticCompletedFabric.size() : (int)(pageIndex * pageSize + pageSize);
             return listStatisticCompletedFabric.subList(fromIndex,toIndex);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<StatisticExportedFabric> findStatisticExportedFabrics(Long pageIndex, Long pageSize) throws InternalException {
+        try {
+            List<Fabric> listFabric = fabricRepository.findExportedFabrics();
+
+            List<StatisticExportedFabric> listStatisticExportedFabric = new ArrayList<StatisticExportedFabric>();
+            for (Fabric fabric: listFabric){
+                boolean isExisted = false;
+                for (StatisticExportedFabric statisticExportedFabric: listStatisticExportedFabric){
+                    if(statisticExportedFabric.getDyehouseName().equals(fabric.getDyehouse().getName())){
+                        isExisted = true;
+                        statisticExportedFabric.setRawNumber(statisticExportedFabric.getRawNumber() + 1);
+                        statisticExportedFabric.setRawLength(String.valueOf(Double.parseDouble(statisticExportedFabric.getRawLength()) + fabric.getRawLength()));
+                        break;
+                    }
+                }
+                if (!isExisted){
+                    listStatisticExportedFabric.add(new StatisticExportedFabric(
+                            fabric.getDyehouse().getName(),
+                            1L,
+                            String.valueOf(fabric.getRawLength())
+                    ));
+                }
+            }
+
+            int fromIndex = (int)(pageIndex * pageSize) > listStatisticExportedFabric.size() ? listStatisticExportedFabric.size() : (int)(pageIndex * pageSize);
+            int toIndex = (int)(pageIndex * pageSize + pageSize) > listStatisticExportedFabric.size() ? listStatisticExportedFabric.size() : (int)(pageIndex * pageSize + pageSize);
+            return listStatisticExportedFabric.subList(fromIndex,toIndex);
         } catch (Exception e){
             e.printStackTrace();
             throw new InternalException(e.getMessage());

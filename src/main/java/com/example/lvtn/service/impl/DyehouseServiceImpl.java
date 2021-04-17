@@ -91,13 +91,23 @@ public class DyehouseServiceImpl implements DyehouseService {
     }
 
     @Override
-    public Dyehouse updateDyehouse(UpdateDyehouseForm updateDyehouseForm) throws InternalException {
+    public ModelMap updateDyehouse(UpdateDyehouseForm updateDyehouseForm) throws InternalException {
         try {
             Dyehouse currentDyehouse = dyehouseRepository.findDyehouseById(updateDyehouseForm.getId());
             currentDyehouse.setAddress(updateDyehouseForm.getAddress());
             currentDyehouse.setPhoneNumber(updateDyehouseForm.getPhoneNumber());
             currentDyehouse.setEmail(updateDyehouseForm.getEmail());
-            return dyehouseRepository.save(currentDyehouse);
+            Dyehouse updatedDyehouse = dyehouseRepository.save(currentDyehouse);
+
+            ModelMap modelMap = new ModelMap();
+            modelMap.addAttribute("id", updatedDyehouse.getId());
+            modelMap.addAttribute("name", updatedDyehouse.getName());
+            modelMap.addAttribute("address", updatedDyehouse.getAddress());
+            modelMap.addAttribute("phoneNumber", updatedDyehouse.getPhoneNumber());
+            modelMap.addAttribute("email", updatedDyehouse.getEmail());
+            modelMap.addAttribute("debt", String.format("%.1f", updatedDyehouse.getDebt()));
+
+            return modelMap;
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalException(e.getMessage());

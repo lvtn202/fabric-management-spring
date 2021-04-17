@@ -1,8 +1,10 @@
 package com.example.lvtn.web;
 
 
+import com.example.lvtn.dto.SignUpForm;
 import com.example.lvtn.dto.UpdateDyehouseForm;
 import com.example.lvtn.service.*;
+import com.example.lvtn.utils.DeAccent;
 import com.example.lvtn.utils.InternalException;
 import com.example.lvtn.dto.LoginForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +39,30 @@ public class ApplicationController {
         return "hello";
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "/signUp", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap signUp(@RequestBody SignUpForm signUpForm) {
+
+        System.out.println("Sign Up: " + signUpForm.toString());
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        return modelMap;
+    }
+
+    @CrossOrigin
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@RequestBody LoginForm loginForm) {
+    @ResponseBody
+    public ModelMap login(@RequestBody LoginForm loginForm) {
         System.out.println("username: " + loginForm.getUsername());
         System.out.println("password: " + loginForm.getPassword());
 
-        return "hello";
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        return modelMap;
     }
 
     @CrossOrigin
@@ -107,11 +127,10 @@ public class ApplicationController {
         System.out.println("updateDyehouseForm: " + updateDyehouseForm.toString());
         System.out.println("token: " + token);
 
-        dyehouseService.updateDyehouse(updateDyehouseForm);
-
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", dyehouseService.updateDyehouse(updateDyehouseForm));
         return modelMap;
     }
 
@@ -190,7 +209,7 @@ public class ApplicationController {
     @CrossOrigin
     @RequestMapping(value = "listStatisticCompletedFabricInDyehouse", method = RequestMethod.GET)
     @ResponseBody
-    public ModelMap getListStatisticFabric(@RequestParam("dyehouseId") Long dyehouseId,
+    public ModelMap getListStatisticCompletedFabricInDyehouse(@RequestParam("dyehouseId") Long dyehouseId,
                                            @RequestParam("startDate") Double startDate,
                                            @RequestParam("endDate") Double endDate,
                                            @RequestParam("pageIndex") Long pageIndex,
@@ -207,6 +226,23 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", fabricService.findStatisticCompletedFabricsInDyehouse(dyehouseId, startDate, endDate, pageIndex, pageSize));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listStatisticExportedFabric", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListStatisticExportedFabric(@RequestParam("pageIndex") Long pageIndex,
+                                                   @RequestParam("pageSize") Long pageSize,
+                                                   @RequestHeader("token") String token) throws InternalException {
+        System.out.println("pageIndex: " + pageIndex);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricService.findStatisticExportedFabrics(pageIndex, pageSize));
         return modelMap;
     }
 

@@ -18,12 +18,15 @@ public class DyeBatchDTO {
 
     private String dyeDate;
 
-    public DyeBatchDTO(Long id, String fabricType, String color, String fabricLength, String dyeDate) {
+    private String dyehouseName;
+
+    public DyeBatchDTO(Long id, String fabricType, String color, String fabricLength, String dyeDate, String dyehouseName) {
         this.id = id;
         this.fabricType = fabricType;
         this.color = color;
         this.fabricLength = fabricLength;
         this.dyeDate = dyeDate;
+        this.dyehouseName = dyehouseName;
     }
 
     @Override
@@ -34,6 +37,7 @@ public class DyeBatchDTO {
                 ", color='" + color + '\'' +
                 ", fabricLength='" + fabricLength + '\'' +
                 ", dyeDate='" + dyeDate + '\'' +
+                ", dyehouseName='" + dyehouseName + '\'' +
                 '}';
     }
 
@@ -47,6 +51,7 @@ public class DyeBatchDTO {
                 dyeBatch.getColor().getFabricType().getType(),
                 dyeBatch.getColor().getName(),
                 String.format("%.1f",fabricLength),
-                String.format("%tQ", dyeBatch.getDyeDate()));
+                String.format("%tQ", dyeBatch.getDyeDate()),
+                dyeBatch.getDyehouse().getName());
     }
 }

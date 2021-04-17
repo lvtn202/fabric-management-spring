@@ -15,5 +15,5 @@ public interface DyehouseService {
 
     ModelMap findDetailDyehouseById(Long id) throws InternalException;
 
-    Dyehouse updateDyehouse (UpdateDyehouseForm updateDyehouseForm) throws InternalException;
+    ModelMap updateDyehouse (UpdateDyehouseForm updateDyehouseForm) throws InternalException;
 }

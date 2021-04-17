@@ -25,7 +25,7 @@ public class User {
     private String lastName;
 
     @Column(name = "user_name", length = 100, nullable = false)
-    private String userName;
+    private String username;
 
     @Column(length = 100, nullable = false)
     private String email;
@@ -54,11 +54,11 @@ public class User {
     public User() {
     }
 
-    public User(String firstName, String middleName, String lastName, String userName, String email, String password, String sex, Set<PersistentLogin> persistentLogins, Set<ImportSlip> importSlips, Set<ExportSlip> exportSlips, Set<Payment> payments, Set<ReturnSlip> returnSlips) {
+    public User(String firstName, String middleName, String lastName, String username, String email, String password, String sex, Set<PersistentLogin> persistentLogins, Set<ImportSlip> importSlips, Set<ExportSlip> exportSlips, Set<Payment> payments, Set<ReturnSlip> returnSlips) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
-        this.userName = userName;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.sex = sex;
@@ -76,7 +76,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", middleName='" + middleName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", userName='" + userName + '\'' +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", sex='" + sex + '\'' +

@@ -1,6 +1,7 @@
 package com.example.lvtn.dao.custom;
 
 import com.example.lvtn.dom.Dyehouse;
+import com.example.lvtn.utils.DeAccent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -20,9 +21,9 @@ public class DyehouseRepositoryCustomImpl implements DyehouseRepositoryCustom{
         try {
 
             String sql = "select d from " + Dyehouse.class.getName() + " d "
-                    + "where lower(d.name) LIKE :dyehouseName";
+                    + "where lower(d.nameEN) LIKE :dyehouseName";
             Query query = entityManager.createQuery(sql, Dyehouse.class);
-            query.setParameter("dyehouseName", "%"+dyehouseName.toLowerCase()+"%");
+            query.setParameter("dyehouseName", "%"+ DeAccent.deAccent(dyehouseName).toLowerCase()+"%");
             query.setFirstResult((int) (pageIndex * pageSize));
             query.setMaxResults(Math.toIntExact(pageSize));
             return  query.getResultList();

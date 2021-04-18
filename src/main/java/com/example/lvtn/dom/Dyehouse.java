@@ -13,7 +13,7 @@ import java.util.Set;
 //@Document(indexName = "dyehouseindex")
 public class Dyehouse {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

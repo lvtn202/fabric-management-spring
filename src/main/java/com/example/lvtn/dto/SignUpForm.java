@@ -8,11 +8,7 @@ import lombok.Setter;
 public class SignUpForm {
     private String firstName;
 
-    private String middleName;
-
     private String lastName;
-
-    private String username;
 
     private String email;
 
@@ -20,11 +16,9 @@ public class SignUpForm {
 
     private String sex;
 
-    public SignUpForm(String firstName, String middleName, String lastName, String username, String email, String password, String sex) {
+    public SignUpForm(String firstName, String lastName, String email, String password, String sex, String role) {
         this.firstName = firstName;
-        this.middleName = middleName;
         this.lastName = lastName;
-        this.username = username;
         this.email = email;
         this.password = password;
         this.sex = sex;
@@ -34,9 +28,7 @@ public class SignUpForm {
     public String toString() {
         return "SignUpForm{" +
                 "firstName='" + firstName + '\'' +
-                ", middleName='" + middleName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", sex='" + sex + '\'' +

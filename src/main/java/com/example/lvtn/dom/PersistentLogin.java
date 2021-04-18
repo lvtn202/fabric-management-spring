@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Setter
 public class PersistentLogin {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @ManyToOne

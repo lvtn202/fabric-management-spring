@@ -2,10 +2,13 @@ package com.example.lvtn.service.impl;
 
 import com.example.lvtn.dao.DyehouseRepository;
 import com.example.lvtn.dao.FabricRepository;
+import com.example.lvtn.dao.FabricTypeRepository;
 import com.example.lvtn.dao.OrderRepository;
 import com.example.lvtn.dom.Dyehouse;
 import com.example.lvtn.dom.Fabric;
+import com.example.lvtn.dom.FabricType;
 import com.example.lvtn.dto.DyehouseDTO;
+import com.example.lvtn.dto.StatisticRawFabric;
 import com.example.lvtn.dto.UpdateDyehouseForm;
 import com.example.lvtn.service.DyehouseService;
 import com.example.lvtn.utils.InternalException;
@@ -20,6 +23,9 @@ import java.util.List;
 public class DyehouseServiceImpl implements DyehouseService {
     @Autowired
     private DyehouseRepository dyehouseRepository;
+
+    @Autowired
+    private FabricTypeRepository fabricTypeRepository;
 
     @Autowired
     private FabricRepository fabricRepository;
@@ -109,6 +115,43 @@ public class DyehouseServiceImpl implements DyehouseService {
 
             return modelMap;
         } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<ModelMap> findStatisticExportedFabrics(Long pageIndex, Long pageSize) throws InternalException {
+        try {
+            List<Dyehouse> listDyehouse = dyehouseRepository.findAll();
+            List<FabricType> listFabricType = fabricTypeRepository.findAll();
+            List<ModelMap> listModelMap = new ArrayList<>();
+            for (Dyehouse dyehouse: listDyehouse){
+                ModelMap newModelMap = new ModelMap();
+                newModelMap.addAttribute("dyehouseId", dyehouse.getId());
+                newModelMap.addAttribute("dyehouseName", dyehouse.getName());
+
+                List<StatisticRawFabric> fabricTypes = new ArrayList<>();
+                List<Fabric> listExportedFabricInDyehouse = fabricRepository.findRawFabricsByDyehouseId(dyehouse.getId());
+                for (FabricType fabricType: listFabricType){
+                    StatisticRawFabric newStatisticRawFabric = new StatisticRawFabric(fabricType.getType(), 0L, "0.0");
+                    for (Fabric fabric: listExportedFabricInDyehouse){
+                        if(fabric.getFabricType().getType().equals(fabricType.getType())){
+                            newStatisticRawFabric.setRawNumber(newStatisticRawFabric.getRawNumber() + 1);
+                            newStatisticRawFabric.setRawLength(String.format("%.1f", Double.parseDouble(newStatisticRawFabric.getRawLength()) + fabric.getRawLength()));
+                        }
+                    }
+                    fabricTypes.add(newStatisticRawFabric);
+                }
+                newModelMap.addAttribute("fabricTypes", fabricTypes);
+
+                listModelMap.add(newModelMap);
+            }
+
+            int fromIndex = (int)(pageIndex * pageSize) > listModelMap.size() ? listModelMap.size() : (int)(pageIndex * pageSize);
+            int toIndex = (int)(pageIndex * pageSize + pageSize) > listModelMap.size() ? listModelMap.size() : (int)(pageIndex * pageSize + pageSize);
+            return listModelMap.subList(fromIndex,toIndex);
+        } catch (Exception e){
             e.printStackTrace();
             throw new InternalException(e.getMessage());
         }

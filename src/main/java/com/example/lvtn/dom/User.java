@@ -12,20 +12,14 @@ import java.util.Set;
 @Setter
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "first_name",length = 50)
     private String firstName;
 
-    @Column(name = "middle_name",length = 50)
-    private String middleName;
-
     @Column(name = "last_name", length = 50, nullable = false)
     private String lastName;
-
-    @Column(name = "user_name", length = 100, nullable = false)
-    private String username;
 
     @Column(length = 100, nullable = false)
     private String email;
@@ -51,14 +45,15 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<ReturnSlip> returnSlips;
 
+    @ManyToMany(mappedBy = "users")
+    private Set<Role> roles;
+
     public User() {
     }
 
-    public User(String firstName, String middleName, String lastName, String username, String email, String password, String sex, Set<PersistentLogin> persistentLogins, Set<ImportSlip> importSlips, Set<ExportSlip> exportSlips, Set<Payment> payments, Set<ReturnSlip> returnSlips) {
+    public User(String firstName, String lastName, String email, String password, String sex, Set<PersistentLogin> persistentLogins, Set<ImportSlip> importSlips, Set<ExportSlip> exportSlips, Set<Payment> payments, Set<ReturnSlip> returnSlips, Set<Role> roles) {
         this.firstName = firstName;
-        this.middleName = middleName;
         this.lastName = lastName;
-        this.username = username;
         this.email = email;
         this.password = password;
         this.sex = sex;
@@ -67,6 +62,7 @@ public class User {
         this.exportSlips = exportSlips;
         this.payments = payments;
         this.returnSlips = returnSlips;
+        this.roles = roles;
     }
 
     @Override
@@ -74,9 +70,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
-                ", middleName='" + middleName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", sex='" + sex + '\'' +

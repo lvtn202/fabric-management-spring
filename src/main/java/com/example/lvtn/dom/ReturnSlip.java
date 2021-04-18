@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Setter
 public class ReturnSlip {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "return_date", nullable = false)

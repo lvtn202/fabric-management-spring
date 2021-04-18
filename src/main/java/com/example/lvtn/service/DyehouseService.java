@@ -16,4 +16,6 @@ public interface DyehouseService {
     ModelMap findDetailDyehouseById(Long id) throws InternalException;
 
     ModelMap updateDyehouse (UpdateDyehouseForm updateDyehouseForm) throws InternalException;
+
+    List<ModelMap> findStatisticExportedFabrics(Long pageIndex, Long pageSize) throws InternalException;
 }

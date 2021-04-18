@@ -7,31 +7,35 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "payment_method")
+@Table(name = "roles")
 @Getter
 @Setter
-public class PaymentMethod {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100, nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "paymentMethod")
-    private Set<Payment> payments;
+    @ManyToMany
+    @JoinTable(name = "users_roles",
+                joinColumns = @JoinColumn(name = "role_id"),
+                inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users;
 
-    public PaymentMethod() {
+    public Role() {
     }
 
-    public PaymentMethod(String name, Set<Payment> payments) {
+    public Role(Long id, String name, Set<User> users) {
+        this.id = id;
         this.name = name;
-        this.payments = payments;
+        this.users = users;
     }
 
     @Override
     public String toString() {
-        return "PaymentMethod{" +
+        return "Role{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

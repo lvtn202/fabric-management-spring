@@ -4,7 +4,6 @@ package com.example.lvtn.web;
 import com.example.lvtn.dto.SignUpForm;
 import com.example.lvtn.dto.UpdateDyehouseForm;
 import com.example.lvtn.service.*;
-import com.example.lvtn.utils.DeAccent;
 import com.example.lvtn.utils.InternalException;
 import com.example.lvtn.dto.LoginForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +33,9 @@ public class ApplicationController {
     @Autowired
     FabricTypeService fabricTypeService;
 
+    @Autowired
+    UserService userService;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main() {
         return "hello";
@@ -42,13 +44,20 @@ public class ApplicationController {
     @CrossOrigin
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     @ResponseBody
-    public ModelMap signUp(@RequestBody SignUpForm signUpForm) {
-
+    public ModelMap signUp(@RequestBody SignUpForm signUpForm) throws InternalException {
         System.out.println("Sign Up: " + signUpForm.toString());
 
         ModelMap modelMap = new ModelMap();
+
+        if(userService.isEmailExisted(signUpForm.getEmail())){
+            modelMap.addAttribute("status", 2);
+            modelMap.addAttribute("status_code", "EMAIL_EXISTED");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", userService.createUser(signUpForm));
         return modelMap;
     }
 
@@ -233,7 +242,7 @@ public class ApplicationController {
     @RequestMapping(value = "listStatisticExportedFabric", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap getListStatisticExportedFabric(@RequestParam("pageIndex") Long pageIndex,
-                                                   @RequestParam("pageSize") Long pageSize,
+                                                    @RequestParam("pageSize") Long pageSize,
                                                    @RequestHeader("token") String token) throws InternalException {
         System.out.println("pageIndex: " + pageIndex);
         System.out.println("pageSize: " + pageSize);
@@ -242,7 +251,7 @@ public class ApplicationController {
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
-        modelMap.addAttribute("result", fabricService.findStatisticExportedFabrics(pageIndex, pageSize));
+        modelMap.addAttribute("result", dyehouseService.findStatisticExportedFabrics(pageIndex, pageSize));
         return modelMap;
     }
 

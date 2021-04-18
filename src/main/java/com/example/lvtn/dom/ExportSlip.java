@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 public class ExportSlip {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "fabric_number", nullable = false)

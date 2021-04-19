@@ -50,7 +50,7 @@ public class ApplicationController {
         ModelMap modelMap = new ModelMap();
 
         if(userService.isEmailExisted(signUpForm.getEmail())){
-            modelMap.addAttribute("status", 2);
+            modelMap.addAttribute("status", 0);
             modelMap.addAttribute("status_code", "EMAIL_EXISTED");
             return modelMap;
         }
@@ -64,13 +64,25 @@ public class ApplicationController {
     @CrossOrigin
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public ModelMap login(@RequestBody LoginForm loginForm) {
-        System.out.println("username: " + loginForm.getUsername());
+    public ModelMap login(@RequestBody LoginForm loginForm) throws InternalException {
+        System.out.println("email: " + loginForm.getEmail());
         System.out.println("password: " + loginForm.getPassword());
 
         ModelMap modelMap = new ModelMap();
-        modelMap.addAttribute("status", 1);
-        modelMap.addAttribute("status_code", "OK");
+
+        if(!userService.isEmailExisted(loginForm.getEmail())){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "EMAIL_NOT_EXISTED");
+            return modelMap;
+        } else if (!userService.checkPassword(loginForm)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "WRONG_PASSWORD");
+            return modelMap;
+        } else {
+            modelMap.addAttribute("status", 1);
+            modelMap.addAttribute("status_code", "OK");
+            modelMap.addAttribute("result", userService.login(loginForm));
+        }
         return modelMap;
     }
 
@@ -252,6 +264,19 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", dyehouseService.findStatisticExportedFabrics(pageIndex, pageSize));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listFabricType", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListFabricType(@RequestHeader("token") String token) throws InternalException {
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricTypeService.findFabricTypes());
         return modelMap;
     }
 

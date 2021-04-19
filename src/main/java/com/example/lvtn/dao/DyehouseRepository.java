@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface DyehouseRepository extends JpaRepository<Dyehouse, Long>, DyehouseRepositoryCustom {
-    @Query("select d from Dyehouse d")
+    @Query("select d from Dyehouse d order by d.id")
     List<Dyehouse> findAll();
 }

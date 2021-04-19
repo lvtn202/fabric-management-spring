@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface FabricTypeRepository extends JpaRepository<FabricType, Long> {
-    @Query("SELECT ft FROM FabricType ft")
+    @Query("SELECT ft FROM FabricType ft order by ft.id")
     List<FabricType> findAll();
 }

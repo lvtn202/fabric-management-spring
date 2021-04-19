@@ -7,6 +7,7 @@ import com.example.lvtn.dom.Color;
 import com.example.lvtn.dom.Dyehouse;
 import com.example.lvtn.dom.FabricType;
 import com.example.lvtn.dto.FabricTypeAndColorDTO;
+import com.example.lvtn.dto.FabricTypeDTO;
 import com.example.lvtn.service.FabricTypeService;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,21 @@ public class FabricTypeServiceImpl implements FabricTypeService {
     }
 
     @Override
+    public List<FabricTypeDTO> findFabricTypes() throws InternalException {
+        try {
+            List<FabricType> listFabricType = fabricTypeRepository.findAll();
+            List<FabricTypeDTO> listFabricTypeDTO = new ArrayList<>();
+            for (FabricType fabricType: listFabricType){
+                listFabricTypeDTO.add(FabricTypeDTO.convertFabricTypeToFabricTypeDTO(fabricType));
+            }
+            return listFabricTypeDTO;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
     public List<FabricTypeAndColorDTO> findFabricTypesAndColors() throws InternalException {
         try {
             List<FabricTypeAndColorDTO> listFabricTypeAndColorDTO = new ArrayList<>();
@@ -50,4 +66,5 @@ public class FabricTypeServiceImpl implements FabricTypeService {
             throw new InternalException(e.getMessage());
         }
     }
+
 }

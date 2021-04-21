@@ -2,6 +2,7 @@ package com.example.lvtn.service.impl;
 
 import com.example.lvtn.dao.FabricRepository;
 import com.example.lvtn.dom.Fabric;
+import com.example.lvtn.dto.FabricDTO;
 import com.example.lvtn.dto.StatisticCompletedFabric;
 import com.example.lvtn.dto.StatisticRawFabric;
 import com.example.lvtn.service.FabricService;
@@ -93,6 +94,21 @@ public class FabricServiceImpl implements FabricService {
             int fromIndex = (int)(pageIndex * pageSize) > listStatisticCompletedFabric.size() ? listStatisticCompletedFabric.size() : (int)(pageIndex * pageSize);
             int toIndex = (int)(pageIndex * pageSize + pageSize) > listStatisticCompletedFabric.size() ? listStatisticCompletedFabric.size() : (int)(pageIndex * pageSize + pageSize);
             return listStatisticCompletedFabric.subList(fromIndex,toIndex);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<FabricDTO> findFabricsByDyeBatchId(Long dyeBatchId) throws InternalException {
+        try {
+            List<Fabric> listFabric = fabricRepository.findCompletedFabricsByDyeBatchId(dyeBatchId);
+            List<FabricDTO> listFabricDTO = new ArrayList<>();
+            for (Fabric fabric: listFabric){
+                listFabricDTO.add(FabricDTO.convertFabricToFabricDTO(fabric));
+            }
+            return listFabricDTO;
         } catch (Exception e){
             e.printStackTrace();
             throw new InternalException(e.getMessage());

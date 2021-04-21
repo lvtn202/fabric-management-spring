@@ -58,4 +58,18 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
             throw e;
         }
     }
+
+    @Override
+    public User findUsersById(Long userId) {
+        try {
+            String sql = "select u from " + User.class.getName() + " u "
+                    + "where u.id = :userId";
+            Query query = entityManager.createQuery(sql, User.class);
+            query.setParameter("userId", userId);
+            return (User) query.getSingleResult();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ColorRepositoryCustom {
     List<Color> findColorsByFabricTypeId(Long fabricTypeId);
+
+    Color findColorByFabricTypeAndColor(String fabricType, String color);
 }

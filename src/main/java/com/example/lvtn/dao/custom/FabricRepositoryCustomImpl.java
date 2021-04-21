@@ -69,4 +69,18 @@ public class FabricRepositoryCustomImpl implements FabricRepositoryCustom{
             throw e;
         }
     }
+
+    @Override
+    public List<Fabric> findCompletedFabricsByDyeBatchId(Long dyeBatchId) {
+        try {
+            String sql = "select f from " + Fabric.class.getName() + " f "
+                    + "where f.status = '" + FabricStatus.COMPLETED.toString() + "' and f.dyeBatch.id = :dyeBatchId";
+            Query query = entityManager.createQuery(sql, Fabric.class);
+            query.setParameter("dyeBatchId", dyeBatchId);
+            return query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

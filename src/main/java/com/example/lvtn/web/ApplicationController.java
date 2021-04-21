@@ -1,6 +1,7 @@
 package com.example.lvtn.web;
 
 
+import com.example.lvtn.dto.CreateOrderForm;
 import com.example.lvtn.dto.SignUpForm;
 import com.example.lvtn.dto.UpdateDyehouseForm;
 import com.example.lvtn.service.*;
@@ -290,6 +291,51 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", fabricTypeService.findFabricTypesAndColors());
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "createOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap createOrder(@RequestBody CreateOrderForm createOrderForm,
+                                @RequestHeader("token") String token) throws InternalException {
+        System.out.println("createOrderForm: " + createOrderForm);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", orderService.createOrder(createOrderForm));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "detailDyeBatch", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getDetailDyeBatch(@RequestParam("dyeBatchId") Long dyeBatchId,
+                                      @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyeBatchId: " + dyeBatchId);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", dyeBatchService.findDetailDyeBatchById(dyeBatchId));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listFabricOfDyeBatch", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListFabricOfDyeBatch(@RequestParam("dyeBatchId") Long dyeBatchId,
+                                      @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyeBatchId: " + dyeBatchId);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricService.findFabricsByDyeBatchId(dyeBatchId));
         return modelMap;
     }
 

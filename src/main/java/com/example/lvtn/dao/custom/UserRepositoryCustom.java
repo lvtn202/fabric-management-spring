@@ -8,4 +8,6 @@ public interface UserRepositoryCustom {
     List<User> findUsersByUsername(String username);
 
     List<User> findUsersByEmail(String email);
+
+    User findUsersById(Long userId);
 }

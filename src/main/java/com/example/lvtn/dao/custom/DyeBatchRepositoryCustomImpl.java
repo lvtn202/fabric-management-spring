@@ -40,4 +40,18 @@ public class DyeBatchRepositoryCustomImpl implements DyeBatchRepositoryCustom {
             throw e;
         }
     }
+
+    @Override
+    public DyeBatch findDyeBatchById(Long dyeBatchId) {
+        try {
+            String sql = "select d from " + DyeBatch.class.getName() + " d "
+                    + "where d.id = :dyeBatchId";
+            Query query = entityManager.createQuery(sql, DyeBatch.class);
+            query.setParameter("dyeBatchId", dyeBatchId);
+            return (DyeBatch) query.getSingleResult();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

@@ -8,4 +8,6 @@ public interface DyeBatchRepositoryCustom {
     List<DyeBatch> findDyeBatchesWithPaging(Long pageIndex, Long pageSize);
 
     List<DyeBatch> findDyeBatchesByImportSlipIdWithPaging(Long importSlipId, Long pageIndex, Long pageSize);
+
+    DyeBatch findDyeBatchById(Long dyeBatchId);
 }

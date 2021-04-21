@@ -1,6 +1,7 @@
 package com.example.lvtn.service;
 
 import com.example.lvtn.dom.Order;
+import com.example.lvtn.dto.CreateOrderForm;
 import com.example.lvtn.dto.OrderDTO;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.ui.ModelMap;
@@ -13,4 +14,6 @@ public interface OrderService {
     List<OrderDTO> findOrderDTOsByDyehouseIdWithPaging(Long dyehouseId, Long pageIndex, Long pageSize) throws InternalException;
 
     ModelMap findDetailOrderById(Long id) throws InternalException;
+
+    ModelMap createOrder(CreateOrderForm createOrderForm) throws InternalException;
 }

@@ -7,6 +7,7 @@ import com.example.lvtn.service.DyeBatchService;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,27 @@ public class DyeBatchServiceImpl implements DyeBatchService {
                 listDyeBatchDTO.add(DyeBatchDTO.convertDyeBatchToDyeBatchDTO(dyeBatch));
             }
             return listDyeBatchDTO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ModelMap findDetailDyeBatchById(Long dyeBatchId) throws InternalException {
+        try {
+            DyeBatch dyeBatch = dyeBatchRepository.findDyeBatchById(dyeBatchId);
+
+            ModelMap modelMap = new ModelMap();
+            modelMap.addAttribute("dyeBatchId", dyeBatch.getId());
+            modelMap.addAttribute("color", dyeBatch.getColor().getName());
+            modelMap.addAttribute("dyehouseName", dyeBatch.getDyehouse().getName());
+            modelMap.addAttribute("fabricType", dyeBatch.getFabrics().iterator().next().getFabricType().getType());
+            modelMap.addAttribute("price", String.format("%.3f", dyeBatch.getColor().getPrice()));
+            modelMap.addAttribute("dyeDate", String.format("%tQ", dyeBatch.getDyeDate()));
+            modelMap.addAttribute("firstName", dyeBatch.getImportSlip().getUser().getFirstName());
+            modelMap.addAttribute("lastName", dyeBatch.getImportSlip().getUser().getLastName());
+            return modelMap;
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalException(e.getMessage());

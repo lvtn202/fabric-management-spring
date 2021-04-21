@@ -26,4 +26,19 @@ public class ColorRepositoryCustomImpl implements ColorRepositoryCustom{
             throw e;
         }
     }
+
+    @Override
+    public Color findColorByFabricTypeAndColor(String fabricType, String color) {
+        try {
+            String sql = "select c from " + Color.class.getName() +
+                    " c where c.fabricType.type = :fabricType and c.name = :color";
+            Query query = entityManager.createQuery(sql, Color.class);
+            query.setParameter("fabricType", fabricType);
+            query.setParameter("color", color);
+            return (Color) query.getSingleResult();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

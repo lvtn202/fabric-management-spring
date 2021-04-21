@@ -13,4 +13,6 @@ public interface FabricRepositoryCustom {
     List<Fabric> findRawFabricsByDyehouseId(Long dyehouseId);
 
     List<Fabric> findCompletedFabricsByDyehouseId(Long dyehouseId);
+
+    List<Fabric> findCompletedFabricsByDyeBatchId(Long dyeBatchId);
 }

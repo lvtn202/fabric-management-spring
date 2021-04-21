@@ -17,7 +17,7 @@ public class ColorRepositoryCustomImpl implements ColorRepositoryCustom{
     @Override
     public List<Color> findColorsByFabricTypeId(Long fabricTypeId) {
         try {
-            String sql = "select c from " + Color.class.getName() + " c where c.fabricType.id = :fabricTypeId";
+            String sql = "select c from " + Color.class.getName() + " c where c.fabricType.id = :fabricTypeId order by c.id";
             Query query = entityManager.createQuery(sql, Color.class);
             query.setParameter("fabricTypeId", fabricTypeId);
             return  query.getResultList();

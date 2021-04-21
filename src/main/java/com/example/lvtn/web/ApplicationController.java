@@ -282,19 +282,6 @@ public class ApplicationController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "listFabricTypeAndColor", method = RequestMethod.GET)
-    @ResponseBody
-    public ModelMap getListFabricTypeAndColor(@RequestHeader("token") String token) throws InternalException {
-        System.out.println("token: " + token);
-
-        ModelMap modelMap = new ModelMap();
-        modelMap.addAttribute("status", 1);
-        modelMap.addAttribute("status_code", "OK");
-        modelMap.addAttribute("result", fabricTypeService.findFabricTypesAndColors());
-        return modelMap;
-    }
-
-    @CrossOrigin
     @RequestMapping(value = "createOrder", method = RequestMethod.POST)
     @ResponseBody
     public ModelMap createOrder(@RequestBody CreateOrderForm createOrderForm,

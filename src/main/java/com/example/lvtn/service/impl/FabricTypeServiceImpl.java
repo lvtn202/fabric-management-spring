@@ -36,32 +36,15 @@ public class FabricTypeServiceImpl implements FabricTypeService {
             List<FabricType> listFabricType = fabricTypeRepository.findAll();
             List<FabricTypeDTO> listFabricTypeDTO = new ArrayList<>();
             for (FabricType fabricType: listFabricType){
-                listFabricTypeDTO.add(FabricTypeDTO.convertFabricTypeToFabricTypeDTO(fabricType));
-            }
-            return listFabricTypeDTO;
-        } catch (Exception e){
-            e.printStackTrace();
-            throw new InternalException(e.getMessage());
-        }
-    }
-
-    @Override
-    public List<FabricTypeAndColorDTO> findFabricTypesAndColors() throws InternalException {
-        try {
-            List<FabricTypeAndColorDTO> listFabricTypeAndColorDTO = new ArrayList<>();
-            List<FabricType> listFabricType = fabricTypeRepository.findAll();
-            for (FabricType fabricType: listFabricType){
                 List<Color> listColorOfFabricType = colorRepository.findColorsByFabricTypeId(fabricType.getId());
                 List<String> colors = new ArrayList<>();
                 for(Color color: listColorOfFabricType){
                     colors.add(color.getName());
                 }
-                listFabricTypeAndColorDTO.add(new FabricTypeAndColorDTO(fabricType.getType(), colors));
+                listFabricTypeDTO.add(FabricTypeDTO.convertFabricTypeToFabricTypeDTO(fabricType, colors));
             }
-
-            return listFabricTypeAndColorDTO;
-
-        }catch (Exception e){
+            return listFabricTypeDTO;
+        } catch (Exception e){
             e.printStackTrace();
             throw new InternalException(e.getMessage());
         }

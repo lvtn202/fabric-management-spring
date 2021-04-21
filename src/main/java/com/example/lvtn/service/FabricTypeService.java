@@ -13,6 +13,4 @@ public interface FabricTypeService {
     List<FabricType> findAll();
 
     List<FabricTypeDTO> findFabricTypes() throws InternalException;
-
-    List<FabricTypeAndColorDTO> findFabricTypesAndColors() throws InternalException;
 }

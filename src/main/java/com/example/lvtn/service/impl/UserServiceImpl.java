@@ -139,4 +139,34 @@ public class UserServiceImpl implements UserService {
             throw new InternalException(e.getMessage());
         }
     }
+
+    @Override
+    public boolean checkToken(String token) throws InternalException {
+        try {
+            List<PersistentLogin> listPersistentLogin = persistentLoginRepository.findAll();
+            boolean isTokenExisted = false;
+            for (PersistentLogin persistentLogin: listPersistentLogin){
+                if (persistentLogin.getToken().equals(token) && !persistentLogin.getToken().equals(null)){
+                    isTokenExisted = true;
+                    break;
+                }
+            }
+            return isTokenExisted;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void logout(String token) throws InternalException {
+        try {
+            PersistentLogin currentPersistentLogin = persistentLoginRepository.getCurrentPersistentLoginByToken(token);
+            currentPersistentLogin.setToken(null);
+            persistentLoginRepository.save(currentPersistentLogin);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
 }

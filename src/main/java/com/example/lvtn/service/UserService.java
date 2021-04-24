@@ -18,4 +18,8 @@ public interface UserService {
     boolean checkPassword(LoginForm loginForm) throws InternalException;
 
     ModelMap login(LoginForm loginForm) throws InternalException;
+
+    boolean checkToken(String token) throws InternalException;
+
+    void logout(String token) throws InternalException;
 }

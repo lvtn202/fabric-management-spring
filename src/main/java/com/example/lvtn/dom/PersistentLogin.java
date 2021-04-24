@@ -19,7 +19,7 @@ public class PersistentLogin {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String token;
 
     @Column(nullable = false, name = "last_update")

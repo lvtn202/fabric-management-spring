@@ -97,4 +97,18 @@ public class FabricRepositoryCustomImpl implements FabricRepositoryCustom{
             throw e;
         }
     }
+
+    @Override
+    public List<Fabric> findExportedFabricsInDyehouse(Long dyehouseId) {
+        try {
+            String sql = "select f from " + Fabric.class.getName() + " f "
+                    + "where f.status = '" + FabricStatus.EXPORTED.toString() + "' and f.dyehouse.id = :dyehouseId";
+            Query query = entityManager.createQuery(sql, Fabric.class);
+            query.setParameter("dyehouseId", dyehouseId);
+            return query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

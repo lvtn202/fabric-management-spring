@@ -20,4 +20,8 @@ public interface FabricService {
     String getRawLength(Long fabricId) throws InternalException;
 
     boolean isRawFabric(Long fabricId) throws InternalException;
+
+    List<FabricDTO> findRawFabricDTOs() throws InternalException;
+
+    List<FabricDTO> findExportedFabricDTOs(Long dyehouseId) throws InternalException;
 }

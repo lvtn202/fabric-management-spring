@@ -47,4 +47,18 @@ public class PersistentLoginrepositoryCustomImpl implements PersistentLoginrepos
             throw e;
         }
     }
+
+    @Override
+    public PersistentLogin getCurrentPersistentLoginByToken(String token) {
+        try {
+            String sql = "select p from " + PersistentLogin.class.getName() +
+                    " p where p.token = :token";
+            Query query = entityManager.createQuery(sql, PersistentLogin.class);
+            query.setParameter("token", token);
+            return (PersistentLogin) query.getSingleResult();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

@@ -6,4 +6,6 @@ public interface PersistentLoginrepositoryCustom {
     boolean isPersistentLoginExisted(Long userId);
 
     PersistentLogin getCurrentPersistentLogin(Long userId);
+
+    PersistentLogin getCurrentPersistentLoginByToken(String token);
 }

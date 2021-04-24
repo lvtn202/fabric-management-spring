@@ -94,6 +94,24 @@ public class ApplicationController {
     }
 
     @CrossOrigin
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap logout(@RequestHeader("token") String token) throws InternalException {
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "USER_LOGOUTED");
+            return modelMap;
+        }
+        userService.logout(token);
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        return modelMap;
+    }
+
+    @CrossOrigin
     @RequestMapping(value = "/listDyehouse", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap getListDyehouse(@RequestParam("dyehouseName") String dyehouseName,
@@ -339,8 +357,13 @@ public class ApplicationController {
                                @RequestHeader("token") String token) throws InternalException {
         System.out.println("fabricId: " + fabricId);
         System.out.println("token: " + token);
-
         ModelMap modelMap = new ModelMap();
+
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "WRONG_TOKEN");
+            return modelMap;
+        }
 
         if(!fabricService.isRawFabric(fabricId)){
             modelMap.addAttribute("status", 0);
@@ -419,6 +442,34 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", dyehouseService.findDebtsWithPaging(pageIndex, pageSize));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listRawFabric", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListRawFabric(@RequestHeader("token") String token) throws InternalException {
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricService.findRawFabricDTOs());
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listExportedFabric", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListExportedFabric(@RequestParam("dyehouseId") Long dyehouseId,
+                                          @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricService.findExportedFabricDTOs(dyehouseId));
         return modelMap;
     }
 

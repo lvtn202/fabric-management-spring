@@ -16,4 +16,8 @@ public interface FabricService {
     List<StatisticCompletedFabric> findStatisticCompletedFabricsInDyehouse(Long dyehouseId, Double startDate, Double endDate, Long pageIndex, Long pageSize) throws InternalException;
 
     List<FabricDTO> findFabricsByDyeBatchId(Long dyeBatchId) throws InternalException;
+
+    String getRawLength(Long fabricId) throws InternalException;
+
+    boolean isRawFabric(Long fabricId) throws InternalException;
 }

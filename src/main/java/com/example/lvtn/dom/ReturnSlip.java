@@ -21,6 +21,9 @@ public class ReturnSlip {
     @Column(nullable = false)
     private Double money;
 
+    @Column(name = "received_name", nullable = false)
+    private String receivedName;
+
     @ManyToOne
     @JoinColumn(name = "dyehouse_id", nullable = false)
     private Dyehouse dyehouse;
@@ -32,9 +35,10 @@ public class ReturnSlip {
     public ReturnSlip() {
     }
 
-    public ReturnSlip(Timestamp returnDate, Double money, Dyehouse dyehouse, User user) {
+    public ReturnSlip(Timestamp returnDate, Double money, String receivedName, Dyehouse dyehouse, User user) {
         this.returnDate = returnDate;
         this.money = money;
+        this.receivedName = receivedName;
         this.dyehouse = dyehouse;
         this.user = user;
     }
@@ -45,6 +49,7 @@ public class ReturnSlip {
                 "id=" + id +
                 ", returnDate=" + returnDate +
                 ", money=" + money +
+                ", receivedName=" + receivedName +
                 ", dyehouse=" + dyehouse +
                 ", user=" + user +
                 '}';

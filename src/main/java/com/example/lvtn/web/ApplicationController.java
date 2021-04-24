@@ -37,6 +37,12 @@ public class ApplicationController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    ReturnSlipService returnSlipService;
+
+    @Autowired
+    ReturnService returnService;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main() {
         return "hello";
@@ -255,7 +261,7 @@ public class ApplicationController {
     @RequestMapping(value = "listStatisticExportedFabric", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap getListStatisticExportedFabric(@RequestParam("pageIndex") Long pageIndex,
-                                                    @RequestParam("pageSize") Long pageSize,
+                                                   @RequestParam("pageSize") Long pageSize,
                                                    @RequestHeader("token") String token) throws InternalException {
         System.out.println("pageIndex: " + pageIndex);
         System.out.println("pageSize: " + pageSize);
@@ -323,6 +329,96 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", fabricService.findFabricsByDyeBatchId(dyeBatchId));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "getRawLength", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getRawLength(@RequestParam("fabricId") Long fabricId,
+                               @RequestHeader("token") String token) throws InternalException {
+        System.out.println("fabricId: " + fabricId);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+
+        if(!fabricService.isRawFabric(fabricId)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "NOT_RAW_FABRIC");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricService.getRawLength(fabricId));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listReturnSlip", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListReturnSlip(@RequestParam("pageIndex") Long pageIndex,
+                                      @RequestParam("pageSize") Long pageSize,
+                                      @RequestHeader("token") String token) throws InternalException {
+        System.out.println("pageIndex: " + pageIndex);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", returnSlipService.findReturnSlipDTOsWithPaging(pageIndex, pageSize));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "detailReturnSlip", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getDetailReturnSlip(@RequestParam("returnSlipId") Long returnSlipId,
+                                        @RequestHeader("token") String token) throws InternalException {
+        System.out.println("returnSlipId: " + returnSlipId);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", returnSlipService.findDetailReturnSlip(returnSlipId));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listReturn", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListReturn(@RequestParam("returnSlipId") Long returnSlipId,
+                                  @RequestParam("pageIndex") Long pageIndex,
+                                  @RequestParam("pageSize") Long pageSize,
+                                  @RequestHeader("token") String token) throws InternalException {
+        System.out.println("returnSlipId: " + returnSlipId);
+        System.out.println("pageIndex: " + pageIndex);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", returnService.findReturnDTOs(returnSlipId, pageIndex, pageSize));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listDebt", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListDebt(@RequestParam("pageIndex") Long pageIndex,
+                                @RequestParam("pageSize") Long pageSize,
+                                @RequestHeader("token") String token) throws InternalException {
+        System.out.println("pageIndex: " + pageIndex);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", dyehouseService.findDebtsWithPaging(pageIndex, pageSize));
         return modelMap;
     }
 

@@ -6,6 +6,7 @@ import com.example.lvtn.dto.FabricDTO;
 import com.example.lvtn.dto.StatisticCompletedFabric;
 import com.example.lvtn.dto.StatisticRawFabric;
 import com.example.lvtn.service.FabricService;
+import com.example.lvtn.utils.FabricStatus;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -109,6 +110,31 @@ public class FabricServiceImpl implements FabricService {
                 listFabricDTO.add(FabricDTO.convertFabricToFabricDTO(fabric));
             }
             return listFabricDTO;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public String getRawLength(Long fabricId) throws InternalException {
+        try {
+            Fabric fabric = fabricRepository.findFabricById(fabricId);
+            return String.format("%.1f", fabric.getRawLength());
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean isRawFabric(Long fabricId) throws InternalException {
+        try {
+            Fabric fabric = fabricRepository.findFabricById(fabricId);
+            if (fabric.getStatus().equals(FabricStatus.IN_RAW)){
+                return true;
+            }
+            return false;
         } catch (Exception e){
             e.printStackTrace();
             throw new InternalException(e.getMessage());

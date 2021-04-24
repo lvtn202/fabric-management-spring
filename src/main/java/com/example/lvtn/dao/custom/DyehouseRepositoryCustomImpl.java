@@ -36,7 +36,7 @@ public class DyehouseRepositoryCustomImpl implements DyehouseRepositoryCustom{
     @Override
     public List<Dyehouse> findDyehousesWithPaging(Long pageIndex, Long pageSize) {
         try {
-            String sql = "select d from " + Dyehouse.class.getName() + " d";
+            String sql = "select d from " + Dyehouse.class.getName() + " d order by d.id";
             Query query = entityManager.createQuery(sql, Dyehouse.class);
             query.setFirstResult((int) (pageIndex * pageSize));
             query.setMaxResults(Math.toIntExact(pageSize));

@@ -156,4 +156,26 @@ public class DyehouseServiceImpl implements DyehouseService {
             throw new InternalException(e.getMessage());
         }
     }
+
+    @Override
+    public List<ModelMap> findDebtsWithPaging(Long pageIndex, Long pageSize) throws InternalException {
+        try {
+            List<Dyehouse> listDyehouse = dyehouseRepository.findDyehousesWithPaging(pageIndex, pageSize);
+            List<ModelMap> listModelMap = new ArrayList<>();
+            for (Dyehouse dyehouse: listDyehouse){
+                ModelMap modelMap = new ModelMap();
+                modelMap.addAttribute("dyehouseId", dyehouse.getId());
+                modelMap.addAttribute("dyehouseName", dyehouse.getName());
+                modelMap.addAttribute("address", dyehouse.getAddress());
+                modelMap.addAttribute("phoneNumber", dyehouse.getPhoneNumber());
+                modelMap.addAttribute("email", dyehouse.getEmail());
+                modelMap.addAttribute("debt", String.format("%.3f", dyehouse.getDebt()));
+                listModelMap.add(modelMap);
+            }
+            return listModelMap;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
 }

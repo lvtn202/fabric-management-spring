@@ -18,4 +18,6 @@ public interface DyehouseService {
     ModelMap updateDyehouse (UpdateDyehouseForm updateDyehouseForm) throws InternalException;
 
     List<ModelMap> findStatisticExportedFabrics(Long pageIndex, Long pageSize) throws InternalException;
+
+    List<ModelMap> findDebtsWithPaging(Long pageIndex, Long pageSize) throws InternalException;
 }

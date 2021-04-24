@@ -83,4 +83,18 @@ public class FabricRepositoryCustomImpl implements FabricRepositoryCustom{
             throw e;
         }
     }
+
+    @Override
+    public Fabric findFabricById(Long fabricId) {
+        try {
+            String sql = "select f from " + Fabric.class.getName() + " f "
+                    + "where f.id = :fabricId";
+            Query query = entityManager.createQuery(sql, Fabric.class);
+            query.setParameter("fabricId", fabricId);
+            return (Fabric) query.getSingleResult();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

@@ -1,12 +1,9 @@
 package com.example.lvtn.web;
 
 
-import com.example.lvtn.dto.CreateOrderForm;
-import com.example.lvtn.dto.SignUpForm;
-import com.example.lvtn.dto.UpdateDyehouseForm;
+import com.example.lvtn.dto.*;
 import com.example.lvtn.service.*;
 import com.example.lvtn.utils.InternalException;
-import com.example.lvtn.dto.LoginForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -42,6 +39,9 @@ public class ApplicationController {
 
     @Autowired
     ReturnService returnService;
+
+    @Autowired
+    ExportSlipService exportSlipService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main() {
@@ -448,13 +448,15 @@ public class ApplicationController {
     @CrossOrigin
     @RequestMapping(value = "listRawFabric", method = RequestMethod.GET)
     @ResponseBody
-    public ModelMap getListRawFabric(@RequestHeader("token") String token) throws InternalException {
+    public ModelMap getListRawFabric(@RequestParam("fabricType") String fabricType,
+                                     @RequestHeader("token") String token) throws InternalException {
+        System.out.println("fabricType: " + fabricType);
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
-        modelMap.addAttribute("result", fabricService.findRawFabricDTOs());
+        modelMap.addAttribute("result", fabricService.findRawFabricDTOsByFabricType(fabricType));
         return modelMap;
     }
 
@@ -462,6 +464,8 @@ public class ApplicationController {
     @RequestMapping(value = "listExportedFabric", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap getListExportedFabric(@RequestParam("dyehouseId") Long dyehouseId,
+                                          @RequestParam("fabricType") String fabricType,
+                                          @RequestParam("color") String color,
                                           @RequestHeader("token") String token) throws InternalException {
         System.out.println("dyehouseId: " + dyehouseId);
         System.out.println("token: " + token);
@@ -469,7 +473,22 @@ public class ApplicationController {
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
-        modelMap.addAttribute("result", fabricService.findExportedFabricDTOs(dyehouseId));
+        modelMap.addAttribute("result", fabricService.findExportedFabricDTOsByFabricTypeAndColor(dyehouseId, fabricType, color));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "createExportSlip", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap createExportSlip(@RequestBody CreateExportSlipForm createExportSlipForm,
+                                     @RequestHeader("token") String token) throws InternalException {
+        System.out.println("createExportSlipForm: " + createExportSlipForm.toString());
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", exportSlipService.createExportSlip(createExportSlipForm));
         return modelMap;
     }
 

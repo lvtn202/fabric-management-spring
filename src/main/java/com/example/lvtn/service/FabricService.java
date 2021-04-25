@@ -21,7 +21,7 @@ public interface FabricService {
 
     boolean isRawFabric(Long fabricId) throws InternalException;
 
-    List<FabricDTO> findRawFabricDTOs() throws InternalException;
+    List<FabricDTO> findRawFabricDTOsByFabricType(String fabricType) throws InternalException;
 
-    List<FabricDTO> findExportedFabricDTOs(Long dyehouseId) throws InternalException;
+    List<FabricDTO> findExportedFabricDTOsByFabricTypeAndColor(Long dyehouseId, String fabricType, String color) throws InternalException;
 }

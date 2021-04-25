@@ -142,9 +142,9 @@ public class FabricServiceImpl implements FabricService {
     }
 
     @Override
-    public List<FabricDTO> findRawFabricDTOs() throws InternalException {
+    public List<FabricDTO> findRawFabricDTOsByFabricType(String fabricType) throws InternalException {
         try {
-            List<Fabric> listFabric = fabricRepository.findRawFabrics();
+            List<Fabric> listFabric = fabricRepository.findRawFabricsByFabricType(fabricType);
             List<FabricDTO> listFabricDTO = new ArrayList<>();
             for (Fabric fabric: listFabric){
                 listFabricDTO.add(FabricDTO.convertFabricToFabricDTO(fabric));
@@ -157,13 +157,13 @@ public class FabricServiceImpl implements FabricService {
     }
 
     @Override
-    public List<FabricDTO> findExportedFabricDTOs(Long dyehouseId) throws InternalException {
+    public List<FabricDTO> findExportedFabricDTOsByFabricTypeAndColor(Long dyehouseId, String fabricType, String color) throws InternalException {
         try {
             List<Fabric> listFabric = new ArrayList<>();
             if (dyehouseId < 0L){
-                listFabric = fabricRepository.findExportedFabrics();
+                listFabric = fabricRepository.findExportedFabricsByFabricTypeAndColor(fabricType, color);
             } else {
-                listFabric = fabricRepository.findExportedFabricsInDyehouse(dyehouseId);
+                listFabric = fabricRepository.findExportedFabricsInDyehouseByFabricTypeAndColor(dyehouseId, fabricType, color);
             }
             List<FabricDTO> listFabricDTO = new ArrayList<>();
             for (Fabric fabric: listFabric){

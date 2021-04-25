@@ -19,4 +19,11 @@ public interface FabricRepositoryCustom {
     Fabric findFabricById(Long fabricId);
 
     List<Fabric> findExportedFabricsInDyehouse(Long dyehouseId);
+
+    List<Fabric> findRawFabricsByFabricType(String fabricType);
+
+    List<Fabric> findExportedFabricsByFabricTypeAndColor(String fabricType, String color);
+
+    List<Fabric> findExportedFabricsInDyehouseByFabricTypeAndColor(Long dyehouseId, String fabricType, String color);
+
 }

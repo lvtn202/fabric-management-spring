@@ -1,20 +1,50 @@
 package com.example.lvtn.service.impl;
 
-import com.example.lvtn.dao.ImportSlipRepository;
+import com.example.lvtn.dao.*;
+import com.example.lvtn.dom.DyeBatch;
+import com.example.lvtn.dom.Fabric;
 import com.example.lvtn.dom.ImportSlip;
+import com.example.lvtn.dom.Order;
+import com.example.lvtn.dto.CreateImportSlipForm;
+import com.example.lvtn.dto.FabricCreateImportSlip;
 import com.example.lvtn.dto.ImportSlipDTO;
 import com.example.lvtn.service.ImportSlipService;
+import com.example.lvtn.utils.FabricStatus;
 import com.example.lvtn.utils.InternalException;
+import com.example.lvtn.utils.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
-public class ImportSlipServiceImpl implements ImportSlipService {
+public class ImportSlipServiceImpl implements
+        ImportSlipService {
     @Autowired
     private ImportSlipRepository importSlipRepository;
+
+    @Autowired
+    private FabricRepository fabricRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private DyehouseRepository dyehouseRepository;
+
+    @Autowired
+    private ColorRepository colorRepository;
+
+    @Autowired
+    private DyeBatchRepository dyeBatchRepository;
 
     @Override
     public List<ImportSlip> findAll() {
@@ -35,4 +65,68 @@ public class ImportSlipServiceImpl implements ImportSlipService {
             throw new InternalException(e.getMessage());
         }
     }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public ModelMap createImportSlip(CreateImportSlipForm createImportSlipForm) throws InternalException {
+        try {
+            Order order = orderRepository.findOrderById(createImportSlipForm.getOrderId());
+            Set<Fabric> fabrics = new HashSet<>();
+            Double importLength = Double.valueOf(0);
+
+            for (FabricCreateImportSlip fabricCreateImportSlip: createImportSlipForm.getFabrics()){
+                Fabric fabric = fabricRepository.findFabricById(fabricCreateImportSlip.getFabricId());
+                fabric.setFinishedLength(fabricCreateImportSlip.getFinishedLength());
+                fabric.setStatus(FabricStatus.COMPLETED);
+                importLength += fabric.getFinishedLength();
+                fabrics.add(fabric);
+            }
+            order.setDoneLength(order.getDoneLength() + importLength);
+            if (order.getDoneLength() >= order.getOrderLength()){
+                order.setStatus(OrderStatus.COMPLETED);
+            } else {
+                order.setStatus(OrderStatus.IN_PROGRESS);
+            }
+            ImportSlip newImportSlip = new ImportSlip(
+                    createImportSlipForm.getTotalPrice(),
+                    (long) createImportSlipForm.getFabrics().size(),
+                    createImportSlipForm.getCreateDate(),
+                    order,
+                    userRepository.findUsersById(createImportSlipForm.getUserId()),
+                    new HashSet<DyeBatch>()
+            );
+            DyeBatch newDyeBatch = new DyeBatch(
+                    createImportSlipForm.getCreateDate(),
+                    colorRepository.findColorByFabricTypeAndColor(createImportSlipForm.getFabricType(),createImportSlipForm.getColor()),
+                    dyehouseRepository.findDyehouseById(createImportSlipForm.getDyehouseId()),
+                    newImportSlip,
+                    fabrics
+            );
+
+            for (Fabric fabric: fabrics){
+                fabric.setDyeBatch(newDyeBatch);
+                fabricRepository.save(fabric);
+            }
+            orderRepository.save(order);
+            importSlipRepository.save(newImportSlip);
+            dyeBatchRepository.save(newDyeBatch);
+
+
+            ModelMap modelMap = new ModelMap();
+            modelMap.addAttribute("importSlipId", newImportSlip.getId());
+            modelMap.addAttribute("money", String.format("%.3f", newImportSlip.getMoney()));
+            modelMap.addAttribute("fabricNumber", newImportSlip.getFabricNumber());
+            modelMap.addAttribute("createDate", String.format("%tQ", newImportSlip.getCreateDate()));
+            modelMap.addAttribute("orderId", newImportSlip.getOrder().getId());
+            modelMap.addAttribute("firstName", newImportSlip.getUser().getFirstName());
+            modelMap.addAttribute("lastName", newImportSlip.getUser().getLastName());
+            return modelMap;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+
 }

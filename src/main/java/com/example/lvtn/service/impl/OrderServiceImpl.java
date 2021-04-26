@@ -107,4 +107,19 @@ public class OrderServiceImpl implements OrderService {
             throw new InternalException(e.getMessage());
         }
     }
+
+    @Override
+    public List<OrderDTO> findOrderDTOsByFabricTypeAndColor(Long dyehouseId, String fabricType, String color) throws InternalException {
+        try {
+            List<Order> listOrder = orderRepository.findOrdersOfDyehouseByFabricTypeAndColor(dyehouseId, fabricType, color);
+            List<OrderDTO> listOrderDTO = new ArrayList<>();
+            for (Order order: listOrder){
+                listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
+            }
+            return listOrderDTO;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
 }

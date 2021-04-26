@@ -16,4 +16,6 @@ public interface OrderService {
     ModelMap findDetailOrderById(Long id) throws InternalException;
 
     ModelMap createOrder(CreateOrderForm createOrderForm) throws InternalException;
+
+    List<OrderDTO> findOrderDTOsByFabricTypeAndColor(Long dyehouseId, String fabricType, String color) throws InternalException;
 }

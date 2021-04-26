@@ -12,4 +12,6 @@ public interface OrderRepositoryCustom {
     List<Order> findOrdersByDyehouseIdWithPaging(Long dyehouseId, Long pageIndex, Long pageSize);
 
     Order findOrderById(Long id);
+
+    List<Order> findOrdersOfDyehouseByFabricTypeAndColor(Long dyehouseId, String fabricType, String color);
 }

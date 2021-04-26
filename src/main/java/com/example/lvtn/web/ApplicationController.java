@@ -43,6 +43,9 @@ public class ApplicationController {
     @Autowired
     ExportSlipService exportSlipService;
 
+    @Autowired
+    ColorService colorService;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main() {
         return "hello";
@@ -468,6 +471,8 @@ public class ApplicationController {
                                           @RequestParam("color") String color,
                                           @RequestHeader("token") String token) throws InternalException {
         System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("fabricType: " + fabricType);
+        System.out.println("color: " + color);
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
@@ -489,6 +494,57 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", exportSlipService.createExportSlip(createExportSlipForm));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listOrderAdvance", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListOrderAdvance(@RequestParam("dyehouseId") Long dyehouseId,
+                                        @RequestParam("fabricType") String fabricType,
+                                        @RequestParam("color") String color,
+                                        @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("fabricType: " + fabricType);
+        System.out.println("color: " + color);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", orderService.findOrderDTOsByFabricTypeAndColor(dyehouseId, fabricType, color));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "getPrice", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getPrice(@RequestParam("fabricType") String fabricType,
+                             @RequestParam("color") String color,
+                             @RequestHeader("token") String token) throws InternalException {
+        System.out.println("fabricType: " + fabricType);
+        System.out.println("color: " + color);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", colorService.getPriceByFabricTypeAndColor(fabricType, color));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "createImportSlip", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap createImportSlip(@RequestBody CreateImportSlipForm createImportSlipForm,
+                                     @RequestHeader("token") String token) throws InternalException {
+        System.out.println("createImportSlipForm: " + createImportSlipForm.toString());
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", importSlipService.createImportSlip(createImportSlipForm));
         return modelMap;
     }
 

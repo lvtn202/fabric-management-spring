@@ -1,7 +1,7 @@
 package com.example.lvtn.service.impl;
 
-import com.example.lvtn.dao.FabricRepository;
-import com.example.lvtn.dom.Fabric;
+import com.example.lvtn.dao.*;
+import com.example.lvtn.dom.*;
 import com.example.lvtn.dto.FabricDTO;
 import com.example.lvtn.dto.StatisticCompletedFabric;
 import com.example.lvtn.dto.StatisticRawFabric;
@@ -12,13 +12,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
 public class FabricServiceImpl implements FabricService {
     @Autowired
     FabricRepository fabricRepository;
+
+    @Autowired
+    FabricTypeRepository fabricTypeRepository;
+
+    @Autowired
+    ColorRepository colorRepository;
+
+    @Autowired
+    ImportSlipRepository importSlipRepository;
+
+    @Autowired
+    ExportSlipRepository exportSlipRepository;
+
+    @Autowired
+    DyehouseRepository dyehouseRepository;
+
+    @Autowired
+    DyeBatchRepository dyeBatchRepository;
 
     @Override
     public List<Fabric> findAll() {
@@ -157,19 +177,88 @@ public class FabricServiceImpl implements FabricService {
     }
 
     @Override
-    public List<FabricDTO> findExportedFabricDTOsByFabricTypeAndColor(Long dyehouseId, String fabricType, String color) throws InternalException {
+    public List<FabricDTO> findExportedFabricDTOsByFabricType(Long dyehouseId, String fabricType) throws InternalException {
         try {
             List<Fabric> listFabric = new ArrayList<>();
             if (dyehouseId < 0L){
-                listFabric = fabricRepository.findExportedFabricsByFabricTypeAndColor(fabricType, color);
+                listFabric = fabricRepository.findExportedFabricsByFabricType(fabricType);
             } else {
-                listFabric = fabricRepository.findExportedFabricsInDyehouseByFabricTypeAndColor(dyehouseId, fabricType, color);
+                listFabric = fabricRepository.findExportedFabricsInDyehouseByFabricType(dyehouseId, fabricType);
             }
             List<FabricDTO> listFabricDTO = new ArrayList<>();
             for (Fabric fabric: listFabric){
                 listFabricDTO.add(FabricDTO.convertFabricToFabricDTO(fabric));
             }
             return listFabricDTO;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public String createData() throws InternalException {
+        try {
+            Random random = new Random();
+            List<Color> colors = colorRepository.findAll();
+            List<ExportSlip> exportSlips = exportSlipRepository.findAll();
+
+            for (int i = 0; i<500; i++){
+                Double rawLength = 1000.0 * (random.nextInt(10) + 1);
+                DyeBatch dyeBatch = dyeBatchRepository.findDyeBatchById((long) (random.nextInt(19) + 1));
+                Color color = dyeBatch.getColor();
+                Fabric newFabric = new Fabric(
+                        rawLength,
+                        rawLength - 100.0 * (random.nextInt(10) + 1),
+                        FabricStatus.COMPLETED,
+                        color.getName(),
+                        color.getFabricType(),
+                        color,
+                        dyeBatch,
+                        exportSlips.get(random.nextInt(17)),
+                        dyeBatch.getDyehouse(),
+                        new HashSet<Return>()
+                );
+                System.out.println(newFabric.toString());
+                fabricRepository.save(newFabric);
+            }
+//            for (int i = 0; i<500; i++){
+//                Color color = colors.get(random.nextInt(99));
+//                Fabric newFabric = new Fabric(
+//                        1000.0 * (random.nextInt(10) + 1),
+//                        0.0,
+//                        FabricStatus.EXPORTED,
+//                        color.getName(),
+//                        color.getFabricType(),
+//                        null,
+//                        null,
+//                        exportSlips.get(random.nextInt(17)),
+//                        dyehouseRepository.findDyehouseById((long) (random.nextInt(10) + 1)),
+//                        new HashSet<Return>()
+//                );
+//                System.out.println(newFabric.toString());
+//                fabricRepository.save(newFabric);
+//            }
+//            for (int i = 0; i<500; i++){
+//                Color color = colors.get(random.nextInt(99));
+//                Fabric newFabric = new Fabric(
+//                        1000.0 * (random.nextInt(10) + 1),
+//                        0.0,
+//                        FabricStatus.IN_RAW,
+//                        color.getName(),
+//                        color.getFabricType(),
+//                        color,
+//                        null,
+//                        null,
+//                        null,
+//                        new HashSet<Return>()
+//                );
+//                System.out.println(newFabric.toString());
+//                fabricRepository.save(newFabric);
+//            }
+
+
+            return "created !!";
         } catch (Exception e){
             e.printStackTrace();
             throw new InternalException(e.getMessage());

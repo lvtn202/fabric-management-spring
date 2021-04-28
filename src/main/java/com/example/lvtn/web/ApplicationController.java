@@ -468,17 +468,15 @@ public class ApplicationController {
     @ResponseBody
     public ModelMap getListExportedFabric(@RequestParam("dyehouseId") Long dyehouseId,
                                           @RequestParam("fabricType") String fabricType,
-                                          @RequestParam("color") String color,
                                           @RequestHeader("token") String token) throws InternalException {
         System.out.println("dyehouseId: " + dyehouseId);
         System.out.println("fabricType: " + fabricType);
-        System.out.println("color: " + color);
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
-        modelMap.addAttribute("result", fabricService.findExportedFabricDTOsByFabricTypeAndColor(dyehouseId, fabricType, color));
+        modelMap.addAttribute("result", fabricService.findExportedFabricDTOsByFabricType(dyehouseId, fabricType));
         return modelMap;
     }
 
@@ -545,6 +543,17 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", importSlipService.createImportSlip(createImportSlipForm));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "createData", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap createData() throws InternalException {
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricService.createData());
         return modelMap;
     }
 

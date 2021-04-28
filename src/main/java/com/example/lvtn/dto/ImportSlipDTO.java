@@ -17,15 +17,18 @@ public class ImportSlipDTO {
 
     private String fabricLength;
 
+    private String driver;
+
     private String createDate;
 
     private String employee;
 
-    public ImportSlipDTO(Long id, String money, String fabricNumber, String fabricLength, String createDate, String employee) {
+    public ImportSlipDTO(Long id, String money, String fabricNumber, String fabricLength, String driver, String createDate, String employee) {
         this.id = id;
         this.money = money;
         this.fabricNumber = fabricNumber;
         this.fabricLength = fabricLength;
+        this.driver = driver;
         this.createDate = createDate;
         this.employee = employee;
     }
@@ -37,6 +40,7 @@ public class ImportSlipDTO {
                 ", money='" + money + '\'' +
                 ", fabricNumber='" + fabricNumber + '\'' +
                 ", fabricLength='" + fabricLength + '\'' +
+                ", driver='" + driver + '\'' +
                 ", createDate='" + createDate + '\'' +
                 ", employee='" + employee + '\'' +
                 '}';
@@ -54,6 +58,7 @@ public class ImportSlipDTO {
                 String.format("%.1f", importSlip.getMoney()),
                 importSlip.getFabricNumber().toString(),
                 String.format("%.1f", fabricLength),
+                importSlip.getDriver(),
                 String.format("%tQ", importSlip.getCreateDate()),
                 importSlip.getUser().getLastName());
     }

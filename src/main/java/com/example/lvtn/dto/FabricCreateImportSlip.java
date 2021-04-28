@@ -6,22 +6,22 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FabricCreateImportSlip {
-    private Long fabricId;
+    private Long id;
 
     private Double finishedLength;
 
     public FabricCreateImportSlip() {
     }
 
-    public FabricCreateImportSlip(Long fabricId, Double finishedLength) {
-        this.fabricId = fabricId;
+    public FabricCreateImportSlip(Long id, Double finishedLength) {
+        this.id = id;
         this.finishedLength = finishedLength;
     }
 
     @Override
     public String toString() {
         return "FabricCreateImportSlip{" +
-                "fabricId=" + fabricId +
+                "id=" + id +
                 ", finishedLength=" + finishedLength +
                 '}';
     }

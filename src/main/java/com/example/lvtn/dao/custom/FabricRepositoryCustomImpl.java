@@ -127,14 +127,13 @@ public class FabricRepositoryCustomImpl implements FabricRepositoryCustom{
     }
 
     @Override
-    public List<Fabric> findExportedFabricsByFabricTypeAndColor(String fabricType, String color) {
+    public List<Fabric> findExportedFabricsByFabricType(String fabricType) {
         try {
             String sql = "select f from " + Fabric.class.getName() + " f "
                     + "where f.status = '" + FabricStatus.EXPORTED.toString() + "' "
-                    + "and f.fabricType.type = :fabricType and f.colorName = :color ";
+                    + "and f.fabricType.type = :fabricType ";
             Query query = entityManager.createQuery(sql, Fabric.class);
             query.setParameter("fabricType", fabricType);
-            query.setParameter("color", color);
             return query.getResultList();
         } catch (Exception e){
             e.printStackTrace();
@@ -143,15 +142,14 @@ public class FabricRepositoryCustomImpl implements FabricRepositoryCustom{
     }
 
     @Override
-    public List<Fabric> findExportedFabricsInDyehouseByFabricTypeAndColor(Long dyehouseId, String fabricType, String color) {
+    public List<Fabric> findExportedFabricsInDyehouseByFabricType(Long dyehouseId, String fabricType) {
         try {
             String sql = "select f from " + Fabric.class.getName() + " f "
                     + "where f.status = '" + FabricStatus.EXPORTED.toString() + "' "
-                    + "and f.dyehouse.id = :dyehouseId and f.fabricType.type = :fabricType and f.colorName = :color ";
+                    + "and f.dyehouse.id = :dyehouseId and f.fabricType.type = :fabricType ";
             Query query = entityManager.createQuery(sql, Fabric.class);
             query.setParameter("dyehouseId", dyehouseId);
             query.setParameter("fabricType", fabricType);
-            query.setParameter("color", color);
             return query.getResultList();
         } catch (Exception e){
             e.printStackTrace();

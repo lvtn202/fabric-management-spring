@@ -22,6 +22,9 @@ public class ImportSlip {
     @Column(name = "fabric_number", nullable = false)
     private Long fabricNumber;
 
+    @Column(name = "driver")
+    private String driver;
+
     @Column(name = "create_date", nullable = false)
     private Timestamp createDate;
 
@@ -39,9 +42,10 @@ public class ImportSlip {
     public ImportSlip() {
     }
 
-    public ImportSlip(Double money, Long fabricNumber, Timestamp createDate, Order order, User user, Set<DyeBatch> dyeBatches) {
+    public ImportSlip(Double money, Long fabricNumber, String driver, Timestamp createDate, Order order, User user, Set<DyeBatch> dyeBatches) {
         this.money = money;
         this.fabricNumber = fabricNumber;
+        this.driver = driver;
         this.createDate = createDate;
         this.order = order;
         this.user = user;
@@ -54,6 +58,7 @@ public class ImportSlip {
                 "id=" + id +
                 ", money=" + money +
                 ", fabricNumber=" + fabricNumber +
+                ", driver=" + driver +
                 ", createDate=" + createDate +
                 ", order=" + order +
                 ", user=" + user +

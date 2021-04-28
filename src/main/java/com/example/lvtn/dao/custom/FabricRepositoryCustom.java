@@ -22,8 +22,8 @@ public interface FabricRepositoryCustom {
 
     List<Fabric> findRawFabricsByFabricType(String fabricType);
 
-    List<Fabric> findExportedFabricsByFabricTypeAndColor(String fabricType, String color);
+    List<Fabric> findExportedFabricsByFabricType(String fabricType);
 
-    List<Fabric> findExportedFabricsInDyehouseByFabricTypeAndColor(Long dyehouseId, String fabricType, String color);
+    List<Fabric> findExportedFabricsInDyehouseByFabricType(Long dyehouseId, String fabricType);
 
 }

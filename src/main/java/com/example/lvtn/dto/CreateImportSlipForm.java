@@ -19,23 +19,23 @@ public class CreateImportSlipForm {
 
     private String color;
 
-    private Timestamp createDate;
+    private String driver;
 
-    private Double totalPrice;
+    private Timestamp createDate;
 
     private List<FabricCreateImportSlip> fabrics;
 
     public CreateImportSlipForm() {
     }
 
-    public CreateImportSlipForm(Long userId, Long dyehouseId, Long orderId, String fabricType, String color, Timestamp createDate, Double totalPrice, List<FabricCreateImportSlip> fabrics) {
+    public CreateImportSlipForm(Long userId, Long dyehouseId, Long orderId, String fabricType, String color, String driver, Timestamp createDate, List<FabricCreateImportSlip> fabrics) {
         this.userId = userId;
         this.dyehouseId = dyehouseId;
         this.orderId = orderId;
         this.fabricType = fabricType;
         this.color = color;
+        this.driver = driver;
         this.createDate = createDate;
-        this.totalPrice = totalPrice;
         this.fabrics = fabrics;
     }
 
@@ -47,8 +47,8 @@ public class CreateImportSlipForm {
                 ", orderId=" + orderId +
                 ", fabricType='" + fabricType + '\'' +
                 ", color='" + color + '\'' +
+                ", driver='" + driver + '\'' +
                 ", createDate=" + createDate +
-                ", totalPrice=" + totalPrice +
                 ", fabrics=" + fabrics +
                 '}';
     }

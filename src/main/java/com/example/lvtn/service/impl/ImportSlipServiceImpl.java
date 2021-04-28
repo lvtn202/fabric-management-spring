@@ -1,10 +1,7 @@
 package com.example.lvtn.service.impl;
 
 import com.example.lvtn.dao.*;
-import com.example.lvtn.dom.DyeBatch;
-import com.example.lvtn.dom.Fabric;
-import com.example.lvtn.dom.ImportSlip;
-import com.example.lvtn.dom.Order;
+import com.example.lvtn.dom.*;
 import com.example.lvtn.dto.CreateImportSlipForm;
 import com.example.lvtn.dto.FabricCreateImportSlip;
 import com.example.lvtn.dto.ImportSlipDTO;
@@ -72,10 +69,11 @@ public class ImportSlipServiceImpl implements
         try {
             Order order = orderRepository.findOrderById(createImportSlipForm.getOrderId());
             Set<Fabric> fabrics = new HashSet<>();
+            Color color = colorRepository.findColorByFabricTypeAndColor(createImportSlipForm.getFabricType(),createImportSlipForm.getColor());
             Double importLength = Double.valueOf(0);
 
             for (FabricCreateImportSlip fabricCreateImportSlip: createImportSlipForm.getFabrics()){
-                Fabric fabric = fabricRepository.findFabricById(fabricCreateImportSlip.getFabricId());
+                Fabric fabric = fabricRepository.findFabricById(fabricCreateImportSlip.getId());
                 fabric.setFinishedLength(fabricCreateImportSlip.getFinishedLength());
                 fabric.setStatus(FabricStatus.COMPLETED);
                 importLength += fabric.getFinishedLength();
@@ -88,8 +86,9 @@ public class ImportSlipServiceImpl implements
                 order.setStatus(OrderStatus.IN_PROGRESS);
             }
             ImportSlip newImportSlip = new ImportSlip(
-                    createImportSlipForm.getTotalPrice(),
+                    importLength,
                     (long) createImportSlipForm.getFabrics().size(),
+                    createImportSlipForm.getDriver(),
                     createImportSlipForm.getCreateDate(),
                     order,
                     userRepository.findUsersById(createImportSlipForm.getUserId()),
@@ -97,7 +96,7 @@ public class ImportSlipServiceImpl implements
             );
             DyeBatch newDyeBatch = new DyeBatch(
                     createImportSlipForm.getCreateDate(),
-                    colorRepository.findColorByFabricTypeAndColor(createImportSlipForm.getFabricType(),createImportSlipForm.getColor()),
+                    color,
                     dyehouseRepository.findDyehouseById(createImportSlipForm.getDyehouseId()),
                     newImportSlip,
                     fabrics
@@ -105,6 +104,7 @@ public class ImportSlipServiceImpl implements
 
             for (Fabric fabric: fabrics){
                 fabric.setDyeBatch(newDyeBatch);
+                fabric.setColor(color);
                 fabricRepository.save(fabric);
             }
             orderRepository.save(order);
@@ -116,6 +116,7 @@ public class ImportSlipServiceImpl implements
             modelMap.addAttribute("importSlipId", newImportSlip.getId());
             modelMap.addAttribute("money", String.format("%.3f", newImportSlip.getMoney()));
             modelMap.addAttribute("fabricNumber", newImportSlip.getFabricNumber());
+            modelMap.addAttribute("driver", newImportSlip.getDriver());
             modelMap.addAttribute("createDate", String.format("%tQ", newImportSlip.getCreateDate()));
             modelMap.addAttribute("orderId", newImportSlip.getOrder().getId());
             modelMap.addAttribute("firstName", newImportSlip.getUser().getFirstName());

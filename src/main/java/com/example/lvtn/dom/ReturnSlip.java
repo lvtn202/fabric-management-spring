@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
 @Table(name = "return_slip")
@@ -32,15 +33,19 @@ public class ReturnSlip {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @OneToMany(mappedBy = "returnSlip")
+    private Set<Return> returns;
+
     public ReturnSlip() {
     }
 
-    public ReturnSlip(Timestamp returnDate, Double money, String receivedName, Dyehouse dyehouse, User user) {
+    public ReturnSlip(Timestamp returnDate, Double money, String receivedName, Dyehouse dyehouse, User user, Set<Return> returns) {
         this.returnDate = returnDate;
         this.money = money;
         this.receivedName = receivedName;
         this.dyehouse = dyehouse;
         this.user = user;
+        this.returns = returns;
     }
 
     @Override

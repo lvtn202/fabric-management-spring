@@ -264,4 +264,24 @@ public class FabricServiceImpl implements FabricService {
             throw new InternalException(e.getMessage());
         }
     }
+
+    @Override
+    public List<FabricDTO> findCompletedFabricDTOs(Long dyehouseId, Long pageIndex, Long pageSize) throws InternalException {
+        try {
+            List<Fabric> listFabric = new ArrayList<>();
+            List<FabricDTO> listFabricDTO = new ArrayList<>();
+            if (dyehouseId < 0L){
+                listFabric = fabricRepository.findAllCompletedFabrics(pageIndex, pageSize);
+            } else {
+                listFabric = fabricRepository.findAllCompletedFabricsByDyehouseId(dyehouseId, pageIndex, pageSize);
+            }
+            for (Fabric fabric: listFabric){
+                listFabricDTO.add(FabricDTO.convertFabricToFabricDTO(fabric));
+            }
+            return listFabricDTO;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
 }

@@ -7,6 +7,7 @@ import com.example.lvtn.service.ReturnService;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,24 @@ public class ReturnServiceImpl implements ReturnService {
                 listReturnDTO.add(ReturnDTO.convertReturnToReturnDTO(aReturn));
             }
             return  listReturnDTO;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ModelMap findDetailReturn(Long returnId) throws InternalException {
+        try {
+            Return aReturn = returnRepository.getOne(returnId);
+            ModelMap modelMap = new ModelMap();
+            modelMap.addAttribute("returnId", aReturn.getId());
+            modelMap.addAttribute("returnLength", String.format("%.1f", aReturn.getReturnLength()));
+            modelMap.addAttribute("returnReason", aReturn.getReturnReason());
+            modelMap.addAttribute("money", String.format("%.3f", aReturn.getMoney()));
+            modelMap.addAttribute("fabricId", aReturn.getFabric().getId());
+            modelMap.addAttribute("returnSlipId", aReturn.getReturnSlip().getId());
+            return modelMap;
         } catch (Exception e){
             e.printStackTrace();
             throw new InternalException(e.getMessage());

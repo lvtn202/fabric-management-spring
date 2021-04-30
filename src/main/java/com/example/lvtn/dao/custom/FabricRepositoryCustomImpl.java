@@ -156,4 +156,36 @@ public class FabricRepositoryCustomImpl implements FabricRepositoryCustom{
             throw e;
         }
     }
+
+    @Override
+    public List<Fabric> findAllCompletedFabrics(Long pageIndex, Long pageSize) {
+        try {
+            String sql = "select f from " + Fabric.class.getName() + " f "
+                    + "where f.status = '" + FabricStatus.COMPLETED.toString() + "'";
+            Query query = entityManager.createQuery(sql, Fabric.class);
+            query.setFirstResult((int) (pageIndex * pageSize));
+            query.setMaxResults(Math.toIntExact(pageSize));
+            return query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    @Override
+    public List<Fabric> findAllCompletedFabricsByDyehouseId(Long dyehouseId, Long pageIndex, Long pageSize) {
+        try {
+            String sql = "select f from " + Fabric.class.getName() + " f "
+                    + "where f.status = '" + FabricStatus.COMPLETED.toString() + "' "
+                    + "and f.dyehouse.id = :dyehouseId ";
+            Query query = entityManager.createQuery(sql, Fabric.class);
+            query.setParameter("dyehouseId", dyehouseId);
+            query.setFirstResult((int) (pageIndex * pageSize));
+            query.setMaxResults(Math.toIntExact(pageSize));
+            return query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

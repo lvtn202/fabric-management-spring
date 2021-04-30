@@ -26,4 +26,6 @@ public interface FabricService {
     List<FabricDTO> findExportedFabricDTOsByFabricType(Long dyehouseId, String fabricType) throws InternalException;
 
     String createData() throws InternalException;
+
+    List<FabricDTO> findCompletedFabricDTOs(Long dyehouseId, Long pageIndex, Long pageSize) throws InternalException;
 }

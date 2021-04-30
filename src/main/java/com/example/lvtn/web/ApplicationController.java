@@ -432,6 +432,21 @@ public class ApplicationController {
     }
 
     @CrossOrigin
+    @RequestMapping(value = "detailReturn", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getDetailReturn(@RequestParam("returnId") Long returnId,
+                                    @RequestHeader("token") String token) throws InternalException {
+        System.out.println("returnId: " + returnId);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", returnService.findDetailReturn(returnId));
+        return modelMap;
+    }
+
+    @CrossOrigin
     @RequestMapping(value = "listDebt", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap getListDebt(@RequestParam("pageIndex") Long pageIndex,
@@ -556,6 +571,26 @@ public class ApplicationController {
         modelMap.addAttribute("result", fabricService.createData());
         return modelMap;
     }
+
+    @CrossOrigin
+    @RequestMapping(value = "listCompletedFabric", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListCompletedFabric(@RequestParam("dyehouseId") Long dyehouseId,
+                                           @RequestParam("pageIndex") Long pageIndex,
+                                           @RequestParam("pageSize") Long pageSize,
+                                           @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("pageIndex: " + pageIndex);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricService.findCompletedFabricDTOs(dyehouseId, pageIndex, pageSize));
+        return modelMap;
+    }
+
 
     @ExceptionHandler(InternalException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -10,9 +10,9 @@ import lombok.Setter;
 public class FabricDTO {
     private Long id;
 
-    private Double rawLength;
+    private String rawLength;
 
-    private  Double finishedLength;
+    private  String finishedLength;
 
     private FabricStatus status;
 
@@ -20,16 +20,19 @@ public class FabricDTO {
 
     private String fabricType;
 
+    private String price;
+
     public FabricDTO() {
     }
 
-    public FabricDTO(Long id, Double rawLength, Double finishedLength, FabricStatus status, String colorName, String fabricType) {
+    public FabricDTO(Long id, String rawLength, String finishedLength, FabricStatus status, String colorName, String fabricType, String price) {
         this.id = id;
         this.rawLength = rawLength;
         this.finishedLength = finishedLength;
         this.status = status;
         this.colorName = colorName;
         this.fabricType = fabricType;
+        this.price = price;
     }
 
     @Override
@@ -41,17 +44,20 @@ public class FabricDTO {
                 ", status=" + status +
                 ", colorName='" + colorName + '\'' +
                 ", fabricType='" + fabricType + '\'' +
+                ", price='" + price + '\'' +
                 '}';
     }
 
     static public FabricDTO convertFabricToFabricDTO(Fabric fabric){
+        String price = (fabric.getColor() != null) ? String.format("%.3f", fabric.getColor().getPrice()) : "0.0";
         return new FabricDTO(
                 fabric.getId(),
-                fabric.getRawLength(),
-                fabric.getFinishedLength(),
+                String.format("%.1f", fabric.getRawLength()),
+                String.format("%.1f", fabric.getFinishedLength()),
                 fabric.getStatus(),
                 fabric.getColorName(),
-                fabric.getFabricType().getType()
+                fabric.getFabricType().getType(),
+                price
         );
     }
 }

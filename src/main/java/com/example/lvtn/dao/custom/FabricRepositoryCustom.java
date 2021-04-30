@@ -26,4 +26,7 @@ public interface FabricRepositoryCustom {
 
     List<Fabric> findExportedFabricsInDyehouseByFabricType(Long dyehouseId, String fabricType);
 
+    List<Fabric> findAllCompletedFabrics(Long pageIndex, Long pageSize);
+
+    List<Fabric> findAllCompletedFabricsByDyehouseId(Long dyehouseId, Long pageIndex, Long pageSize);
 }

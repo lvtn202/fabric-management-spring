@@ -591,6 +591,20 @@ public class ApplicationController {
         return modelMap;
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "createReturnSlip", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap createReturnSlip(@RequestBody CreateReturnSlipForm createReturnSlipForm,
+                                     @RequestHeader("token") String token) throws InternalException {
+        System.out.println("createImportSlipForm: " + createReturnSlipForm.toString());
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", returnSlipService.createReturnSlip(createReturnSlipForm));
+        return modelMap;
+    }
 
     @ExceptionHandler(InternalException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

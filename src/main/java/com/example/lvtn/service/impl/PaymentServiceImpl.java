@@ -1,20 +1,84 @@
 package com.example.lvtn.service.impl;
 
+import com.example.lvtn.dao.DyehouseRepository;
+import com.example.lvtn.dao.PaymentMethodRepository;
 import com.example.lvtn.dao.PaymentRepository;
+import com.example.lvtn.dao.UserRepository;
+import com.example.lvtn.dom.Dyehouse;
 import com.example.lvtn.dom.Payment;
+import com.example.lvtn.dto.CreatePaymentForm;
+import com.example.lvtn.dto.PaymentDTO;
 import com.example.lvtn.service.PaymentService;
+import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
     @Autowired
-    PaymentRepository paymentRepository;
+    private PaymentRepository paymentRepository;
+
+    @Autowired
+    private DyehouseRepository dyehouseRepository;
+
+    @Autowired
+    private PaymentMethodRepository paymentMethodRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public List<Payment> findAll() {
         return paymentRepository.findAll();
+    }
+
+    @Override
+    public List<PaymentDTO> findPaymentDTOs(Long dyehouseId, Long pageIndex, Long pageSize) throws InternalException {
+        try {
+            List<Payment> listPayment = new ArrayList<>();
+            List<PaymentDTO> listPaymentDTO = new ArrayList<>();
+            if (dyehouseId < 0) {
+                listPayment = paymentRepository.findPaymentsWithPaging(pageIndex, pageSize);
+            } else {
+                listPayment = paymentRepository.findPaymentsByDyehouseIdWithPaging(dyehouseId, pageIndex, pageSize);
+            }
+
+            for (Payment payment: listPayment){
+                listPaymentDTO.add(PaymentDTO.convertPaymentToPaymentDTO(payment));
+            }
+            return listPaymentDTO;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public PaymentDTO createPayment(CreatePaymentForm createPaymentForm) throws InternalException {
+        try {
+            Payment newPayment = new Payment(
+                    createPaymentForm.getMoney(),
+                    createPaymentForm.getCreateDate(),
+                    createPaymentForm.getBankName(),
+                    createPaymentForm.getRecipientName(),
+                    paymentMethodRepository.getOne(createPaymentForm.getPaymentMethodId()),
+                    dyehouseRepository.findDyehouseById(createPaymentForm.getDyehouseId()),
+                    userRepository.findUsersById(createPaymentForm.getUserId())
+            );
+            Dyehouse dyehouse = dyehouseRepository.findDyehouseById(createPaymentForm.getDyehouseId());
+            dyehouse.setDebt(dyehouse.getDebt() - createPaymentForm.getMoney());
+            dyehouseRepository.save(dyehouse);
+            paymentRepository.save(newPayment);
+            return PaymentDTO.convertPaymentToPaymentDTO(newPayment);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
     }
 }

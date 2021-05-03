@@ -46,6 +46,12 @@ public class ApplicationController {
     @Autowired
     ColorService colorService;
 
+    @Autowired
+    PaymentMethodService paymentMethodService;
+
+    @Autowired
+    PaymentService paymentService;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main() {
         return "hello";
@@ -603,6 +609,53 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", returnSlipService.createReturnSlip(createReturnSlipForm));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listPaymentMethod", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListPaymentMethod(@RequestHeader("token") String token) throws InternalException {
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", paymentMethodService.findPaymentMethodDTOs());
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listPayment", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListPayment(@RequestParam("dyehouseId") Long dyehouseId,
+                                   @RequestParam("pageIndex") Long pageIndex,
+                                   @RequestParam("pageSize") Long pageSize,
+                                   @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("pageIndex: " + pageIndex);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", paymentService.findPaymentDTOs(dyehouseId, pageIndex, pageSize));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "createPayment", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap createPayment(@RequestBody CreatePaymentForm createPaymentForm,
+                                  @RequestHeader("token") String token) throws InternalException {
+        System.out.println("createImportSlipForm: " + createPaymentForm.toString());
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", paymentService.createPayment(createPaymentForm));
         return modelMap;
     }
 

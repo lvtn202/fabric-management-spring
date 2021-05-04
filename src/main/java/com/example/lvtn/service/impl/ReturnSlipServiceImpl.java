@@ -1,6 +1,7 @@
 package com.example.lvtn.service.impl;
 
 import com.example.lvtn.dao.*;
+import com.example.lvtn.dom.Dyehouse;
 import com.example.lvtn.dom.Fabric;
 import com.example.lvtn.dom.Return;
 import com.example.lvtn.dom.ReturnSlip;
@@ -105,10 +106,13 @@ public class ReturnSlipServiceImpl implements ReturnSlipService {
                     userRepository.findUsersById(createReturnSlipForm.getUserId()),
                     returns
             );
+            Dyehouse dyehouse = dyehouseRepository.findDyehouseById(createReturnSlipForm.getDyehouseId());
+            dyehouse.setDebt(dyehouse.getDebt() - totalPrice);
+
+            dyehouseRepository.save(dyehouse);
             returnSlipRepository.save(newReturnSlip);
             for (Return aReturn: returns){
                 aReturn.setReturnSlip(newReturnSlip);
-                System.out.println(aReturn.toString());
                 returnRepository.save(aReturn);
             }
 

@@ -88,11 +88,12 @@ public class ReturnSlipServiceImpl implements ReturnSlipService {
                 Fabric currentFabric = fabricRepository.findFabricById(fabricCreateReturnSlip.getFabricId());
                 currentFabric.setStatus(FabricStatus.RETURNED);
                 fabricRepository.save(currentFabric);
-                totalPrice += fabricCreateReturnSlip.getMoney();
+                Double price = currentFabric.getColor().getPrice() * fabricCreateReturnSlip.getReturnLength();
+                totalPrice += price;
                 Return newReturn = new Return(
                         fabricCreateReturnSlip.getReturnLength(),
                         fabricCreateReturnSlip.getReturnReason(),
-                        fabricCreateReturnSlip.getMoney(),
+                        price,
                         currentFabric,
                         null
                 );

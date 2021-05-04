@@ -12,16 +12,13 @@ public class FabricCreateReturnSlip {
 
     private String returnReason;
 
-    private Double money;
-
     public FabricCreateReturnSlip() {
     }
 
-    public FabricCreateReturnSlip(Long fabricId, Double returnLength, String returnReason, Double money) {
+    public FabricCreateReturnSlip(Long fabricId, Double returnLength, String returnReason) {
         this.fabricId = fabricId;
         this.returnLength = returnLength;
         this.returnReason = returnReason;
-        this.money = money;
     }
 
     @Override
@@ -30,7 +27,6 @@ public class FabricCreateReturnSlip {
                 "fabricId=" + fabricId +
                 ", returnLength=" + returnLength +
                 ", returnReason='" + returnReason + '\'' +
-                ", money=" + money +
                 '}';
     }
 }

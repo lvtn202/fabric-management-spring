@@ -203,29 +203,30 @@ public class FabricServiceImpl implements FabricService {
             List<Color> colors = colorRepository.findAll();
             List<ExportSlip> exportSlips = exportSlipRepository.findAll();
 
-            for (int i = 0; i<500; i++){
-                Double rawLength = 1000.0 * (random.nextInt(10) + 1);
-                DyeBatch dyeBatch = dyeBatchRepository.findDyeBatchById((long) (random.nextInt(19) + 1));
-                Color color = dyeBatch.getColor();
-                Fabric newFabric = new Fabric(
-                        rawLength,
-                        rawLength - 100.0 * (random.nextInt(10) + 1),
-                        FabricStatus.COMPLETED,
-                        color.getName(),
-                        color.getFabricType(),
-                        color,
-                        dyeBatch,
-                        exportSlips.get(random.nextInt(17)),
-                        dyeBatch.getDyehouse(),
-                        new HashSet<Return>()
-                );
-                System.out.println(newFabric.toString());
-                fabricRepository.save(newFabric);
-            }
+
+//            for (int i = 0; i<500; i++){
+//                Double rawLength = 100.0 * (random.nextInt(10) + 1);
+//                DyeBatch dyeBatch = dyeBatchRepository.findDyeBatchById((long) (random.nextInt(19) + 1));
+//                Color color = dyeBatch.getColor();
+//                Fabric newFabric = new Fabric(
+//                        rawLength,
+//                        rawLength - 10.0 * (random.nextInt(10) + 1),
+//                        FabricStatus.COMPLETED,
+//                        color.getName(),
+//                        color.getFabricType(),
+//                        color,
+//                        dyeBatch,
+//                        exportSlips.get(random.nextInt(17)),
+//                        dyeBatch.getDyehouse(),
+//                        new HashSet<Return>()
+//                );
+//                System.out.println(newFabric.toString());
+//                fabricRepository.save(newFabric);
+//            }
 //            for (int i = 0; i<500; i++){
 //                Color color = colors.get(random.nextInt(99));
 //                Fabric newFabric = new Fabric(
-//                        1000.0 * (random.nextInt(10) + 1),
+//                        100.0 * (random.nextInt(10) + 1),
 //                        0.0,
 //                        FabricStatus.EXPORTED,
 //                        color.getName(),
@@ -242,7 +243,7 @@ public class FabricServiceImpl implements FabricService {
 //            for (int i = 0; i<500; i++){
 //                Color color = colors.get(random.nextInt(99));
 //                Fabric newFabric = new Fabric(
-//                        1000.0 * (random.nextInt(10) + 1),
+//                        100.0 * (random.nextInt(10) + 1),
 //                        0.0,
 //                        FabricStatus.IN_RAW,
 //                        color.getName(),

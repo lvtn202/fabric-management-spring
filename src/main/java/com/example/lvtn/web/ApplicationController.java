@@ -908,6 +908,27 @@ public class ApplicationController {
         return modelMap;
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "getStatisticFabric", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getStatisticFabric(@RequestParam("dyehouseId") Long dyehouseId,
+                                       @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricService.findStatisticFabrics(dyehouseId));
+        return modelMap;
+    }
+
     @ExceptionHandler(InternalException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody

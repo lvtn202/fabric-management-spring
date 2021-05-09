@@ -29,4 +29,12 @@ public interface FabricRepositoryCustom {
     List<Fabric> findAllCompletedFabrics(Long pageIndex, Long pageSize);
 
     List<Fabric> findAllCompletedFabricsByDyehouseId(Long dyehouseId, Long pageIndex, Long pageSize);
+
+    List<Fabric> findCompletedFabrics();
+
+    List<Fabric> findCompletedFabricsByFabricType(String fabricType);
+
+    List<Fabric> findRawFabricsByDyehouseIdAndFabricType(Long dyehouseId, String fabricType);
+
+    List<Fabric> findCompletedFabricsByDyehouseIdAndFabricType(Long dyehouseId, String fabricType);
 }

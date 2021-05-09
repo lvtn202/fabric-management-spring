@@ -10,6 +10,7 @@ import com.example.lvtn.utils.FabricStatus;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -279,6 +280,48 @@ public class FabricServiceImpl implements FabricService {
                 listFabricDTO.add(FabricDTO.convertFabricToFabricDTO(fabric));
             }
             return listFabricDTO;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<ModelMap> findStatisticFabrics(Long dyehouseId) throws InternalException {
+        try {
+            List<FabricType> listFabricType = fabricTypeRepository.findAll();
+            List<ModelMap> listModelMap = new ArrayList<>();
+
+            for (FabricType fabricType: listFabricType){
+                ModelMap newModelMap = new ModelMap();
+                newModelMap.addAttribute("fabricType", fabricType.getType());
+                List<Fabric> listRawFabric = new ArrayList<>();
+                List<Fabric> listCompletedFabric = new ArrayList<>();
+                if (dyehouseId < 0){
+                    listRawFabric = fabricRepository.findRawFabricsByFabricType(fabricType.getType());
+                    listCompletedFabric = fabricRepository.findCompletedFabricsByFabricType(fabricType.getType());
+                } else {
+                    listRawFabric = fabricRepository.findRawFabricsByDyehouseIdAndFabricType(dyehouseId, fabricType.getType());
+                    listCompletedFabric = fabricRepository.findCompletedFabricsByDyehouseIdAndFabricType(dyehouseId, fabricType.getType());
+                }
+
+                Double rawLength = 0.0;
+                Double completedLength = 0.0;
+                for (Fabric fabric: listRawFabric){
+                    rawLength += fabric.getRawLength();
+                }
+                for (Fabric fabric: listCompletedFabric){
+                    completedLength += fabric.getFinishedLength();
+                }
+
+                newModelMap.addAttribute("rawNumber", listRawFabric.size());
+                newModelMap.addAttribute("rawLength", rawLength);
+                newModelMap.addAttribute("completedNumber", listCompletedFabric.size());
+                newModelMap.addAttribute("completedLength", completedLength);
+                listModelMap.add(newModelMap);
+            }
+
+            return listModelMap;
         } catch (Exception e){
             e.printStackTrace();
             throw new InternalException(e.getMessage());

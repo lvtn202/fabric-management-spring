@@ -5,6 +5,7 @@ import com.example.lvtn.dto.FabricDTO;
 import com.example.lvtn.dto.StatisticCompletedFabric;
 import com.example.lvtn.dto.StatisticRawFabric;
 import com.example.lvtn.utils.InternalException;
+import org.springframework.ui.ModelMap;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface FabricService {
     String createData() throws InternalException;
 
     List<FabricDTO> findCompletedFabricDTOs(Long dyehouseId, Long pageIndex, Long pageSize) throws InternalException;
+
+    List<ModelMap> findStatisticFabrics(Long dyehouseId) throws InternalException;
 }

@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ExportSlipRepository extends JpaRepository<ExportSlip, Long>, ExportSlipRepositoryCustom {
-    @Query("select e from ExportSlip e")
+    @Query("select e from ExportSlip e order by e.createDate desc ")
     List<ExportSlip> findAll();
 }

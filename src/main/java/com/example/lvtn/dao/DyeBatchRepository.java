@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface DyeBatchRepository extends JpaRepository<DyeBatch, Long>, DyeBatchRepositoryCustom {
-    @Query("select db from DyeBatch db")
+    @Query("select db from DyeBatch db order by db.dyeDate desc ")
     List<DyeBatch> findAll();
 }

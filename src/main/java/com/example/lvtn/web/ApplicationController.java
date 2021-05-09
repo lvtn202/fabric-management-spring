@@ -1,6 +1,8 @@
 package com.example.lvtn.web;
 
 
+import com.example.lvtn.dao.OrderRepository;
+import com.example.lvtn.dom.Order;
 import com.example.lvtn.dto.*;
 import com.example.lvtn.service.*;
 import com.example.lvtn.utils.InternalException;
@@ -9,6 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Controller
 @ControllerAdvice
@@ -717,6 +723,9 @@ public class ApplicationController {
         return modelMap;
     }
 
+    @Autowired
+    OrderRepository orderRepository;
+
     @CrossOrigin
     @RequestMapping(value = "createData", method = RequestMethod.GET)
     @ResponseBody
@@ -724,7 +733,11 @@ public class ApplicationController {
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
-        modelMap.addAttribute("result", fabricService.createData());
+//        modelMap.addAttribute("result", fabricService.createData());
+        List<Order> orders = orderRepository.findAll();
+        for (Order order: orders){
+            System.out.println(order.getStatus());
+        }
         return modelMap;
     }
 

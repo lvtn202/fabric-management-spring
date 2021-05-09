@@ -6,6 +6,9 @@ import com.example.lvtn.dom.ImportSlip;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 public class ImportSlipDTO {
@@ -23,7 +26,9 @@ public class ImportSlipDTO {
 
     private String employee;
 
-    public ImportSlipDTO(Long id, String money, String fabricNumber, String fabricLength, String driver, String createDate, String employee) {
+    private List<DyeBatchDTO> dyeBatchs;
+
+    public ImportSlipDTO(Long id, String money, String fabricNumber, String fabricLength, String driver, String createDate, String employee, List<DyeBatchDTO> dyeBatchs) {
         this.id = id;
         this.money = money;
         this.fabricNumber = fabricNumber;
@@ -31,6 +36,7 @@ public class ImportSlipDTO {
         this.driver = driver;
         this.createDate = createDate;
         this.employee = employee;
+        this.dyeBatchs = dyeBatchs;
     }
 
     @Override
@@ -48,7 +54,9 @@ public class ImportSlipDTO {
 
     static public ImportSlipDTO convertImportSlipToImportSlipDTO(ImportSlip importSlip){
         Double fabricLength = 0.0;
+        List<DyeBatchDTO> dyeBatchs = new ArrayList<>();
         for (DyeBatch dyeBatch: importSlip.getDyeBatches()){
+            dyeBatchs.add(DyeBatchDTO.convertDyeBatchToDyeBatchDTO(dyeBatch));
             for (Fabric fabric: dyeBatch.getFabrics()){
                 fabricLength += fabric.getFinishedLength();
             }
@@ -60,6 +68,7 @@ public class ImportSlipDTO {
                 String.format("%.1f", fabricLength),
                 importSlip.getDriver(),
                 String.format("%tQ", importSlip.getCreateDate()),
-                importSlip.getUser().getLastName());
+                importSlip.getUser().getLastName(),
+                dyeBatchs);
     }
 }

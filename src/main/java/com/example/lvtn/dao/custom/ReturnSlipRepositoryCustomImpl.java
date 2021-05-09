@@ -17,7 +17,7 @@ public class ReturnSlipRepositoryCustomImpl implements ReturnSlipRepositoryCusto
     @Override
     public List<ReturnSlip> findReturnSlipsWithPaging(Long pageIndex, Long pageSize) {
         try {
-            String sql = "select r from " + ReturnSlip.class.getName() + " r order by r.id";
+            String sql = "select r from " + ReturnSlip.class.getName() + " r order by r.returnDate desc ";
             Query query = entityManager.createQuery(sql, ReturnSlip.class);
             query.setFirstResult((int) (pageIndex * pageSize));
             query.setMaxResults(Math.toIntExact(pageSize));
@@ -31,7 +31,8 @@ public class ReturnSlipRepositoryCustomImpl implements ReturnSlipRepositoryCusto
     @Override
     public ReturnSlip findReturnSlipById(Long returnSlipId) {
         try {
-            String sql = "select r from " + ReturnSlip.class.getName() + " r where  r.id = :returnSlipId";
+            String sql = "select r from " + ReturnSlip.class.getName() + " r where  r.id = :returnSlipId "
+                    + " order by r.returnDate desc ";
             Query query = entityManager.createQuery(sql, ReturnSlip.class);
             query.setParameter("returnSlipId", returnSlipId);
             return (ReturnSlip) query.getSingleResult();

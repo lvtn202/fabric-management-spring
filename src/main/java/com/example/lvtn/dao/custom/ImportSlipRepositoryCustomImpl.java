@@ -20,7 +20,7 @@ public class ImportSlipRepositoryCustomImpl implements ImportSlipRepositoryCusto
     public List<ImportSlip> findImportSlipsByOrderIdWithPaging(Long orderId, Long pageIndex, Long pageSize) {
         try {
             String sql = "select i from " + ImportSlip.class.getName() + " i "
-                    + "where i.order.id = :orderId";
+                    + "where i.order.id = :orderId order by i.createDate desc ";
             Query query = entityManager.createQuery(sql, ImportSlip.class);
             query.setParameter("orderId", orderId);
             query.setFirstResult((int) (pageIndex * pageSize));

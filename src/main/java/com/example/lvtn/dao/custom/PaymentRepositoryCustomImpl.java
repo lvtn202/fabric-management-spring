@@ -16,7 +16,7 @@ public class PaymentRepositoryCustomImpl implements PaymentRepositoryCustom{
     @Override
     public List<Payment> findPaymentsWithPaging(Long pageIndex, Long pageSize) {
         try {
-            String sql = "select p from " + Payment.class.getName() + " p order by p.id";
+            String sql = "select p from " + Payment.class.getName() + " p order by p.createDate desc ";
             Query query = entityManager.createQuery(sql, Payment.class);
             query.setFirstResult((int) (pageIndex * pageSize));
             query.setMaxResults(Math.toIntExact(pageSize));
@@ -31,7 +31,7 @@ public class PaymentRepositoryCustomImpl implements PaymentRepositoryCustom{
     public List<Payment> findPaymentsByDyehouseIdWithPaging(Long dyehouseId, Long pageIndex, Long pageSize) {
         try {
             String sql = "select p from " + Payment.class.getName() + " p "
-                    + "where p.dyehouse.id = :dyehouseId order by p.id";
+                    + "where p.dyehouse.id = :dyehouseId order by p.createDate desc ";
             Query query = entityManager.createQuery(sql, Payment.class);
             query.setParameter("dyehouseId", dyehouseId);
             query.setFirstResult((int) (pageIndex * pageSize));
@@ -47,7 +47,7 @@ public class PaymentRepositoryCustomImpl implements PaymentRepositoryCustom{
     public List<Payment> findTotalRecentPayment(Long period) {
         try {
             String sql = "select p from " + Payment.class.getName() + " p "
-                    + "where p.createDate >= :period ";
+                    + "where p.createDate >= :period order by p.createDate desc ";
             Query query = entityManager.createQuery(sql, Payment.class);
             query.setParameter("period",  new Timestamp(System.currentTimeMillis() - period * 86400000));
             return query.getResultList();
@@ -62,7 +62,7 @@ public class PaymentRepositoryCustomImpl implements PaymentRepositoryCustom{
         try {
             String sql = "select p from " + Payment.class.getName() + " p "
                     + "where p.dyehouse.id = :dyehouseId "
-                    + "and p.createDate >= :period";
+                    + "and p.createDate >= :period order by p.createDate desc ";
             Query query = entityManager.createQuery(sql, Payment.class);
             query.setParameter("dyehouseId", dyehouseId);
             query.setParameter("period",  new Timestamp(System.currentTimeMillis() - period * 86400000));

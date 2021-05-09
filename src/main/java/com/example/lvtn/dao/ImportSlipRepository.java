@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ImportSlipRepository extends JpaRepository<ImportSlip, Long>, ImportSlipRepositoryCustom {
-    @Query("select i from ImportSlip i")
+    @Query("select i from ImportSlip i order by i.createDate desc ")
     List<ImportSlip> findAll();
 }

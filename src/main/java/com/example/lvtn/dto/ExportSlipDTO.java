@@ -10,6 +10,8 @@ import lombok.Setter;
 public class ExportSlipDTO {
     private Long id;
 
+    private String fabricType;
+
     private String fabricNumber;
 
     private String fabricLength;
@@ -23,8 +25,9 @@ public class ExportSlipDTO {
     public ExportSlipDTO() {
     }
 
-    public ExportSlipDTO(Long id, String fabricNumber, String fabricLength, String createDate, String dyehouse, String user) {
+    public ExportSlipDTO(Long id, String fabricType, String fabricNumber, String fabricLength, String createDate, String dyehouse, String user) {
         this.id = id;
+        this.fabricType = fabricType;
         this.fabricNumber = fabricNumber;
         this.fabricLength = fabricLength;
         this.createDate = createDate;
@@ -36,6 +39,7 @@ public class ExportSlipDTO {
     public String toString() {
         return "ExportSlipDTO{" +
                 "id=" + id +
+                ", fabricType='" + fabricType + '\'' +
                 ", fabricNumber='" + fabricNumber + '\'' +
                 ", fabricLength='" + fabricLength + '\'' +
                 ", createDate='" + createDate + '\'' +
@@ -51,6 +55,7 @@ public class ExportSlipDTO {
         }
         return new ExportSlipDTO(
                 exportSlip.getId(),
+                exportSlip.getFabrics().iterator().next().getFabricType().getType(),
                 exportSlip.getFabricNumber().toString(),
                 String.format("%.1f", fabricLength),
                 String.format("%tQ", exportSlip.getCreateDate()),

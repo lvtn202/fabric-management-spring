@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ReturnSlipRepository extends JpaRepository<ReturnSlip, Long>, ReturnSlipRepositoryCustom {
-    @Query("select rs from ReturnSlip rs")
+    @Query("select rs from ReturnSlip rs order by rs.returnDate desc ")
     List<ReturnSlip> findAll();
 }

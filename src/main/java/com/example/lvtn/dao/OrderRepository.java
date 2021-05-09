@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderRepositoryCustom {
-    @Query("select o from Order o")
+    @Query("select o from Order o order by o.status asc ")
     List<Order> findAll();
 }

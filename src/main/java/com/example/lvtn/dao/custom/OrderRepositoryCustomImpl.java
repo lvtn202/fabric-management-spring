@@ -23,7 +23,7 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
     public List<Order> findOrdersByDyehouseId(Long dyehouseId) {
         try {
             String sql = "select o from " + Order.class.getName() + " o "
-                    + "where o.dyehouse.id = :dyehouseId";
+                    + "where o.dyehouse.id = :dyehouseId order by o.createDate desc ";
             Query query = entityManager.createQuery(sql, Order.class);
             query.setParameter("dyehouseId", dyehouseId);
             return query.getResultList();
@@ -36,7 +36,7 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
     @Override
     public List<Order> findOrdersWithPaging(Long pageIndex, Long pageSize) {
         try {
-            String sql = "select o from " + Order.class.getName() + " o";
+            String sql = "select o from " + Order.class.getName() + " o order by o.createDate desc ";
             Query query = entityManager.createQuery(sql, Order.class);
             query.setFirstResult((int) (pageIndex * pageSize));
             query.setMaxResults(Math.toIntExact(pageSize));
@@ -51,7 +51,7 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
     public List<Order> findOrdersByDyehouseIdWithPaging(Long dyehouseId, Long pageIndex, Long pageSize) {
         try {
             String sql = "select o from " + Order.class.getName() + " o "
-                    + "where o.dyehouse.id = :dyehouseId";
+                    + "where o.dyehouse.id = :dyehouseId order by o.createDate desc ";
             Query query = entityManager.createQuery(sql, Order.class);
             query.setParameter("dyehouseId", dyehouseId);
             query.setFirstResult((int) (pageIndex * pageSize));
@@ -67,7 +67,7 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
     public Order findOrderById(Long id) {
         try {
             String sql = "select o from " + Order.class.getName() + " o "
-                    + "where o.id = :id";
+                    + "where o.id = :id order by o.createDate desc ";
             Query query = entityManager.createQuery(sql, Order.class);
             query.setParameter("id", id);
             return (Order) query.getSingleResult();
@@ -85,7 +85,7 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
                     + "','" + OrderStatus.IN_PROGRESS.toString() + "') "
                     + "and o.dyehouse.id = :dyehouseId "
                     + "and o.color.fabricType.type = :fabricType "
-                    + "and o.color.name = :color";
+                    + "and o.color.name = :color order by o.createDate desc ";
             Query query = entityManager.createQuery(sql, Order.class);
             query.setParameter("dyehouseId", dyehouseId);
             query.setParameter("fabricType", fabricType);

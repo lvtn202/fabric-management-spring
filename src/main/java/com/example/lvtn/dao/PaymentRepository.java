@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long>, PaymentRepositoryCustom {
-    @Query("select p from Payment p")
+    @Query("select p from Payment p order by p.createDate desc ")
     List<Payment> findAll();
 }

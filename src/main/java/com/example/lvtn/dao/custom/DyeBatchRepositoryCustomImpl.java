@@ -14,7 +14,7 @@ public class DyeBatchRepositoryCustomImpl implements DyeBatchRepositoryCustom {
     @Override
     public List<DyeBatch> findDyeBatchesWithPaging(Long pageIndex, Long pageSize) {
         try {
-            String sql = "select d from " + DyeBatch.class.getName() + " d ";
+            String sql = "select d from " + DyeBatch.class.getName() + " d order by d.dyeDate desc ";
             Query query = entityManager.createQuery(sql, DyeBatch.class);
             query.setFirstResult((int) (pageIndex * pageSize));
             query.setMaxResults(Math.toIntExact(pageSize));
@@ -29,7 +29,7 @@ public class DyeBatchRepositoryCustomImpl implements DyeBatchRepositoryCustom {
     public List<DyeBatch> findDyeBatchesByImportSlipIdWithPaging(Long importSlipId, Long pageIndex, Long pageSize) {
         try {
             String sql = "select d from " + DyeBatch.class.getName() + " d "
-                    + "where d.importSlip.id = :importSlipId";
+                    + "where d.importSlip.id = :importSlipId order by d.dyeDate desc ";
             Query query = entityManager.createQuery(sql, DyeBatch.class);
             query.setParameter("importSlipId", importSlipId);
             query.setFirstResult((int) (pageIndex * pageSize));
@@ -45,7 +45,7 @@ public class DyeBatchRepositoryCustomImpl implements DyeBatchRepositoryCustom {
     public DyeBatch findDyeBatchById(Long dyeBatchId) {
         try {
             String sql = "select d from " + DyeBatch.class.getName() + " d "
-                    + "where d.id = :dyeBatchId";
+                    + "where d.id = :dyeBatchId order by d.dyeDate desc ";
             Query query = entityManager.createQuery(sql, DyeBatch.class);
             query.setParameter("dyeBatchId", dyeBatchId);
             return (DyeBatch) query.getSingleResult();

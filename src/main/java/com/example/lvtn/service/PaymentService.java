@@ -14,4 +14,6 @@ public interface PaymentService {
     List<PaymentDTO> findPaymentDTOs(Long dyehouseId, Long pageIndex, Long pageSize) throws InternalException;
 
     PaymentDTO createPayment(CreatePaymentForm createPaymentForm) throws InternalException;
+
+    String findTotalRecentPayment(Long dyehouseId, Long period) throws InternalException;
 }

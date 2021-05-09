@@ -111,7 +111,7 @@ public class ApplicationController {
         ModelMap modelMap = new ModelMap();
         if (!userService.checkToken(token)){
             modelMap.addAttribute("status", 0);
-            modelMap.addAttribute("status_code", "USER_LOGOUTED");
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
             return modelMap;
         }
         userService.logout(token);
@@ -134,6 +134,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", dyehouseService.findDyehouseDTOsByNameWithPaging(dyehouseName, pageIndex, pageSize));
@@ -149,6 +155,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", dyehouseService.findDetailDyehouseById(id));
@@ -168,6 +180,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", orderService.findOrderDTOsByDyehouseIdWithPaging(dyehouseId, pageIndex, pageSize));
@@ -183,6 +201,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", dyehouseService.updateDyehouse(updateDyehouseForm));
@@ -198,6 +222,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", orderService.findDetailOrderById(id));
@@ -217,6 +247,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", importSlipService.findImportSlipDTOsByOrderIdWithPaging(orderId, pageIndex, pageSize));
@@ -236,6 +272,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", dyeBatchService.findDyeBatches(importSlipId, pageIndex, pageSize));
@@ -255,6 +297,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", fabricService.findStatisticRawFabrics(dyehouseId, pageIndex, pageSize));
@@ -278,6 +326,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", fabricService.findStatisticCompletedFabricsInDyehouse(dyehouseId, startDate, endDate, pageIndex, pageSize));
@@ -295,6 +349,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", dyehouseService.findStatisticExportedFabrics(pageIndex, pageSize));
@@ -308,6 +368,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", fabricTypeService.findFabricTypes());
@@ -323,6 +389,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", orderService.createOrder(createOrderForm));
@@ -338,6 +410,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", dyeBatchService.findDetailDyeBatchById(dyeBatchId));
@@ -353,6 +431,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", fabricService.findFabricsByDyeBatchId(dyeBatchId));
@@ -370,7 +454,7 @@ public class ApplicationController {
 
         if (!userService.checkToken(token)){
             modelMap.addAttribute("status", 0);
-            modelMap.addAttribute("status_code", "WRONG_TOKEN");
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
             return modelMap;
         }
 
@@ -397,6 +481,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", returnSlipService.findReturnSlipDTOsWithPaging(pageIndex, pageSize));
@@ -412,6 +502,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", returnSlipService.findDetailReturnSlip(returnSlipId));
@@ -431,6 +527,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", returnService.findReturnDTOs(returnSlipId, pageIndex, pageSize));
@@ -446,6 +548,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", returnService.findDetailReturn(returnId));
@@ -463,6 +571,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", dyehouseService.findDebtsWithPaging(pageIndex, pageSize));
@@ -478,6 +592,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", fabricService.findRawFabricDTOsByFabricType(fabricType));
@@ -495,6 +615,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", fabricService.findExportedFabricDTOsByFabricType(dyehouseId, fabricType));
@@ -510,6 +636,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", exportSlipService.createExportSlip(createExportSlipForm));
@@ -529,6 +661,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", orderService.findOrderDTOsByFabricTypeAndColor(dyehouseId, fabricType, color));
@@ -546,6 +684,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", colorService.getPriceByFabricTypeAndColor(fabricType, color));
@@ -561,6 +705,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", importSlipService.createImportSlip(createImportSlipForm));
@@ -591,6 +741,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", fabricService.findCompletedFabricDTOs(dyehouseId, pageIndex, pageSize));
@@ -606,6 +762,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", returnSlipService.createReturnSlip(createReturnSlipForm));
@@ -619,6 +781,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", paymentMethodService.findPaymentMethodDTOs());
@@ -638,6 +806,12 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", paymentService.findPaymentDTOs(dyehouseId, pageIndex, pageSize));
@@ -653,9 +827,84 @@ public class ApplicationController {
         System.out.println("token: " + token);
 
         ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", paymentService.createPayment(createPaymentForm));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "totalRecentPayment", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getTotalRecentPayment(@RequestParam("dyehouseId") Long dyehouseId,
+                                          @RequestParam("period") Long period,
+                                          @RequestHeader("token") String token) throws InternalException {
+        System.out.println("period: " + period);
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", paymentService.findTotalRecentPayment(dyehouseId, period));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listRecentImportSlip", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListRecentImportSlip(@RequestParam("dyehouseId") Long dyehouseId,
+                                            @RequestParam("pageSize") Long pageSize,
+                                            @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", importSlipService.findRecentImportSlipDTOs(dyehouseId, pageSize));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listRecentExportSlip", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListRecentExportSlip(@RequestParam("dyehouseId") Long dyehouseId,
+                                            @RequestParam("pageSize") Long pageSize,
+                                            @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", exportSlipService.findRecentExportSlipDTOs(dyehouseId, pageSize));
         return modelMap;
     }
 

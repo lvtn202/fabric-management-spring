@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class ImportSlipServiceImpl implements
-        ImportSlipService {
+public class ImportSlipServiceImpl implements ImportSlipService {
     @Autowired
     private ImportSlipRepository importSlipRepository;
 
@@ -123,6 +122,27 @@ public class ImportSlipServiceImpl implements
             modelMap.addAttribute("lastName", newImportSlip.getUser().getLastName());
             return modelMap;
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<ImportSlipDTO> findRecentImportSlipDTOs(Long dyehouseId, Long pageSize) throws InternalException {
+        try {
+            List<ImportSlip> listImportSlip = new ArrayList<>();
+            List<ImportSlipDTO> listImportSlipDTO = new ArrayList<ImportSlipDTO>();
+            if(dyehouseId < 0){
+                listImportSlip = importSlipRepository.findRecentImportSlips(pageSize);
+            } else {
+                listImportSlip = importSlipRepository.findRecentImportSlipsInDyehouse(dyehouseId, pageSize);
+            }
+
+            for (ImportSlip importSlip: listImportSlip){
+                listImportSlipDTO.add(ImportSlipDTO.convertImportSlipToImportSlipDTO(importSlip));
+            }
+            return listImportSlipDTO;
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalException(e.getMessage());

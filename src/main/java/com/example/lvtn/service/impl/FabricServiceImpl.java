@@ -203,7 +203,6 @@ public class FabricServiceImpl implements FabricService {
             List<Color> colors = colorRepository.findAll();
             List<ExportSlip> exportSlips = exportSlipRepository.findAll();
 
-
 //            for (int i = 0; i<500; i++){
 //                Double rawLength = 100.0 * (random.nextInt(10) + 1);
 //                DyeBatch dyeBatch = dyeBatchRepository.findDyeBatchById((long) (random.nextInt(19) + 1));

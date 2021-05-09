@@ -12,7 +12,6 @@ import com.example.lvtn.service.PaymentService;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -76,6 +75,28 @@ public class PaymentServiceImpl implements PaymentService {
             dyehouseRepository.save(dyehouse);
             paymentRepository.save(newPayment);
             return PaymentDTO.convertPaymentToPaymentDTO(newPayment);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public String findTotalRecentPayment(Long dyehouseId, Long period) throws InternalException {
+        try {
+            List<Payment> listPayment = new ArrayList<>();
+            Double totalPrice = 0.0;
+            if(dyehouseId < 0){
+                listPayment = paymentRepository.findTotalRecentPayment(period);
+            } else {
+                listPayment = paymentRepository.findTotalRecentPaymentInDyehouse(dyehouseId, period);
+            }
+
+            for (Payment payment: listPayment){
+//                System.out.println(payment.getCreateDate() + " with: " + payment.getMoney() + " vnd" );
+                totalPrice += payment.getMoney();
+            }
+            return String.format("%.3f", totalPrice);
         } catch (Exception e){
             e.printStackTrace();
             throw new InternalException(e.getMessage());

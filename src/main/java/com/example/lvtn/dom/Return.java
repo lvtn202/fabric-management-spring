@@ -25,7 +25,7 @@ public class Return {
     private Double money;
 
     @ManyToOne
-    @JoinColumn(name = "fabric_id", nullable = false, unique = true)
+    @JoinColumn(name = "fabric_id")
     private Fabric fabric;
 
     @ManyToOne

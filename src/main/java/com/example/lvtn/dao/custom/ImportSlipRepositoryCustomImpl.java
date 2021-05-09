@@ -31,4 +31,33 @@ public class ImportSlipRepositoryCustomImpl implements ImportSlipRepositoryCusto
             throw e;
         }
     }
+
+    @Override
+    public List<ImportSlip> findRecentImportSlips(Long pageSize) {
+        try {
+            String sql = "select i from " + ImportSlip.class.getName() + " i "
+                    + "order by i.createDate desc ";
+            Query query = entityManager.createQuery(sql, ImportSlip.class);
+            query.setMaxResults(Math.toIntExact(pageSize));
+            return  query.getResultList();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    @Override
+    public List<ImportSlip> findRecentImportSlipsInDyehouse(Long dyehouseId, Long pageSize) {
+        try {
+            String sql = "select i from " + ImportSlip.class.getName() + " i "
+                    + "where i.order.dyehouse.id = :dyehouseId order by i.createDate desc ";
+            Query query = entityManager.createQuery(sql, ImportSlip.class);
+            query.setParameter("dyehouseId", dyehouseId);
+            query.setMaxResults(Math.toIntExact(pageSize));
+            return  query.getResultList();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

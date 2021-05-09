@@ -14,4 +14,6 @@ public interface ImportSlipService {
     List<ImportSlipDTO> findImportSlipDTOsByOrderIdWithPaging(Long orderId, Long pageIndex, Long pageSize) throws InternalException;
 
     ModelMap createImportSlip(CreateImportSlipForm createImportSlipForm) throws InternalException;
+
+    List<ImportSlipDTO> findRecentImportSlipDTOs(Long dyehouseId, Long pageSize) throws InternalException;
 }

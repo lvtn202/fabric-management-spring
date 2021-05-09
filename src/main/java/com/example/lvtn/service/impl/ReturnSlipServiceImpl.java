@@ -85,6 +85,13 @@ public class ReturnSlipServiceImpl implements ReturnSlipService {
             Double totalPrice = 0.0;
 
             for (FabricCreateReturnSlip fabricCreateReturnSlip: createReturnSlipForm.getFabrics()){
+//                Fabric currentFabric;
+//                if (fabricCreateReturnSlip.getFabricId() < 0){
+//
+//                } else {
+//                    currentFabric = fabricRepository.findFabricById(fabricCreateReturnSlip.getFabricId());
+//                }
+
                 Fabric currentFabric = fabricRepository.findFabricById(fabricCreateReturnSlip.getFabricId());
                 currentFabric.setStatus(FabricStatus.RETURNED);
                 fabricRepository.save(currentFabric);

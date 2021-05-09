@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class PaymentRepositoryCustomImpl implements PaymentRepositoryCustom{
@@ -35,6 +36,36 @@ public class PaymentRepositoryCustomImpl implements PaymentRepositoryCustom{
             query.setParameter("dyehouseId", dyehouseId);
             query.setFirstResult((int) (pageIndex * pageSize));
             query.setMaxResults(Math.toIntExact(pageSize));
+            return query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    @Override
+    public List<Payment> findTotalRecentPayment(Long period) {
+        try {
+            String sql = "select p from " + Payment.class.getName() + " p "
+                    + "where p.createDate >= :period ";
+            Query query = entityManager.createQuery(sql, Payment.class);
+            query.setParameter("period",  new Timestamp(System.currentTimeMillis() - period * 86400000));
+            return query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    @Override
+    public List<Payment> findTotalRecentPaymentInDyehouse(Long dyehouseId, Long period) {
+        try {
+            String sql = "select p from " + Payment.class.getName() + " p "
+                    + "where p.dyehouse.id = :dyehouseId "
+                    + "and p.createDate >= :period";
+            Query query = entityManager.createQuery(sql, Payment.class);
+            query.setParameter("dyehouseId", dyehouseId);
+            query.setParameter("period",  new Timestamp(System.currentTimeMillis() - period * 86400000));
             return query.getResultList();
         } catch (Exception e){
             e.printStackTrace();

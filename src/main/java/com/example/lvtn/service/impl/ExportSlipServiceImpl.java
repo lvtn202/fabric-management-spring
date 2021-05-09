@@ -6,7 +6,10 @@ import com.example.lvtn.dao.FabricRepository;
 import com.example.lvtn.dao.UserRepository;
 import com.example.lvtn.dom.ExportSlip;
 import com.example.lvtn.dom.Fabric;
+import com.example.lvtn.dom.ImportSlip;
 import com.example.lvtn.dto.CreateExportSlipForm;
+import com.example.lvtn.dto.ExportSlipDTO;
+import com.example.lvtn.dto.ImportSlipDTO;
 import com.example.lvtn.service.ExportSlipService;
 import com.example.lvtn.utils.FabricStatus;
 import com.example.lvtn.utils.InternalException;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,6 +76,27 @@ public class ExportSlipServiceImpl implements ExportSlipService {
             modelMap.addAttribute("lastName", exportSlip.getUser().getLastName());
             return modelMap;
         } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<ExportSlipDTO> findRecentExportSlipDTOs(Long dyehouseId, Long pageSize) throws InternalException {
+        try {
+            List<ExportSlip> listExportSlip = new ArrayList<>();
+            List<ExportSlipDTO> listExportSlipDTO = new ArrayList<ExportSlipDTO>();
+            if(dyehouseId < 0){
+                listExportSlip = exportSlipRepository.findRecentExportSlips(pageSize);
+            } else {
+                listExportSlip = exportSlipRepository.findRecentExportSlipsInDyehouse(dyehouseId, pageSize);
+            }
+
+            for (ExportSlip exportSlip: listExportSlip){
+                listExportSlipDTO.add(ExportSlipDTO.convertExportSlipToExportSlipDTO(exportSlip));
+            }
+            return listExportSlipDTO;
+        } catch (Exception e) {
             e.printStackTrace();
             throw new InternalException(e.getMessage());
         }

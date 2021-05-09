@@ -8,4 +8,8 @@ public interface PaymentRepositoryCustom {
     List<Payment> findPaymentsWithPaging(Long pageIndex, Long pageSize);
 
     List<Payment> findPaymentsByDyehouseIdWithPaging(Long dyehouseId, Long pageIndex, Long pageSize);
+
+    List<Payment> findTotalRecentPayment(Long period);
+
+    List<Payment> findTotalRecentPaymentInDyehouse(Long dyehouseId, Long period);
 }

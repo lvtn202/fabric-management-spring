@@ -41,15 +41,15 @@ public class LvtnApplication extends SpringBootServletInitializer {
 		return resourceBundleMessageSource;
 	}
 
-	@Bean
-    public DriverManagerDataSource getDataSource() {
-		DriverManagerDataSource dataSourceBuilder = new DriverManagerDataSource();
-        dataSourceBuilder.setDriverClassName("org.postgresql.Driver");
-        dataSourceBuilder.setUrl("jdbc:postgresql://localhost:5432/postgres");
-        dataSourceBuilder.setUsername("postgres");
-        dataSourceBuilder.setPassword("lvtn");
-        return dataSourceBuilder;
-    }
+//	@Bean
+//    public DriverManagerDataSource getDataSource() {
+//		DriverManagerDataSource dataSourceBuilder = new DriverManagerDataSource();
+//        dataSourceBuilder.setDriverClassName("org.postgresql.Driver");
+//        dataSourceBuilder.setUrl("jdbc:postgresql://localhost:5432/postgres");
+//        dataSourceBuilder.setUsername("postgres");
+//        dataSourceBuilder.setPassword("lvtn");
+//        return dataSourceBuilder;
+//    }
 
 //    @Bean
 //	@Lazy

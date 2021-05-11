@@ -17,11 +17,12 @@ public class ExportSlipRepositoryCustomImpl implements ExportSlipRepositoryCusto
     EntityManager entityManager;
 
     @Override
-    public List<ExportSlip> findRecentExportSlips(Long pageSize) {
+    public List<ExportSlip> findRecentExportSlips(Long pageIndex, Long pageSize) {
         try {
             String sql = "select e from " + ExportSlip.class.getName() + " e "
                     + "order by e.createDate desc ";
             Query query = entityManager.createQuery(sql, ExportSlip.class);
+            query.setFirstResult((int) (pageIndex * pageSize));
             query.setMaxResults(Math.toIntExact(pageSize));
             return  query.getResultList();
         }catch (Exception e){
@@ -31,12 +32,13 @@ public class ExportSlipRepositoryCustomImpl implements ExportSlipRepositoryCusto
     }
 
     @Override
-    public List<ExportSlip> findRecentExportSlipsInDyehouse(Long dyehouseId, Long pageSize) {
+    public List<ExportSlip> findRecentExportSlipsInDyehouse(Long dyehouseId, Long pageIndex, Long pageSize) {
         try {
             String sql = "select e from " + ExportSlip.class.getName() + " e "
                     + "where e.dyehouse.id = :dyehouseId order by e.createDate desc ";
             Query query = entityManager.createQuery(sql, ExportSlip.class);
             query.setParameter("dyehouseId", dyehouseId);
+            query.setFirstResult((int) (pageIndex * pageSize));
             query.setMaxResults(Math.toIntExact(pageSize));
             return  query.getResultList();
         }catch (Exception e){

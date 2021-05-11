@@ -13,5 +13,5 @@ public interface ExportSlipService {
 
     ModelMap createExportSlip(CreateExportSlipForm createExportSlipForm) throws InternalException;
 
-    List<ExportSlipDTO> findRecentExportSlipDTOs(Long dyehouseId, Long pageSize) throws InternalException;
+    List<ExportSlipDTO> findRecentExportSlipDTOs(Long dyehouseId, Long pageIndex, Long pageSize) throws InternalException;
 }

@@ -20,26 +20,10 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
     EntityManager entityManager;
 
     @Override
-    public List<Order> findOrdersByDyehouseId(Long dyehouseId) {
-        try {
-            String sql = "select o from " + Order.class.getName() + " o "
-                    + "where o.dyehouse.id = :dyehouseId order by o.createDate desc ";
-            Query query = entityManager.createQuery(sql, Order.class);
-            query.setParameter("dyehouseId", dyehouseId);
-            return query.getResultList();
-        } catch (Exception e){
-            e.printStackTrace();
-            throw e;
-        }
-    }
-
-    @Override
-    public List<Order> findOrdersWithPaging(Long pageIndex, Long pageSize) {
+    public List<Order> findOrders() {
         try {
             String sql = "select o from " + Order.class.getName() + " o order by o.createDate desc ";
             Query query = entityManager.createQuery(sql, Order.class);
-            query.setFirstResult((int) (pageIndex * pageSize));
-            query.setMaxResults(Math.toIntExact(pageSize));
             return  query.getResultList();
         }catch (Exception e){
             e.printStackTrace();
@@ -48,14 +32,12 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
     }
 
     @Override
-    public List<Order> findOrdersByDyehouseIdWithPaging(Long dyehouseId, Long pageIndex, Long pageSize) {
+    public List<Order> findOrdersByDyehouseId(Long dyehouseId) {
         try {
             String sql = "select o from " + Order.class.getName() + " o "
                     + "where o.dyehouse.id = :dyehouseId order by o.createDate desc ";
             Query query = entityManager.createQuery(sql, Order.class);
             query.setParameter("dyehouseId", dyehouseId);
-            query.setFirstResult((int) (pageIndex * pageSize));
-            query.setMaxResults(Math.toIntExact(pageSize));
             return query.getResultList();
         } catch (Exception e){
             e.printStackTrace();

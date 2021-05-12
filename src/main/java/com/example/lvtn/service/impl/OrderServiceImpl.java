@@ -45,14 +45,36 @@ public class OrderServiceImpl implements OrderService {
             List<Order> listOrder;
             List<OrderDTO> listOrderDTO = new ArrayList<OrderDTO>();
             if(dyehouseId < 0){
-                listOrder = orderRepository.findOrdersWithPaging(pageIndex, pageSize);
+                listOrder = orderRepository.findOrders();
             } else {
-                listOrder = orderRepository.findOrdersByDyehouseIdWithPaging(dyehouseId, pageIndex, pageSize);
+                listOrder = orderRepository.findOrdersByDyehouseId(dyehouseId);
             }
             for (Order order: listOrder){
-                listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
+                if(order.getStatus().equals(OrderStatus.CREATED) && listOrderDTO.size() < pageSize){
+                    listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
+                }
             }
-            return listOrderDTO;
+            for (Order order: listOrder){
+                if(order.getStatus().equals(OrderStatus.IN_PROGRESS) && listOrderDTO.size() < pageSize){
+                    listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
+                }
+            }
+            for (Order order: listOrder){
+                if(order.getStatus().equals(OrderStatus.COMPLETED) && listOrderDTO.size() < pageSize){
+                    listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
+                }
+            }
+            for (Order order: listOrder){
+                if(!order.getStatus().equals(OrderStatus.CREATED)
+                        && !order.getStatus().equals(OrderStatus.IN_PROGRESS)
+                        && !order.getStatus().equals(OrderStatus.COMPLETED)
+                        && listOrderDTO.size() < pageSize){
+                    listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
+                }
+            }
+            int fromIndex = (int)(pageIndex * pageSize) > listOrderDTO.size() ? listOrderDTO.size() : (int)(pageIndex * pageSize);
+            int toIndex = (int)(pageIndex * pageSize + pageSize) > listOrderDTO.size() ? listOrderDTO.size() : (int)(pageIndex * pageSize + pageSize);
+            return listOrderDTO.subList(fromIndex,toIndex);
         } catch (Exception e){
             e.printStackTrace();
             throw new InternalException(e.getMessage());
@@ -115,6 +137,28 @@ public class OrderServiceImpl implements OrderService {
             List<OrderDTO> listOrderDTO = new ArrayList<>();
             for (Order order: listOrder){
                 listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
+            }
+            for (Order order: listOrder){
+                if(order.getStatus().equals(OrderStatus.CREATED)){
+                    listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
+                }
+            }
+            for (Order order: listOrder){
+                if(order.getStatus().equals(OrderStatus.IN_PROGRESS)){
+                    listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
+                }
+            }
+            for (Order order: listOrder){
+                if(order.getStatus().equals(OrderStatus.COMPLETED)){
+                    listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
+                }
+            }
+            for (Order order: listOrder){
+                if(!order.getStatus().equals(OrderStatus.CREATED)
+                        && !order.getStatus().equals(OrderStatus.IN_PROGRESS)
+                        && !order.getStatus().equals(OrderStatus.COMPLETED)){
+                    listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
+                }
             }
             return listOrderDTO;
         } catch (Exception e){

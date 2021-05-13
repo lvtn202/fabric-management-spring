@@ -50,25 +50,24 @@ public class OrderServiceImpl implements OrderService {
                 listOrder = orderRepository.findOrdersByDyehouseId(dyehouseId);
             }
             for (Order order: listOrder){
-                if(order.getStatus().equals(OrderStatus.CREATED) && listOrderDTO.size() < pageSize){
+                if(order.getStatus().equals(OrderStatus.CREATED)){
                     listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
                 }
             }
             for (Order order: listOrder){
-                if(order.getStatus().equals(OrderStatus.IN_PROGRESS) && listOrderDTO.size() < pageSize){
+                if(order.getStatus().equals(OrderStatus.IN_PROGRESS)){
                     listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
                 }
             }
             for (Order order: listOrder){
-                if(order.getStatus().equals(OrderStatus.COMPLETED) && listOrderDTO.size() < pageSize){
+                if(order.getStatus().equals(OrderStatus.COMPLETED)){
                     listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
                 }
             }
             for (Order order: listOrder){
                 if(!order.getStatus().equals(OrderStatus.CREATED)
                         && !order.getStatus().equals(OrderStatus.IN_PROGRESS)
-                        && !order.getStatus().equals(OrderStatus.COMPLETED)
-                        && listOrderDTO.size() < pageSize){
+                        && !order.getStatus().equals(OrderStatus.COMPLETED)){
                     listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
                 }
             }

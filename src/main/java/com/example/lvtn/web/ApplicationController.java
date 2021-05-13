@@ -879,9 +879,11 @@ public class ApplicationController {
     @RequestMapping(value = "listRecentImportSlip", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap getListRecentImportSlip(@RequestParam("dyehouseId") Long dyehouseId,
+                                            @RequestParam("pageIndex") Long pageIndex,
                                             @RequestParam("pageSize") Long pageSize,
                                             @RequestHeader("token") String token) throws InternalException {
         System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("pageIndex: " + pageIndex);
         System.out.println("pageSize: " + pageSize);
         System.out.println("token: " + token);
 
@@ -894,7 +896,7 @@ public class ApplicationController {
 
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
-        modelMap.addAttribute("result", importSlipService.findRecentImportSlipDTOs(dyehouseId, pageSize));
+        modelMap.addAttribute("result", importSlipService.findRecentImportSlipDTOs(dyehouseId, pageIndex, pageSize));
         return modelMap;
     }
 
@@ -902,9 +904,11 @@ public class ApplicationController {
     @RequestMapping(value = "listRecentExportSlip", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap getListRecentExportSlip(@RequestParam("dyehouseId") Long dyehouseId,
+                                            @RequestParam("pageIndex") Long pageIndex,
                                             @RequestParam("pageSize") Long pageSize,
                                             @RequestHeader("token") String token) throws InternalException {
         System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("pageIndex: " + pageIndex);
         System.out.println("pageSize: " + pageSize);
         System.out.println("token: " + token);
 
@@ -917,7 +921,7 @@ public class ApplicationController {
 
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
-        modelMap.addAttribute("result", exportSlipService.findRecentExportSlipDTOs(dyehouseId, pageSize));
+        modelMap.addAttribute("result", exportSlipService.findRecentExportSlipDTOs(dyehouseId, pageIndex, pageSize));
         return modelMap;
     }
 

@@ -5,7 +5,7 @@ import com.example.lvtn.dom.ExportSlip;
 import java.util.List;
 
 public interface ExportSlipRepositoryCustom {
-    List<ExportSlip> findRecentExportSlips(Long pageSize);
+    List<ExportSlip> findRecentExportSlips(Long pageIndex, Long pageSize);
 
-    List<ExportSlip> findRecentExportSlipsInDyehouse(Long dyehouseId, Long pageSize);
+    List<ExportSlip> findRecentExportSlipsInDyehouse(Long dyehouseId, Long pageIndex, Long pageSize);
 }

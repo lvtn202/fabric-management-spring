@@ -82,14 +82,14 @@ public class ExportSlipServiceImpl implements ExportSlipService {
     }
 
     @Override
-    public List<ExportSlipDTO> findRecentExportSlipDTOs(Long dyehouseId, Long pageSize) throws InternalException {
+    public List<ExportSlipDTO> findRecentExportSlipDTOs(Long dyehouseId, Long pageIndex, Long pageSize) throws InternalException {
         try {
             List<ExportSlip> listExportSlip = new ArrayList<>();
             List<ExportSlipDTO> listExportSlipDTO = new ArrayList<ExportSlipDTO>();
             if(dyehouseId < 0){
-                listExportSlip = exportSlipRepository.findRecentExportSlips(pageSize);
+                listExportSlip = exportSlipRepository.findRecentExportSlips(pageIndex, pageSize);
             } else {
-                listExportSlip = exportSlipRepository.findRecentExportSlipsInDyehouse(dyehouseId, pageSize);
+                listExportSlip = exportSlipRepository.findRecentExportSlipsInDyehouse(dyehouseId, pageIndex, pageSize);
             }
 
             for (ExportSlip exportSlip: listExportSlip){

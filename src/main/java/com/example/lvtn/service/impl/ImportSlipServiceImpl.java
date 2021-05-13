@@ -129,14 +129,14 @@ public class ImportSlipServiceImpl implements ImportSlipService {
     }
 
     @Override
-    public List<ImportSlipDTO> findRecentImportSlipDTOs(Long dyehouseId, Long pageSize) throws InternalException {
+    public List<ImportSlipDTO> findRecentImportSlipDTOs(Long dyehouseId, Long pageIndex, Long pageSize) throws InternalException {
         try {
             List<ImportSlip> listImportSlip = new ArrayList<>();
             List<ImportSlipDTO> listImportSlipDTO = new ArrayList<ImportSlipDTO>();
             if(dyehouseId < 0){
-                listImportSlip = importSlipRepository.findRecentImportSlips(pageSize);
+                listImportSlip = importSlipRepository.findRecentImportSlips(pageIndex, pageSize);
             } else {
-                listImportSlip = importSlipRepository.findRecentImportSlipsInDyehouse(dyehouseId, pageSize);
+                listImportSlip = importSlipRepository.findRecentImportSlipsInDyehouse(dyehouseId, pageIndex, pageSize);
             }
 
             for (ImportSlip importSlip: listImportSlip){

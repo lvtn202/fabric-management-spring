@@ -33,11 +33,12 @@ public class ImportSlipRepositoryCustomImpl implements ImportSlipRepositoryCusto
     }
 
     @Override
-    public List<ImportSlip> findRecentImportSlips(Long pageSize) {
+    public List<ImportSlip> findRecentImportSlips(Long pageIndex, Long pageSize) {
         try {
             String sql = "select i from " + ImportSlip.class.getName() + " i "
                     + "order by i.createDate desc ";
             Query query = entityManager.createQuery(sql, ImportSlip.class);
+            query.setFirstResult((int) (pageIndex * pageSize));
             query.setMaxResults(Math.toIntExact(pageSize));
             return  query.getResultList();
         }catch (Exception e){
@@ -47,12 +48,13 @@ public class ImportSlipRepositoryCustomImpl implements ImportSlipRepositoryCusto
     }
 
     @Override
-    public List<ImportSlip> findRecentImportSlipsInDyehouse(Long dyehouseId, Long pageSize) {
+    public List<ImportSlip> findRecentImportSlipsInDyehouse(Long dyehouseId, Long pageIndex, Long pageSize) {
         try {
             String sql = "select i from " + ImportSlip.class.getName() + " i "
                     + "where i.order.dyehouse.id = :dyehouseId order by i.createDate desc ";
             Query query = entityManager.createQuery(sql, ImportSlip.class);
             query.setParameter("dyehouseId", dyehouseId);
+            query.setFirstResult((int) (pageIndex * pageSize));
             query.setMaxResults(Math.toIntExact(pageSize));
             return  query.getResultList();
         }catch (Exception e){

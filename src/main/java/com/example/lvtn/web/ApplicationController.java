@@ -973,19 +973,43 @@ public class ApplicationController {
         ModelMap modelMap = new ModelMap();
         if (!userService.checkToken(resetPasswordForm.getToken())){
             modelMap.addAttribute("status", 0);
-            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            modelMap.addAttribute("status_code", "ERROR_TOKEN_RESET_PASSWORD");
             return modelMap;
         }
 
         if (!userService.checkExpiredToken(resetPasswordForm.getToken())){
             modelMap.addAttribute("status", 0);
-            modelMap.addAttribute("status_code", "EXPIRED_TOKEN");
+            modelMap.addAttribute("status_code", "ERROR_TOKEN_RESET_PASSWORD");
             return modelMap;
         }
 
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         userService.resetPassword(resetPasswordForm);
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "checkTokenResetPassword", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap checkTokenResetPassword(@RequestBody TokenResetPasswordForm tokenResetPasswordForm) throws InternalException {
+        System.out.println("tokenResetPasswordForm: " + tokenResetPasswordForm.toString());
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(tokenResetPasswordForm.getToken())){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "INVALID");
+            return modelMap;
+        }
+
+        if (!userService.checkExpiredToken(tokenResetPasswordForm.getToken())){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "INVALID");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "VALID");
         return modelMap;
     }
 

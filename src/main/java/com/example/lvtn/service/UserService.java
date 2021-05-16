@@ -4,6 +4,7 @@ import com.example.lvtn.dom.User;
 import com.example.lvtn.dto.LoginForm;
 import com.example.lvtn.dto.ResetPasswordForm;
 import com.example.lvtn.dto.SignUpForm;
+import com.example.lvtn.dto.UserDTO;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.ui.ModelMap;
 
@@ -29,4 +30,8 @@ public interface UserService {
     boolean checkExpiredToken(String token) throws InternalException;
 
     void resetPassword(ResetPasswordForm resetPasswordForm) throws InternalException;
+
+    List<UserDTO> findUserDTOsWithPaging(Long pageIndex, Long pageSize) throws InternalException;
+
+    boolean checkTokenAdmin(String token) throws InternalException;
 }

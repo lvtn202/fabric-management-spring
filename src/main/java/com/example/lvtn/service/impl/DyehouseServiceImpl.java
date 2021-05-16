@@ -4,19 +4,21 @@ import com.example.lvtn.dao.DyehouseRepository;
 import com.example.lvtn.dao.FabricRepository;
 import com.example.lvtn.dao.FabricTypeRepository;
 import com.example.lvtn.dao.OrderRepository;
-import com.example.lvtn.dom.Dyehouse;
-import com.example.lvtn.dom.Fabric;
-import com.example.lvtn.dom.FabricType;
+import com.example.lvtn.dom.*;
+import com.example.lvtn.dto.CreateDyehouseForm;
 import com.example.lvtn.dto.DyehouseDTO;
 import com.example.lvtn.dto.StatisticRawFabric;
 import com.example.lvtn.dto.UpdateDyehouseForm;
 import com.example.lvtn.service.DyehouseService;
+import com.example.lvtn.utils.DeAccent;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -173,6 +175,40 @@ public class DyehouseServiceImpl implements DyehouseService {
                 listModelMap.add(modelMap);
             }
             return listModelMap;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public ModelMap createDyehouse(CreateDyehouseForm createDyehouseForm) throws InternalException {
+        try {
+            Dyehouse newDyehouse = new Dyehouse(
+                    createDyehouseForm.getName(),
+                    DeAccent.deAccent(createDyehouseForm.getName()),
+                    createDyehouseForm.getAddress(),
+                    createDyehouseForm.getPhoneNumber(),
+                    createDyehouseForm.getEmail(),
+                    0.0,
+                    new HashSet<ExportSlip>(),
+                    new HashSet<DyeBatch>(),
+                    new HashSet<Payment>(),
+                    new HashSet<Fabric>(),
+                    new HashSet<ReturnSlip>()
+            );
+            dyehouseRepository.save(newDyehouse);
+
+            ModelMap modelMap = new ModelMap();
+            modelMap.addAttribute("id", newDyehouse.getId());
+            modelMap.addAttribute("name", newDyehouse.getName());
+            modelMap.addAttribute("address", newDyehouse.getAddress());
+            modelMap.addAttribute("phoneNumber", newDyehouse.getPhoneNumber());
+            modelMap.addAttribute("email", newDyehouse.getEmail());
+            modelMap.addAttribute("debt", String.format("%.1f", newDyehouse.getDebt()));
+
+            return modelMap;
         } catch (Exception e){
             e.printStackTrace();
             throw new InternalException(e.getMessage());

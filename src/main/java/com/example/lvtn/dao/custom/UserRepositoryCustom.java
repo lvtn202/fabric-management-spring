@@ -10,4 +10,6 @@ public interface UserRepositoryCustom {
     List<User> findUsersByEmail(String email);
 
     User findUsersById(Long userId);
+
+    List<User> findUsersWithPaging(Long pageIndex, Long pageSize);
 }

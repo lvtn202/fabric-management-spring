@@ -4,10 +4,7 @@ import com.example.lvtn.dao.PersistentLoginRepository;
 import com.example.lvtn.dao.RoleRepository;
 import com.example.lvtn.dao.UserRepository;
 import com.example.lvtn.dom.*;
-import com.example.lvtn.dto.LoginForm;
-import com.example.lvtn.dto.MyConstants;
-import com.example.lvtn.dto.ResetPasswordForm;
-import com.example.lvtn.dto.SignUpForm;
+import com.example.lvtn.dto.*;
 import com.example.lvtn.service.PersistentLoginService;
 import com.example.lvtn.service.UserService;
 import com.example.lvtn.utils.GenerateSHA256Password;
@@ -247,6 +244,43 @@ public class UserServiceImpl implements UserService {
 
             persistentLoginRepository.save(currentPersistentLogin);
             userRepository.save(currentUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<UserDTO> findUserDTOsWithPaging(Long pageIndex, Long pageSize) throws InternalException {
+        try {
+            List<User> listUser = userRepository.findUsersWithPaging(pageIndex, pageSize);
+            List<UserDTO> listUserDTO = new ArrayList<>();
+            for (User user: listUser){
+                listUserDTO.add(UserDTO.convertUserToUserDTO(user));
+            }
+            return listUserDTO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean checkTokenAdmin(String token) throws InternalException {
+        try {
+            List<PersistentLogin> listPersistentLogin = persistentLoginRepository.findAll();
+            for (PersistentLogin persistentLogin: listPersistentLogin){
+                if (persistentLogin.getToken() != null && persistentLogin.getToken().equals(token)){
+                    Set<Role> setRole = persistentLogin.getUser().getRoles();
+                    for (Role role: setRole){
+                        if(role.getName().equals("APP_ADMIN")){
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalException(e.getMessage());

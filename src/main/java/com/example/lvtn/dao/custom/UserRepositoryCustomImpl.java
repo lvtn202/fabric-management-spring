@@ -72,4 +72,19 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
             throw e;
         }
     }
+
+    @Override
+    public List<User> findUsersWithPaging(Long pageIndex, Long pageSize) {
+        try {
+            String sql = "select u from " + User.class.getName() + " u "
+                    + "order by u.id ";
+            Query query = entityManager.createQuery(sql, User.class);
+            query.setFirstResult((int) (pageIndex * pageSize));
+            query.setMaxResults(Math.toIntExact(pageSize));
+            return query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.example.lvtn.service;
 
 import com.example.lvtn.dom.User;
 import com.example.lvtn.dto.LoginForm;
+import com.example.lvtn.dto.ResetPasswordForm;
 import com.example.lvtn.dto.SignUpForm;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.ui.ModelMap;
@@ -22,4 +23,10 @@ public interface UserService {
     boolean checkToken(String token) throws InternalException;
 
     void logout(String token) throws InternalException;
+
+    void sendEmailResetPassword(String email) throws InternalException;
+
+    boolean checkExpiredToken(String token) throws InternalException;
+
+    void resetPassword(ResetPasswordForm resetPasswordForm) throws InternalException;
 }

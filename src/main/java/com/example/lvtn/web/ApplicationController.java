@@ -8,6 +8,8 @@ import com.example.lvtn.service.*;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -724,8 +726,7 @@ public class ApplicationController {
     }
 
     @Autowired
-    OrderRepository orderRepository;
-
+    public JavaMailSender emailSender;
     @CrossOrigin
     @RequestMapping(value = "createData", method = RequestMethod.GET)
     @ResponseBody
@@ -734,10 +735,14 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
 //        modelMap.addAttribute("result", fabricService.createData());
-        List<Order> orders = orderRepository.findAll();
-        for (Order order: orders){
-            System.out.println(order.getStatus());
-        }
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo("nguyenxuanhuy225@gmail.com");
+        message.setSubject("Test Simple Email");
+        message.setText("Hi Tinh , I'm Huy dz");
+
+        // Send Message!
+        this.emailSender.send(message);
         return modelMap;
     }
 
@@ -943,6 +948,50 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", fabricService.findStatisticFabrics(dyehouseId));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "getEmailResetPassword", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getEmailResetPassword(@RequestBody EmailResetPasswordForm emailResetPasswordForm) throws InternalException {
+        System.out.println("emailResetPasswordForm: " + emailResetPasswordForm.toString());
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.isEmailExisted(emailResetPasswordForm.getEmail())){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "EMAIL_NOT_EXISTED");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        userService.sendEmailResetPassword(emailResetPasswordForm.getEmail());
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "resetPassword", method = RequestMethod.PUT)
+    @ResponseBody
+    public ModelMap resetPassword(@RequestBody ResetPasswordForm resetPasswordForm) throws InternalException {
+        System.out.println("resetPasswordForm: " + resetPasswordForm.toString());
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(resetPasswordForm.getToken())){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
+        if (!userService.checkExpiredToken(resetPasswordForm.getToken())){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "EXPIRED_TOKEN");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        userService.resetPassword(resetPasswordForm);
         return modelMap;
     }
 

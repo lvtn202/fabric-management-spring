@@ -946,7 +946,7 @@ public class ApplicationController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "getEmailResetPassword", method = RequestMethod.GET)
+    @RequestMapping(value = "getEmailResetPassword", method = RequestMethod.POST)
     @ResponseBody
     public ModelMap getEmailResetPassword(@RequestBody EmailResetPasswordForm emailResetPasswordForm) throws InternalException {
         System.out.println("emailResetPasswordForm: " + emailResetPasswordForm.toString());

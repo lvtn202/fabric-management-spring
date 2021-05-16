@@ -990,7 +990,7 @@ public class ApplicationController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "checkTokenResetPassword", method = RequestMethod.GET)
+    @RequestMapping(value = "checkTokenResetPassword", method = RequestMethod.POST)
     @ResponseBody
     public ModelMap checkTokenResetPassword(@RequestBody TokenResetPasswordForm tokenResetPasswordForm) throws InternalException {
         System.out.println("tokenResetPasswordForm: " + tokenResetPasswordForm.toString());

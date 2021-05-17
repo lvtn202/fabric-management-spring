@@ -108,14 +108,10 @@ public class UserServiceImpl implements UserService {
         try {
             List<User> listUser = userRepository.findUsersByEmail(loginForm.getEmail());
             User user = listUser.get(0);
-            String strRoles = "";
+            List<String> listRole = new ArrayList<>();
             int i = 0;
             for (Role role: user.getRoles()){
-                strRoles += role.getName();
-                if (i < user.getRoles().size() - 1){
-                    strRoles += ",";
-                }
-                i++;
+                listRole.add(role.getName());
             }
             String token = GenerateToken.generate();
 
@@ -136,7 +132,7 @@ public class UserServiceImpl implements UserService {
             modelMap.addAttribute("lastName", user.getLastName());
             modelMap.addAttribute("email", user.getEmail());
             modelMap.addAttribute("sex", user.getSex());
-            modelMap.addAttribute("roles", strRoles);
+            modelMap.addAttribute("roles", listRole);
             modelMap.addAttribute("token", token);
             return modelMap;
         } catch (Exception e) {

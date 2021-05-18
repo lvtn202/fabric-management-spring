@@ -1,20 +1,16 @@
 package com.example.lvtn.web;
 
 
-import com.example.lvtn.dao.OrderRepository;
-import com.example.lvtn.dom.Order;
 import com.example.lvtn.dto.*;
 import com.example.lvtn.service.*;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 @Controller
 @ControllerAdvice
@@ -724,8 +720,7 @@ public class ApplicationController {
     }
 
     @Autowired
-    OrderRepository orderRepository;
-
+    public JavaMailSender emailSender;
     @CrossOrigin
     @RequestMapping(value = "createData", method = RequestMethod.GET)
     @ResponseBody
@@ -734,10 +729,14 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
 //        modelMap.addAttribute("result", fabricService.createData());
-        List<Order> orders = orderRepository.findAll();
-        for (Order order: orders){
-            System.out.println(order.getStatus());
-        }
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo("nguyenxuanhuy225@gmail.com");
+        message.setSubject("Test Simple Email");
+        message.setText("Hi Tinh , I'm Huy dz");
+
+        // Send Message!
+        this.emailSender.send(message);
         return modelMap;
     }
 
@@ -943,6 +942,128 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", fabricService.findStatisticFabrics(dyehouseId));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "getEmailResetPassword", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap getEmailResetPassword(@RequestBody EmailResetPasswordForm emailResetPasswordForm) throws InternalException {
+        System.out.println("emailResetPasswordForm: " + emailResetPasswordForm.toString());
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.isEmailExisted(emailResetPasswordForm.getEmail())){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "EMAIL_NOT_EXISTED");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        userService.sendEmailResetPassword(emailResetPasswordForm.getEmail());
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "resetPassword", method = RequestMethod.PUT)
+    @ResponseBody
+    public ModelMap resetPassword(@RequestBody ResetPasswordForm resetPasswordForm) throws InternalException {
+        System.out.println("resetPasswordForm: " + resetPasswordForm.toString());
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(resetPasswordForm.getToken())){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN_RESET_PASSWORD");
+            return modelMap;
+        }
+
+        if (!userService.checkExpiredToken(resetPasswordForm.getToken())){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN_RESET_PASSWORD");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        userService.resetPassword(resetPasswordForm);
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "checkTokenResetPassword", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap checkTokenResetPassword(@RequestBody TokenResetPasswordForm tokenResetPasswordForm) throws InternalException {
+        System.out.println("tokenResetPasswordForm: " + tokenResetPasswordForm.toString());
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(tokenResetPasswordForm.getToken())){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "INVALID");
+            return modelMap;
+        }
+
+        if (!userService.checkExpiredToken(tokenResetPasswordForm.getToken())){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "INVALID");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "VALID");
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "listUser", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getListUser(@RequestParam("pageIndex") Long pageIndex,
+                                @RequestParam("pageSize") Long pageSize,
+                                @RequestHeader("token") String token) throws InternalException {
+        System.out.println("pageIndex: " + pageIndex);
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+        if (!userService.checkTokenAdmin(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "PERMISSION_DENIED");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", userService.findUserDTOsWithPaging(pageIndex, pageSize));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "createDyehouse", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap createDyehouse(@RequestBody CreateDyehouseForm createDyehouseForm,
+                                   @RequestHeader("token") String token) throws InternalException {
+        System.out.println("createDyehouseForm: " + createDyehouseForm.toString());
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+        if (!userService.checkTokenAdmin(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "PERMISSION_DENIED");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", dyehouseService.createDyehouse(createDyehouseForm));
         return modelMap;
     }
 

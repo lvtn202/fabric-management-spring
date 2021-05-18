@@ -1,5 +1,6 @@
 package com.example.lvtn;
 
+import com.example.lvtn.dto.MyConstants;
 import com.example.lvtn.web.ApplicationController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +13,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+import java.util.Properties;
 
 @SpringBootApplication
 @Configuration
@@ -50,6 +54,25 @@ public class LvtnApplication extends SpringBootServletInitializer {
 //        dataSourceBuilder.setPassword("lvtn");
 //        return dataSourceBuilder;
 //    }
+
+	@Bean
+	public JavaMailSender getJavaMailSender() {
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		mailSender.setHost("smtp.gmail.com");
+		mailSender.setPort(587);
+
+		mailSender.setUsername(MyConstants.MY_EMAIL);
+		mailSender.setPassword(MyConstants.MY_PASSWORD);
+
+		Properties props = mailSender.getJavaMailProperties();
+		props.put("mail.transport.protocol", "smtp");
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.debug", "true");
+
+		return mailSender;
+	}
+
 
 //    @Bean
 //	@Lazy

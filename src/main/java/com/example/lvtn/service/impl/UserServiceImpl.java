@@ -4,17 +4,19 @@ import com.example.lvtn.dao.PersistentLoginRepository;
 import com.example.lvtn.dao.RoleRepository;
 import com.example.lvtn.dao.UserRepository;
 import com.example.lvtn.dom.*;
-import com.example.lvtn.dto.LoginForm;
-import com.example.lvtn.dto.SignUpForm;
+import com.example.lvtn.dto.*;
 import com.example.lvtn.service.PersistentLoginService;
 import com.example.lvtn.service.UserService;
 import com.example.lvtn.utils.GenerateSHA256Password;
 import com.example.lvtn.utils.GenerateToken;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -28,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PersistentLoginRepository persistentLoginRepository;
+
+    @Autowired
+    public JavaMailSender emailSender;
 
     @Override
     public List<User> findAll() {
@@ -103,14 +108,10 @@ public class UserServiceImpl implements UserService {
         try {
             List<User> listUser = userRepository.findUsersByEmail(loginForm.getEmail());
             User user = listUser.get(0);
-            String strRoles = "";
+            List<String> listRole = new ArrayList<>();
             int i = 0;
             for (Role role: user.getRoles()){
-                strRoles += role.getName();
-                if (i < user.getRoles().size() - 1){
-                    strRoles += ",";
-                }
-                i++;
+                listRole.add(role.getName());
             }
             String token = GenerateToken.generate();
 
@@ -131,7 +132,7 @@ public class UserServiceImpl implements UserService {
             modelMap.addAttribute("lastName", user.getLastName());
             modelMap.addAttribute("email", user.getEmail());
             modelMap.addAttribute("sex", user.getSex());
-            modelMap.addAttribute("roles", strRoles);
+            modelMap.addAttribute("roles", listRole);
             modelMap.addAttribute("token", token);
             return modelMap;
         } catch (Exception e) {
@@ -144,14 +145,12 @@ public class UserServiceImpl implements UserService {
     public boolean checkToken(String token) throws InternalException {
         try {
             List<PersistentLogin> listPersistentLogin = persistentLoginRepository.findAll();
-            boolean isTokenExisted = false;
             for (PersistentLogin persistentLogin: listPersistentLogin){
-                if (persistentLogin.getToken().equals(token) && !persistentLogin.getToken().equals(null)){
-                    isTokenExisted = true;
-                    break;
+                if (persistentLogin.getToken() != null && persistentLogin.getToken().equals(token)){
+                    return true;
                 }
             }
-            return isTokenExisted;
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalException(e.getMessage());
@@ -164,6 +163,120 @@ public class UserServiceImpl implements UserService {
             PersistentLogin currentPersistentLogin = persistentLoginRepository.getCurrentPersistentLoginByToken(token);
             currentPersistentLogin.setToken(null);
             persistentLoginRepository.save(currentPersistentLogin);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void sendEmailResetPassword(String email) throws InternalException {
+        try {
+            List<User> listUser = userRepository.findUsersByEmail(email);
+            User user = listUser.get(0);
+            String token = GenerateToken.generate();
+
+            if(persistentLoginRepository.isPersistentLoginExisted(user.getId())){
+                PersistentLogin currentPersistentLogin = persistentLoginRepository.getCurrentPersistentLogin(user.getId());
+                currentPersistentLogin.setToken(token);
+                currentPersistentLogin.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+                persistentLoginRepository.save(currentPersistentLogin);
+            } else {
+                persistentLoginRepository.save(new PersistentLogin(
+                        user,
+                        token,
+                        new Timestamp(System.currentTimeMillis())));
+            }
+
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(email);
+            message.setSubject("Reset password !");
+            message.setText("Hi " + user.getLastName() + ",\n\n"
+            + "To reset your password, please click on the link below:\n"
+            + "https://fabric-management.herokuapp.com/new-password?"
+                    + "email=" + email + "&"
+                    + "token=" + token + "\n\n"
+            + "Kind regards,");
+
+            // Send Message!
+            this.emailSender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public boolean checkExpiredToken(String token) throws InternalException {
+        try {
+            List<PersistentLogin> listPersistentLogin = persistentLoginRepository.findAll();
+            for (PersistentLogin persistentLogin: listPersistentLogin){
+                if (persistentLogin.getToken() != null && persistentLogin.getToken().equals(token)){
+                    if((System.currentTimeMillis() - persistentLogin.getLastUpdate().getTime()) < (60000*5) ){
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public void resetPassword(ResetPasswordForm resetPasswordForm) throws InternalException {
+        try {
+            PersistentLogin currentPersistentLogin = persistentLoginRepository.getCurrentPersistentLoginByToken(resetPasswordForm.getToken());
+            User currentUser = currentPersistentLogin.getUser();
+
+            currentPersistentLogin.setToken(null);
+            currentPersistentLogin.setLastUpdate(new Timestamp(System.currentTimeMillis()));
+            currentUser.setPassword(GenerateSHA256Password.hash(resetPasswordForm.getNewPassword()));
+
+            persistentLoginRepository.save(currentPersistentLogin);
+            userRepository.save(currentUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<UserDTO> findUserDTOsWithPaging(Long pageIndex, Long pageSize) throws InternalException {
+        try {
+            List<User> listUser = userRepository.findUsersWithPaging(pageIndex, pageSize);
+            List<UserDTO> listUserDTO = new ArrayList<>();
+            for (User user: listUser){
+                listUserDTO.add(UserDTO.convertUserToUserDTO(user));
+            }
+            return listUserDTO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean checkTokenAdmin(String token) throws InternalException {
+        try {
+            List<PersistentLogin> listPersistentLogin = persistentLoginRepository.findAll();
+            for (PersistentLogin persistentLogin: listPersistentLogin){
+                if (persistentLogin.getToken() != null && persistentLogin.getToken().equals(token)){
+                    Set<Role> setRole = persistentLogin.getUser().getRoles();
+                    for (Role role: setRole){
+                        if(role.getName().equals("APP_ADMIN")){
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalException(e.getMessage());

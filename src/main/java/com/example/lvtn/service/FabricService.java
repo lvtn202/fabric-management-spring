@@ -31,4 +31,10 @@ public interface FabricService {
     List<FabricDTO> findCompletedFabricDTOs(Long dyehouseId, Long pageIndex, Long pageSize) throws InternalException;
 
     List<ModelMap> findStatisticFabrics(Long dyehouseId) throws InternalException;
+
+    List<ModelMap> getInforExportedFabric() throws InternalException;
+
+    List<ModelMap> getInforCompletedFabricByType(String fabricType, Double startDate, Double endDate) throws InternalException;
+
+    List<ModelMap> getInforCompletedFabricByDyehouse(Long dyehouseId, Double startDate, Double endDate) throws InternalException;
 }

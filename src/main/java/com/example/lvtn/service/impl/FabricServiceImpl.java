@@ -327,4 +327,107 @@ public class FabricServiceImpl implements FabricService {
             throw new InternalException(e.getMessage());
         }
     }
+
+    @Override
+    public List<ModelMap> getInforExportedFabric() throws InternalException {
+        try {
+            List<ModelMap> returnModelMaps = new ArrayList<>();
+            List<Dyehouse> dyehouses = dyehouseRepository.findAll();
+            List<FabricType> fabricTypes = fabricTypeRepository.findAll();
+            for (Dyehouse dyehouse: dyehouses){
+                ModelMap newReturnModelMap = new ModelMap();
+                newReturnModelMap.addAttribute("dyehouseId", dyehouse.getId());
+                newReturnModelMap.addAttribute("dyehouseName", dyehouse.getName());
+                List<StatisticRawFabric> statisticRawFabrics = new ArrayList<>();
+                for (FabricType fabricType: fabricTypes){
+                    List<Fabric> fabrics = fabricRepository.findExportedFabricsInDyehouseByFabricType(dyehouse.getId(), fabricType.getType());
+                    Long rawNumber = 0L;
+                    Double rawLength = 0.0;
+                    for (Fabric fabric: fabrics){
+                        rawNumber += 1L;
+                        rawLength += fabric.getRawLength();
+                    }
+                    statisticRawFabrics.add(
+                            new StatisticRawFabric(
+                                    fabricType.getType(),
+                                    rawNumber,
+                                    String.format("%.1f", rawLength)));
+                }
+                newReturnModelMap.addAttribute("fabricTypes", statisticRawFabrics);
+                returnModelMaps.add(newReturnModelMap);
+            }
+
+            return returnModelMaps;
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<ModelMap> getInforCompletedFabricByType(String fabricType, Double startDate, Double endDate) throws InternalException {
+        try {
+            List<ModelMap> returnModelMap = new ArrayList<>();
+            List<Dyehouse> dyehouses = dyehouseRepository.findAll();
+            for (Dyehouse dyehouse: dyehouses){
+                ModelMap newReturnModelMap = new ModelMap();
+                Long completedNumber = 0L;
+                Double completedLength = 0.0;
+
+                List<Fabric> fabrics = fabricRepository.findCompletedFabricsByDyehouseIdAndFabricType(dyehouse.getId(), fabricType);
+                fabrics.stream()
+                        .filter(fabric -> fabric.getFinishedLength() > startDate && fabric.getFinishedLength() < endDate)
+                        .collect(Collectors.toList());
+                for (Fabric fabric: fabrics){
+                    completedNumber += 1L;
+                    completedLength += fabric.getRawLength();
+                }
+
+                newReturnModelMap.addAttribute("dyehouseId", dyehouse.getId());
+                newReturnModelMap.addAttribute("dyehouseName", dyehouse.getName());
+                newReturnModelMap.addAttribute("fabricType", fabricType);
+                newReturnModelMap.addAttribute("completedNumber", completedNumber);
+                newReturnModelMap.addAttribute("completedLength", String.format("%.1f",completedLength));
+
+                returnModelMap.add(newReturnModelMap);
+            }
+            return returnModelMap;
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<ModelMap> getInforCompletedFabricByDyehouse(Long dyehouseId, Double startDate, Double endDate) throws InternalException {
+        try {
+            List<ModelMap> returnModelMap = new ArrayList<>();
+            List<FabricType> fabricTypes = fabricTypeRepository.findAll();
+            Dyehouse dyehouse = dyehouseRepository.findDyehouseById(dyehouseId);
+            for (FabricType fabricType: fabricTypes){
+                ModelMap newReturnModelMap = new ModelMap();
+                Long completedNumber = 0L;
+                Double completedLength = 0.0;
+
+                List<Fabric> fabrics = fabricRepository.findCompletedFabricsByDyehouseIdAndFabricType(dyehouseId, fabricType.getType());
+                fabrics.stream()
+                        .filter(fabric -> fabric.getFinishedLength() > startDate && fabric.getFinishedLength() < endDate)
+                        .collect(Collectors.toList());
+                for (Fabric fabric: fabrics){
+                    completedNumber += 1L;
+                    completedLength += fabric.getRawLength();
+                }
+                newReturnModelMap.addAttribute("dyehouseId", dyehouseId);
+                newReturnModelMap.addAttribute("dyehouseName", dyehouse.getName());
+                newReturnModelMap.addAttribute("fabricType", fabricType.getType());
+                newReturnModelMap.addAttribute("completedNumber", completedNumber);
+                newReturnModelMap.addAttribute("completedLength", String.format("%.1f",completedLength));
+                returnModelMap.add(newReturnModelMap);
+            }
+            return returnModelMap;
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
 }

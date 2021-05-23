@@ -2,6 +2,7 @@ package com.example.lvtn.dao.custom;
 
 import com.example.lvtn.dom.Dyehouse;
 import com.example.lvtn.utils.DeAccent;
+import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -48,7 +49,7 @@ public class DyehouseRepositoryCustomImpl implements DyehouseRepositoryCustom{
     }
 
     @Override
-    public Dyehouse findDyehouseById(Long id) {
+    public Dyehouse findDyehouseById(Long id) throws InternalException {
         try {
             String sql = "select d from " + Dyehouse.class.getName() + " d where d.id = :id";
             Query query = entityManager.createQuery(sql, Dyehouse.class);
@@ -56,7 +57,7 @@ public class DyehouseRepositoryCustomImpl implements DyehouseRepositoryCustom{
             return (Dyehouse) query.getSingleResult();
         }catch (Exception e){
             e.printStackTrace();
-            throw e;
+            throw new InternalException("dyehouse not existed");
         }
     }
 }

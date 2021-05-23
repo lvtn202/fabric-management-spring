@@ -1067,6 +1067,75 @@ public class ApplicationController {
         return modelMap;
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "getInforExportedFabric", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getInforExportedFabric(@RequestHeader("token") String token) throws InternalException {
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricService.getInforExportedFabric());
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "getInforCompletedFabricByType", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getInforCompletedFabricByType(@RequestParam("fabricType") String fabricType,
+                                                  @RequestParam("startDate") Double startDate,
+                                                  @RequestParam("endDate") Double endDate,
+                                                  @RequestHeader("token") String token) throws InternalException {
+        System.out.println("fabricType: " + fabricType);
+        System.out.println("startDate: " + startDate);
+        System.out.println("endDate: " + endDate);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricService.getInforCompletedFabricByType(fabricType, startDate, endDate));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "getInforCompletedFabricByDyehouse", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getInforCompletedFabricByDyehouse(@RequestParam("dyehouseId") Long dyehouseId,
+                                                      @RequestParam("startDate") Double startDate,
+                                                      @RequestParam("endDate") Double endDate,
+                                                      @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("startDate: " + startDate);
+        System.out.println("endDate: " + endDate);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", fabricService.getInforCompletedFabricByDyehouse(dyehouseId, startDate, endDate));
+        return modelMap;
+    }
+
     @ExceptionHandler(InternalException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody

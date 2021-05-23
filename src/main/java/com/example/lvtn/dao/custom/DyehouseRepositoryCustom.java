@@ -1,6 +1,7 @@
 package com.example.lvtn.dao.custom;
 
 import com.example.lvtn.dom.Dyehouse;
+import com.example.lvtn.utils.InternalException;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +12,5 @@ public interface DyehouseRepositoryCustom {
 
     List<Dyehouse> findDyehousesWithPaging(Long pageIndex, Long pageSize);
 
-    Dyehouse findDyehouseById(Long id);
+    Dyehouse findDyehouseById(Long id) throws InternalException;
 }

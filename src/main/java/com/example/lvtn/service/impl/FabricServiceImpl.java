@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 public class FabricServiceImpl implements FabricService {
@@ -89,27 +91,26 @@ public class FabricServiceImpl implements FabricService {
     public List<StatisticCompletedFabric> findStatisticCompletedFabricsInDyehouse(Long dyehouseId, Double startDate, Double endDate, Long pageIndex, Long pageSize) throws InternalException {
         try {
             List<Fabric> listFabric = fabricRepository.findCompletedFabricsByDyehouseId(dyehouseId);
-            listFabric.stream()
-                    .filter(fabric -> fabric.getFinishedLength() > startDate && fabric.getFinishedLength() < endDate)
-                    .collect(Collectors.toList());
 
             List<StatisticCompletedFabric> listStatisticCompletedFabric = new ArrayList<StatisticCompletedFabric>();
             for (Fabric fabric: listFabric){
-                boolean isExisted = false;
-                for (StatisticCompletedFabric statisticCompletedFabric: listStatisticCompletedFabric){
-                    if(statisticCompletedFabric.getFabricType().equals(fabric.getFabricType().getType())){
-                        isExisted = true;
-                        statisticCompletedFabric.setDoneNumber(statisticCompletedFabric.getDoneNumber() + 1);
-                        statisticCompletedFabric.setDoneLength(String.valueOf(Double.parseDouble(statisticCompletedFabric.getDoneLength()) + fabric.getFinishedLength()));
-                        break;
+                if (fabric.getDyeBatch().getDyeDate().getTime() > startDate && fabric.getDyeBatch().getDyeDate().getTime() < endDate){
+                    boolean isExisted = false;
+                    for (StatisticCompletedFabric statisticCompletedFabric: listStatisticCompletedFabric){
+                        if(statisticCompletedFabric.getFabricType().equals(fabric.getFabricType().getType())){
+                            isExisted = true;
+                            statisticCompletedFabric.setDoneNumber(statisticCompletedFabric.getDoneNumber() + 1);
+                            statisticCompletedFabric.setDoneLength(String.valueOf(Double.parseDouble(statisticCompletedFabric.getDoneLength()) + fabric.getFinishedLength()));
+                            break;
+                        }
                     }
-                }
-                if (!isExisted){
-                    listStatisticCompletedFabric.add(new StatisticCompletedFabric(
-                            fabric.getFabricType().getType(),
-                            1L,
-                            String.valueOf(fabric.getFinishedLength())
-                    ));
+                    if (!isExisted){
+                        listStatisticCompletedFabric.add(new StatisticCompletedFabric(
+                                fabric.getFabricType().getType(),
+                                1L,
+                                String.valueOf(fabric.getFinishedLength())
+                        ));
+                    }
                 }
             }
 
@@ -375,12 +376,11 @@ public class FabricServiceImpl implements FabricService {
                 Double completedLength = 0.0;
 
                 List<Fabric> fabrics = fabricRepository.findCompletedFabricsByDyehouseIdAndFabricType(dyehouse.getId(), fabricType);
-                fabrics.stream()
-                        .filter(fabric -> fabric.getFinishedLength() > startDate && fabric.getFinishedLength() < endDate)
-                        .collect(Collectors.toList());
                 for (Fabric fabric: fabrics){
-                    completedNumber += 1L;
-                    completedLength += fabric.getRawLength();
+                    if(fabric.getDyeBatch().getDyeDate().getTime() > startDate && fabric.getDyeBatch().getDyeDate().getTime() < endDate){
+                        completedNumber += 1L;
+                        completedLength += fabric.getRawLength();
+                    }
                 }
 
                 newReturnModelMap.addAttribute("dyehouseId", dyehouse.getId());
@@ -410,12 +410,11 @@ public class FabricServiceImpl implements FabricService {
                 Double completedLength = 0.0;
 
                 List<Fabric> fabrics = fabricRepository.findCompletedFabricsByDyehouseIdAndFabricType(dyehouseId, fabricType.getType());
-                fabrics.stream()
-                        .filter(fabric -> fabric.getFinishedLength() > startDate && fabric.getFinishedLength() < endDate)
-                        .collect(Collectors.toList());
                 for (Fabric fabric: fabrics){
-                    completedNumber += 1L;
-                    completedLength += fabric.getRawLength();
+                    if(fabric.getDyeBatch().getDyeDate().getTime() > startDate && fabric.getDyeBatch().getDyeDate().getTime() < endDate) {
+                        completedNumber += 1L;
+                        completedLength += fabric.getRawLength();
+                    }
                 }
                 newReturnModelMap.addAttribute("dyehouseId", dyehouseId);
                 newReturnModelMap.addAttribute("dyehouseName", dyehouse.getName());
@@ -424,6 +423,52 @@ public class FabricServiceImpl implements FabricService {
                 newReturnModelMap.addAttribute("completedLength", String.format("%.1f",completedLength));
                 returnModelMap.add(newReturnModelMap);
             }
+            return returnModelMap;
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<ModelMap> getInforCompletedFabricByDyehouseRecentYear(Long dyehouseId) throws InternalException {
+        try {
+            List<ModelMap> returnModelMap = new ArrayList<>();
+            Dyehouse dyehouse = dyehouseRepository.findDyehouseById(dyehouseId);
+            LocalDate currentdate = LocalDate.now();
+            int currentMonth = currentdate.getMonthValue();
+            int currentYear = currentdate.getYear();
+
+            for (int i = 0; i < 12; i++){
+                ModelMap newReturnModelMap = new ModelMap();
+                Long completedNumber = 0L;
+                Double completedLength = 0.0;
+
+                List<Fabric> fabrics = fabricRepository.findCompletedFabricsByDyehouseId(dyehouseId);
+                for (Fabric fabric: fabrics){
+                    String month = new SimpleDateFormat("MM").format(fabric.getDyeBatch().getDyeDate());
+                    String year = new SimpleDateFormat("yyyy").format(fabric.getDyeBatch().getDyeDate());
+                    if(Integer.parseInt(month) ==  currentMonth && Integer.parseInt(year) == currentYear) {
+                        completedNumber += 1L;
+                        completedLength += fabric.getRawLength();
+                    }
+                }
+
+                newReturnModelMap.addAttribute("dyehouseId", dyehouseId);
+                newReturnModelMap.addAttribute("dyehouseName", dyehouse.getName());
+                ModelMap newDataModelMap = new ModelMap();
+                newDataModelMap.addAttribute("time", String.format("%d/%d", currentMonth, currentYear));
+                currentMonth -= 1;
+                if (currentMonth <= 0){
+                    currentMonth = 12;
+                    currentYear -= 1;
+                }
+                newDataModelMap.addAttribute("completedNumber", completedNumber);
+                newDataModelMap.addAttribute("completedLength", String.format("%.1f",completedLength));
+                newReturnModelMap.addAttribute("data", newDataModelMap);
+                returnModelMap.add(newReturnModelMap);
+            }
+
             return returnModelMap;
         } catch(Exception e){
             e.printStackTrace();

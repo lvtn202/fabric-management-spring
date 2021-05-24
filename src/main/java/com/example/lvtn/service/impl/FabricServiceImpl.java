@@ -431,16 +431,19 @@ public class FabricServiceImpl implements FabricService {
     }
 
     @Override
-    public List<ModelMap> getInforCompletedFabricByDyehouseRecentYear(Long dyehouseId) throws InternalException {
+    public ModelMap getInforCompletedFabricByDyehouseRecentYear(Long dyehouseId) throws InternalException {
         try {
-            List<ModelMap> returnModelMap = new ArrayList<>();
+            ModelMap returnModelMap = new ModelMap();
             Dyehouse dyehouse = dyehouseRepository.findDyehouseById(dyehouseId);
             LocalDate currentdate = LocalDate.now();
             int currentMonth = currentdate.getMonthValue();
             int currentYear = currentdate.getYear();
 
+            returnModelMap.addAttribute("dyehouseId", dyehouseId);
+            returnModelMap.addAttribute("dyehouseName", dyehouse.getName());
+            List<ModelMap> modelMaps = new ArrayList<>();
             for (int i = 0; i < 12; i++){
-                ModelMap newReturnModelMap = new ModelMap();
+                ModelMap newModelMap = new ModelMap();
                 Long completedNumber = 0L;
                 Double completedLength = 0.0;
 
@@ -454,21 +457,17 @@ public class FabricServiceImpl implements FabricService {
                     }
                 }
 
-                newReturnModelMap.addAttribute("dyehouseId", dyehouseId);
-                newReturnModelMap.addAttribute("dyehouseName", dyehouse.getName());
-                ModelMap newDataModelMap = new ModelMap();
-                newDataModelMap.addAttribute("time", String.format("%d/%d", currentMonth, currentYear));
+                newModelMap.addAttribute("time", String.format("%d/%d", currentMonth, currentYear));
                 currentMonth -= 1;
                 if (currentMonth <= 0){
                     currentMonth = 12;
                     currentYear -= 1;
                 }
-                newDataModelMap.addAttribute("completedNumber", completedNumber);
-                newDataModelMap.addAttribute("completedLength", String.format("%.1f",completedLength));
-                newReturnModelMap.addAttribute("data", newDataModelMap);
-                returnModelMap.add(newReturnModelMap);
+                newModelMap.addAttribute("completedNumber", completedNumber);
+                newModelMap.addAttribute("completedLength", String.format("%.1f",completedLength));
+                modelMaps.add(newModelMap);
             }
-
+            returnModelMap.addAttribute("data", modelMaps);
             return returnModelMap;
         } catch(Exception e){
             e.printStackTrace();

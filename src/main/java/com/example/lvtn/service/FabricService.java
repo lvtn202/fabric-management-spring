@@ -38,5 +38,5 @@ public interface FabricService {
 
     List<ModelMap> getInforCompletedFabricByDyehouse(Long dyehouseId, Double startDate, Double endDate) throws InternalException;
 
-    List<ModelMap> getInforCompletedFabricByDyehouseRecentYear(Long dyehouseId) throws InternalException;
+    ModelMap getInforCompletedFabricByDyehouseRecentYear(Long dyehouseId) throws InternalException;
 }

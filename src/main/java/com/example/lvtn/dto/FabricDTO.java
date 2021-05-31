@@ -50,10 +50,11 @@ public class FabricDTO {
 
     static public FabricDTO convertFabricToFabricDTO(Fabric fabric){
         String price = (fabric.getColor() != null) ? String.format("%.3f", fabric.getColor().getPrice()) : "0.0";
+        String finishedLength = (fabric.getFinishedLength() != null) ? String.format("%.1f", fabric.getFinishedLength()) : "0.0";
         return new FabricDTO(
                 fabric.getId(),
                 String.format("%.1f", fabric.getRawLength()),
-                String.format("%.1f", fabric.getFinishedLength()),
+                finishedLength,
                 fabric.getStatus(),
                 fabric.getColorName(),
                 fabric.getFabricType().getType(),

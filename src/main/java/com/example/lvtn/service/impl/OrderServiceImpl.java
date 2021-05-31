@@ -135,9 +135,6 @@ public class OrderServiceImpl implements OrderService {
             List<Order> listOrder = orderRepository.findOrdersOfDyehouseByFabricTypeAndColor(dyehouseId, fabricType, color);
             List<OrderDTO> listOrderDTO = new ArrayList<>();
             for (Order order: listOrder){
-                listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
-            }
-            for (Order order: listOrder){
                 if(order.getStatus().equals(OrderStatus.CREATED)){
                     listOrderDTO.add(OrderDTO.convertOrderToOrderDTO(order));
                 }

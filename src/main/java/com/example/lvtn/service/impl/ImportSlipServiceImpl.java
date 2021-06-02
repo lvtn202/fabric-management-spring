@@ -70,13 +70,17 @@ public class ImportSlipServiceImpl implements ImportSlipService {
             Set<Fabric> fabrics = new HashSet<>();
             Color color = colorRepository.findColorByFabricTypeAndColor(createImportSlipForm.getFabricType(),createImportSlipForm.getColor());
             Double importLength = Double.valueOf(0);
+            Double totalPrice = 0.0;
+            Dyehouse currentDyehouse = dyehouseRepository.findDyehouseById(createImportSlipForm.getDyehouseId());
 
             for (FabricCreateImportSlip fabricCreateImportSlip: createImportSlipForm.getFabrics()){
                 Fabric fabric = fabricRepository.findFabricById(fabricCreateImportSlip.getId());
                 fabric.setFinishedLength(fabricCreateImportSlip.getFinishedLength());
                 fabric.setStatus(FabricStatus.COMPLETED);
+                fabric.setColor(color);
                 importLength += fabric.getFinishedLength();
                 fabrics.add(fabric);
+                totalPrice += fabric.getFinishedLength() *  fabric.getColor().getPrice();
             }
             order.setDoneLength(order.getDoneLength() + importLength);
             if (order.getDoneLength() >= order.getOrderLength()){
@@ -85,7 +89,7 @@ public class ImportSlipServiceImpl implements ImportSlipService {
                 order.setStatus(OrderStatus.IN_PROGRESS);
             }
             ImportSlip newImportSlip = new ImportSlip(
-                    importLength,
+                    totalPrice,
                     (long) createImportSlipForm.getFabrics().size(),
                     createImportSlipForm.getDriver(),
                     createImportSlipForm.getCreateDate(),
@@ -96,16 +100,17 @@ public class ImportSlipServiceImpl implements ImportSlipService {
             DyeBatch newDyeBatch = new DyeBatch(
                     createImportSlipForm.getCreateDate(),
                     color,
-                    dyehouseRepository.findDyehouseById(createImportSlipForm.getDyehouseId()),
+                    currentDyehouse,
                     newImportSlip,
                     fabrics
             );
+            currentDyehouse.setDebt(currentDyehouse.getDebt() + totalPrice);
 
             for (Fabric fabric: fabrics){
                 fabric.setDyeBatch(newDyeBatch);
-                fabric.setColor(color);
                 fabricRepository.save(fabric);
             }
+            dyehouseRepository.save(currentDyehouse);
             orderRepository.save(order);
             importSlipRepository.save(newImportSlip);
             dyeBatchRepository.save(newDyeBatch);

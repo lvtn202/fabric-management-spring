@@ -4,6 +4,7 @@ import com.example.lvtn.dom.Dyehouse;
 import com.example.lvtn.dom.Fabric;
 import com.example.lvtn.dom.Order;
 import com.example.lvtn.utils.FabricStatus;
+import com.example.lvtn.utils.InternalException;
 import com.example.lvtn.utils.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -46,7 +47,7 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
     }
 
     @Override
-    public Order findOrderById(Long id) {
+    public Order findOrderById(Long id) throws InternalException {
         try {
             String sql = "select o from " + Order.class.getName() + " o "
                     + "where o.id = :id order by o.createDate desc ";
@@ -55,7 +56,7 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
             return (Order) query.getSingleResult();
         } catch (Exception e){
             e.printStackTrace();
-            throw e;
+            throw new InternalException("ERROR_ID");
         }
     }
 

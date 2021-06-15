@@ -162,4 +162,21 @@ public class OrderServiceImpl implements OrderService {
             throw new InternalException(e.getMessage());
         }
     }
+
+    @Override
+    public OrderDTO findConpletedOrder(Long orderId) throws InternalException {
+        try {
+            if(orderId < 0L){
+                throw new InternalException("ERROR_ID");
+            }
+            Order order = orderRepository.findOrderById(orderId);
+            if (!order.getStatus().equals(OrderStatus.COMPLETED)){
+                throw new InternalException("ORDER_NOT_COMPLETED");
+            }
+            return OrderDTO.convertOrderToOrderDTO(order);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
 }

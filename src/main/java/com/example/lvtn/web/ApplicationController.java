@@ -1157,6 +1157,27 @@ public class ApplicationController {
         return modelMap;
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "completedOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap getCompletedOrder(@RequestBody CompletedIdForm completedIdForm,
+                                      @RequestHeader("token") String token) throws InternalException {
+        System.out.println("completedIdForm: " + completedIdForm.toString());
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", orderService.findConpletedOrder(Long.valueOf(completedIdForm.getOrderId())));
+        return modelMap;
+    }
+
     @ExceptionHandler(InternalException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody

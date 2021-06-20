@@ -1158,9 +1158,9 @@ public class ApplicationController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "completedOrder", method = RequestMethod.POST)
+    @RequestMapping(value = "completeOrder", method = RequestMethod.POST)
     @ResponseBody
-    public ModelMap getCompletedOrder(@RequestBody CompletedIdForm completedIdForm,
+    public ModelMap completeOrder(@RequestBody CompletedIdForm completedIdForm,
                                       @RequestHeader("token") String token) throws InternalException {
         System.out.println("completedIdForm: " + completedIdForm.toString());
         System.out.println("token: " + token);
@@ -1174,7 +1174,7 @@ public class ApplicationController {
 
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
-        modelMap.addAttribute("result", orderService.findConpletedOrder(Long.valueOf(completedIdForm.getOrderId())));
+        modelMap.addAttribute("result", orderService.completeOrder(Long.valueOf(completedIdForm.getOrderId())));
         return modelMap;
     }
 

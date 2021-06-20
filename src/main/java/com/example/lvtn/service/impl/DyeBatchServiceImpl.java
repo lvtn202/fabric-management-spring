@@ -54,6 +54,7 @@ public class DyeBatchServiceImpl implements DyeBatchService {
             modelMap.addAttribute("dyehouseName", dyeBatch.getDyehouse().getName());
             modelMap.addAttribute("fabricType", dyeBatch.getFabrics().iterator().next().getFabricType().getType());
             modelMap.addAttribute("price", String.format("%.3f", dyeBatch.getColor().getPrice()));
+            modelMap.addAttribute("driver", dyeBatch.getImportSlip().getDriver());
             modelMap.addAttribute("dyeDate", String.format("%tQ", dyeBatch.getDyeDate()));
             modelMap.addAttribute("firstName", dyeBatch.getImportSlip().getUser().getFirstName());
             modelMap.addAttribute("lastName", dyeBatch.getImportSlip().getUser().getLastName());

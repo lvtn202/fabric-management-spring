@@ -1178,6 +1178,27 @@ public class ApplicationController {
         return modelMap;
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "cancelOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap cancelOrder(@RequestBody CancelIdForm cancelIdForm,
+                                @RequestHeader("token") String token) throws InternalException {
+        System.out.println("cancelIdForm: " + cancelIdForm.toString());
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", orderService.cancelOrder(Long.valueOf(cancelIdForm.getOrderId())));
+        return modelMap;
+    }
+
     @ExceptionHandler(InternalException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody

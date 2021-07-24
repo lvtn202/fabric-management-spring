@@ -80,7 +80,7 @@ public class PaymentServiceImpl implements PaymentService {
             dyehouseRepository.save(dyehouse);
             paymentRepository.save(newPayment);
 
-            debtService.createDebt(3L, newPayment.getId(), createPaymentForm.getMoney(), createPaymentForm.getCreateDate(), oldDebt);
+            debtService.createDebt(3L, dyehouse, newPayment.getId(), createPaymentForm.getMoney(), createPaymentForm.getCreateDate(), oldDebt);
 
             return PaymentDTO.convertPaymentToPaymentDTO(newPayment);
         } catch (Exception e){

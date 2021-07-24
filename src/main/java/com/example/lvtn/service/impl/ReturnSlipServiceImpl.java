@@ -129,7 +129,7 @@ public class ReturnSlipServiceImpl implements ReturnSlipService {
                 returnRepository.save(aReturn);
             }
 
-            debtService.createDebt(2L, newReturnSlip.getId(), totalPrice, newReturnSlip.getReturnDate(), oldDebt);
+            debtService.createDebt(2L, dyehouse, newReturnSlip.getId(), totalPrice, newReturnSlip.getReturnDate(), oldDebt);
 
 
             ModelMap modelMap = new ModelMap();

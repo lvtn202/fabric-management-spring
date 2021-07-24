@@ -121,7 +121,7 @@ public class ImportSlipServiceImpl implements ImportSlipService {
             importSlipRepository.save(newImportSlip);
             dyeBatchRepository.save(newDyeBatch);
 
-            debtService.createDebt(1L, newImportSlip.getId(), newImportSlip.getMoney(), newImportSlip.getCreateDate(), oldDebt);
+            debtService.createDebt(1L, currentDyehouse, newImportSlip.getId(), newImportSlip.getMoney(), newImportSlip.getCreateDate(), oldDebt);
 
             ModelMap modelMap = new ModelMap();
             modelMap.addAttribute("importSlipId", newImportSlip.getId());

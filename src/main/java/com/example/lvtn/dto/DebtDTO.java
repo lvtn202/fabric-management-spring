@@ -13,6 +13,8 @@ public class DebtDTO {
 
     private Long type;
 
+    private Long dyehouseId;
+
     private Long idTransaction;
 
     private String amount;
@@ -24,9 +26,10 @@ public class DebtDTO {
     public DebtDTO() {
     }
 
-    public DebtDTO(Long id, Long type, Long idTransaction, String amount, String createDate, String total) {
+    public DebtDTO(Long id, Long type, Long dyehouseId, Long idTransaction, String amount, String createDate, String total) {
         this.id = id;
         this.type = type;
+        this.dyehouseId = dyehouseId;
         this.idTransaction = idTransaction;
         this.amount = amount;
         this.createDate = createDate;
@@ -38,6 +41,7 @@ public class DebtDTO {
         return "DebtDTO{" +
                 "id=" + id +
                 ", type=" + type +
+                ", dyehouseId=" + dyehouseId +
                 ", idTransaction=" + idTransaction +
                 ", amount='" + amount + '\'' +
                 ", createDate='" + createDate + '\'' +
@@ -49,6 +53,7 @@ public class DebtDTO {
         return new DebtDTO(
                 debt.getId(),
                 debt.getType(),
+                debt.getDyehouse().getId(),
                 debt.getIdTransaction(),
                 String.format("%.1f", debt.getAmount()),
                 String.format("%tQ", debt.getCreateDate()),

@@ -8,6 +8,7 @@ import com.example.lvtn.dom.Dyehouse;
 import com.example.lvtn.dom.Payment;
 import com.example.lvtn.dto.CreatePaymentForm;
 import com.example.lvtn.dto.PaymentDTO;
+import com.example.lvtn.service.DebtService;
 import com.example.lvtn.service.PaymentService;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private DebtService debtService;
 
     @Override
     public List<Payment> findAll() {
@@ -71,9 +75,13 @@ public class PaymentServiceImpl implements PaymentService {
                     userRepository.findUsersById(createPaymentForm.getUserId())
             );
             Dyehouse dyehouse = dyehouseRepository.findDyehouseById(createPaymentForm.getDyehouseId());
+            Double oldDebt = dyehouse.getDebt();
             dyehouse.setDebt(dyehouse.getDebt() - createPaymentForm.getMoney());
             dyehouseRepository.save(dyehouse);
             paymentRepository.save(newPayment);
+
+            debtService.createDebt(3L, newPayment.getId(), createPaymentForm.getMoney(), createPaymentForm.getCreateDate(), oldDebt);
+
             return PaymentDTO.convertPaymentToPaymentDTO(newPayment);
         } catch (Exception e){
             e.printStackTrace();

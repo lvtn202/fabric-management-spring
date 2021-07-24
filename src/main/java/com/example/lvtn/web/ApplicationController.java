@@ -28,31 +28,34 @@ public class ApplicationController {
     private DyeBatchService dyeBatchService;
 
     @Autowired
-    FabricService fabricService;
+    private FabricService fabricService;
 
     @Autowired
-    FabricTypeService fabricTypeService;
+    private FabricTypeService fabricTypeService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    ReturnSlipService returnSlipService;
+    private ReturnSlipService returnSlipService;
 
     @Autowired
-    ReturnService returnService;
+    private ReturnService returnService;
 
     @Autowired
-    ExportSlipService exportSlipService;
+    private ExportSlipService exportSlipService;
 
     @Autowired
-    ColorService colorService;
+    private ColorService colorService;
 
     @Autowired
-    PaymentMethodService paymentMethodService;
+    private PaymentMethodService paymentMethodService;
 
     @Autowired
-    PaymentService paymentService;
+    private PaymentService paymentService;
+
+    @Autowired
+    private DebtService debtService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main() {
@@ -729,14 +732,15 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
 //        modelMap.addAttribute("result", fabricService.createData());
+        modelMap.addAttribute("result", debtService.createData());
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("nguyenxuanhuy225@gmail.com");
-        message.setSubject("Test Simple Email");
-        message.setText("Hi Tinh , I'm Huy dz");
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setTo("nguyenxuanhuy225@gmail.com");
+//        message.setSubject("Test Simple Email");
+//        message.setText("Hi Tinh , I'm Huy dz");
 
-        // Send Message!
-        this.emailSender.send(message);
+//        Send Message!
+//        this.emailSender.send(message);
         return modelMap;
     }
 

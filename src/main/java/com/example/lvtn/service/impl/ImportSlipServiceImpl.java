@@ -5,6 +5,8 @@ import com.example.lvtn.dom.*;
 import com.example.lvtn.dto.CreateImportSlipForm;
 import com.example.lvtn.dto.FabricCreateImportSlip;
 import com.example.lvtn.dto.ImportSlipDTO;
+
+import com.example.lvtn.service.DebtService;
 import com.example.lvtn.service.ImportSlipService;
 import com.example.lvtn.utils.FabricStatus;
 import com.example.lvtn.utils.InternalException;
@@ -42,6 +44,9 @@ public class ImportSlipServiceImpl implements ImportSlipService {
     @Autowired
     private DyeBatchRepository dyeBatchRepository;
 
+    @Autowired
+    private DebtService debtService;
+
     @Override
     public List<ImportSlip> findAll() {
         return importSlipRepository.findAll();
@@ -72,6 +77,7 @@ public class ImportSlipServiceImpl implements ImportSlipService {
             Double importLength = Double.valueOf(0);
             Double totalPrice = 0.0;
             Dyehouse currentDyehouse = dyehouseRepository.findDyehouseById(createImportSlipForm.getDyehouseId());
+            Double oldDebt = currentDyehouse.getDebt();
 
             for (FabricCreateImportSlip fabricCreateImportSlip: createImportSlipForm.getFabrics()){
                 Fabric fabric = fabricRepository.findFabricById(fabricCreateImportSlip.getId());
@@ -115,6 +121,7 @@ public class ImportSlipServiceImpl implements ImportSlipService {
             importSlipRepository.save(newImportSlip);
             dyeBatchRepository.save(newDyeBatch);
 
+            debtService.createDebt(1L, newImportSlip.getId(), newImportSlip.getMoney(), newImportSlip.getCreateDate(), oldDebt);
 
             ModelMap modelMap = new ModelMap();
             modelMap.addAttribute("importSlipId", newImportSlip.getId());

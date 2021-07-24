@@ -8,6 +8,7 @@ import com.example.lvtn.dom.ReturnSlip;
 import com.example.lvtn.dto.CreateReturnSlipForm;
 import com.example.lvtn.dto.FabricCreateReturnSlip;
 import com.example.lvtn.dto.ReturnSlipDTO;
+import com.example.lvtn.service.DebtService;
 import com.example.lvtn.service.ReturnSlipService;
 import com.example.lvtn.utils.FabricStatus;
 import com.example.lvtn.utils.InternalException;
@@ -37,6 +38,9 @@ public class ReturnSlipServiceImpl implements ReturnSlipService {
 
     @Autowired
     private ReturnRepository returnRepository;
+
+    @Autowired
+    private DebtService debtService;
 
     @Override
     public List<ReturnSlip> findAll() {
@@ -115,6 +119,7 @@ public class ReturnSlipServiceImpl implements ReturnSlipService {
                     returns
             );
             Dyehouse dyehouse = dyehouseRepository.findDyehouseById(createReturnSlipForm.getDyehouseId());
+            Double oldDebt = dyehouse.getDebt();
             dyehouse.setDebt(dyehouse.getDebt() - totalPrice);
 
             dyehouseRepository.save(dyehouse);
@@ -123,6 +128,9 @@ public class ReturnSlipServiceImpl implements ReturnSlipService {
                 aReturn.setReturnSlip(newReturnSlip);
                 returnRepository.save(aReturn);
             }
+
+            debtService.createDebt(2L, newReturnSlip.getId(), totalPrice, newReturnSlip.getReturnDate(), oldDebt);
+
 
             ModelMap modelMap = new ModelMap();
             modelMap.addAttribute("returnSlipId", newReturnSlip.getId());

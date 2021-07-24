@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface DebtRepository extends JpaRepository<Debt, Long>, DebtRepositoryCustom {
-    @Query("select d from Debt d order by d.createDate desc")
+    @Query("select d from Debt d order by d.createDate asc ")
     List<Debt> findAll();
 }

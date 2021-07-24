@@ -49,6 +49,9 @@ public class Dyehouse {
     @OneToMany(mappedBy = "dyehouse")
     private Set<ReturnSlip> returnSlips;
 
+    @OneToMany(mappedBy = "dyehouse")
+    private Set<Debt> debts;
+
     public Dyehouse() {
     }
 

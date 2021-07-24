@@ -18,6 +18,10 @@ public class Debt {
     @Column(nullable = false)
     private Long type;
 
+    @ManyToOne
+    @JoinColumn(name = "dyehouse_id", nullable = false)
+    private Dyehouse dyehouse;
+
     @Column(name = "id_transaction", nullable = false)
     private Long idTransaction;
 
@@ -33,8 +37,9 @@ public class Debt {
     public Debt() {
     }
 
-    public Debt(Long type, Long idTransaction, Double amount, Timestamp createDate, Double total) {
+    public Debt(Long type, Dyehouse dyehouse, Long idTransaction, Double amount, Timestamp createDate, Double total) {
         this.type = type;
+        this.dyehouse = dyehouse;
         this.idTransaction = idTransaction;
         this.amount = amount;
         this.createDate = createDate;
@@ -46,6 +51,7 @@ public class Debt {
         return "Debt{" +
                 "id=" + id +
                 ", type=" + type +
+                ", dyehouse=" + dyehouse +
                 ", idTransaction=" + idTransaction +
                 ", amount=" + amount +
                 ", createDate=" + createDate +

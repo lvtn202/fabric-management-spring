@@ -1,7 +1,9 @@
 package com.example.lvtn.dao.custom;
 
+import com.example.lvtn.dom.ImportSlip;
 import com.example.lvtn.dom.Order;
 import com.example.lvtn.dom.Payment;
+import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -70,6 +72,20 @@ public class PaymentRepositoryCustomImpl implements PaymentRepositoryCustom{
         } catch (Exception e){
             e.printStackTrace();
             throw e;
+        }
+    }
+
+    @Override
+    public Payment findPaymentById(Long id) throws InternalException {
+        try {
+            String sql = "select p from " + Payment.class.getName() + " p "
+                    + "where p.id = :id ";
+            Query query = entityManager.createQuery(sql, Payment.class);
+            query.setParameter("id", id);
+            return (Payment) query.getSingleResult();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException("Payment not existed");
         }
     }
 }

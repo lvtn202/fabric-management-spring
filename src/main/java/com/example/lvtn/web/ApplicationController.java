@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+
 @Controller
 @ControllerAdvice
 public class ApplicationController {
@@ -732,7 +734,7 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
 //        modelMap.addAttribute("result", fabricService.createData());
-        modelMap.addAttribute("result", debtService.createData());
+//        modelMap.addAttribute("result", debtService.createData());
 
 //        SimpleMailMessage message = new SimpleMailMessage();
 //        message.setTo("nguyenxuanhuy225@gmail.com");
@@ -1200,6 +1202,31 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", orderService.cancelOrder(Long.valueOf(cancelIdForm.getOrderId())));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "debt", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getDebt(@RequestParam("dyehouseId") Long dyehouseId,
+                            @RequestParam("startDate") Long startDate,
+                            @RequestParam("endDate") Long endDate,
+                            @RequestHeader("token") String token) throws InternalException {
+        System.out.println("dyehouseId: " + dyehouseId);
+        System.out.println("startDate: " + new Timestamp(startDate));
+        System.out.println("endDate: " + new Timestamp(endDate));
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", debtService.getDebt(dyehouseId, new Timestamp(startDate), new Timestamp(endDate)));
         return modelMap;
     }
 

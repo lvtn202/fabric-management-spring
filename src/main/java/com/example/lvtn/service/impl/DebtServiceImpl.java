@@ -1,8 +1,8 @@
 package com.example.lvtn.service.impl;
 
-import com.example.lvtn.dao.DebtRepository;
-import com.example.lvtn.dao.DyehouseRepository;
+import com.example.lvtn.dao.*;
 import com.example.lvtn.dom.*;
+import com.example.lvtn.dto.DebtDTO;
 import com.example.lvtn.service.DebtService;
 import com.example.lvtn.service.ImportSlipService;
 import com.example.lvtn.service.PaymentService;
@@ -10,6 +10,7 @@ import com.example.lvtn.service.ReturnSlipService;
 import com.example.lvtn.utils.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
@@ -27,10 +28,19 @@ public class DebtServiceImpl implements DebtService {
     private ImportSlipService importSlipService;
 
     @Autowired
+    private ImportSlipRepository importSlipRepository;
+
+    @Autowired
     private ReturnSlipService returnSlipService;
 
     @Autowired
+    private ReturnSlipRepository returnSlipRepository;
+
+    @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     @Autowired
     private DyehouseRepository dyehouseRepository;
@@ -109,6 +119,76 @@ public class DebtServiceImpl implements DebtService {
             }
             return "Created";
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ModelMap getDebt(Long dyehouseId, Timestamp startDate, Timestamp endDate) throws InternalException {
+        try {
+            Dyehouse currentDyehouse = dyehouseRepository.findDyehouseById(dyehouseId);
+            List<Debt> debts = debtRepository.findAll();
+            List<Debt> oldDebts = new ArrayList<>();
+            List<Debt> currentDebts = new ArrayList<>();
+            Double oldDebt = 0.0;
+            Double newDebt = 0.0;
+
+            for (Debt debt: debts){
+                if(debt.getType().equals(1L)){
+                    ImportSlip importSlip = importSlipRepository.findImportSlipById(debt.getIdTransaction());
+                    if(importSlip.getOrder().getDyehouse().getId().equals(dyehouseId)){
+                        if(debt.getCreateDate().before(startDate)){
+                            oldDebts.add(debt);
+                        } else if (debt.getCreateDate().after(startDate) && debt.getCreateDate().before(endDate)){
+                            currentDebts.add(debt);
+                        }
+                    }
+                } else if(debt.getType().equals(2L)){
+                    ReturnSlip returnSlip = returnSlipRepository.findReturnSlipById(debt.getIdTransaction());
+                    if(returnSlip.getDyehouse().getId().equals(dyehouseId)){
+                        if(debt.getCreateDate().before(startDate)){
+                            oldDebts.add(debt);
+                        } else if (debt.getCreateDate().after(startDate) && debt.getCreateDate().before(endDate)){
+                            currentDebts.add(debt);
+                        }
+                    }
+                } else if(debt.getType().equals(3L)){
+                    Payment payment = paymentRepository.findPaymentById(debt.getIdTransaction());
+                    if (payment.getDyehouse().getId().equals(dyehouseId)){
+                        if(debt.getCreateDate().before(startDate)){
+                            oldDebts.add(debt);
+                        } else if (debt.getCreateDate().after(startDate) && debt.getCreateDate().before(endDate)){
+                            currentDebts.add(debt);
+                        }
+                    }
+                }
+            }
+
+            if(oldDebts.size() == 0){
+                oldDebt = currentDyehouse.getDebt();
+            } else if (oldDebts.size() > 0){
+                oldDebt = oldDebts.get(oldDebts.size()-1).getTotal();
+            }
+
+            if(currentDebts.size() == 0){
+                newDebt = oldDebt;
+            } else if (currentDebts.size() > 0){
+                newDebt = currentDebts.get(currentDebts.size()-1).getTotal();
+            }
+
+            List<DebtDTO> debtDTOs = new ArrayList<>();
+            for (Debt debt: currentDebts){
+                debtDTOs.add(DebtDTO.convertDebtToDebtDTO(debt));
+            }
+
+            ModelMap modelMap = new ModelMap();
+            modelMap.addAttribute("dyehouseName", currentDyehouse.getName());
+            modelMap.addAttribute("oldDebt", String.format("%.1f", oldDebt));
+            modelMap.addAttribute("newDebt", String.format("%.1f", newDebt));
+            modelMap.addAttribute("transactions", debtDTOs);
+            return modelMap;
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalException(e.getMessage());

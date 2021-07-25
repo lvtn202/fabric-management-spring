@@ -85,7 +85,7 @@ public class PaymentRepositoryCustomImpl implements PaymentRepositoryCustom{
             return (Payment) query.getSingleResult();
         }catch (Exception e){
             e.printStackTrace();
-            throw new InternalException("Payment not existed");
+            throw new InternalException("ERROR_ID");
         }
     }
 }

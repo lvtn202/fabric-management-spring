@@ -16,4 +16,6 @@ public interface PaymentService {
     PaymentDTO createPayment(CreatePaymentForm createPaymentForm) throws InternalException;
 
     String findTotalRecentPayment(Long dyehouseId, Long period) throws InternalException;
+
+    PaymentDTO findDetailPaymentDTOByPaymentId(Long paymentId) throws InternalException;
 }

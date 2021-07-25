@@ -110,4 +110,18 @@ public class PaymentServiceImpl implements PaymentService {
             throw new InternalException(e.getMessage());
         }
     }
+
+    @Override
+    public PaymentDTO findDetailPaymentDTOByPaymentId(Long paymentId) throws InternalException {
+        try {
+            if (paymentId <= 0L){
+                throw new InternalException("ERROR_ID");
+            }
+            Payment payment = paymentRepository.findPaymentById(paymentId);
+            return PaymentDTO.convertPaymentToPaymentDTO(payment);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
 }

@@ -734,7 +734,7 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
 //        modelMap.addAttribute("result", fabricService.createData());
-        modelMap.addAttribute("result", debtService.createData());
+//        modelMap.addAttribute("result", debtService.createData());
 
 //        SimpleMailMessage message = new SimpleMailMessage();
 //        message.setTo("nguyenxuanhuy225@gmail.com");
@@ -833,6 +833,27 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
         modelMap.addAttribute("result", paymentService.findPaymentDTOs(dyehouseId, pageIndex, pageSize));
+        return modelMap;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "detailPayment", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getDetailPayment(@RequestParam("paymentId") Long paymentId,
+                                     @RequestHeader("token") String token) throws InternalException {
+        System.out.println("paymentId: " + paymentId);
+        System.out.println("token: " + token);
+
+        ModelMap modelMap = new ModelMap();
+        if (!userService.checkToken(token)){
+            modelMap.addAttribute("status", 0);
+            modelMap.addAttribute("status_code", "ERROR_TOKEN");
+            return modelMap;
+        }
+
+        modelMap.addAttribute("status", 1);
+        modelMap.addAttribute("status_code", "OK");
+        modelMap.addAttribute("result", paymentService.findDetailPaymentDTOByPaymentId(paymentId));
         return modelMap;
     }
 

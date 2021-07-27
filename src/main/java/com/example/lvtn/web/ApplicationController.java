@@ -656,29 +656,6 @@ public class ApplicationController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "listExportSlip", method = RequestMethod.GET)
-    @ResponseBody
-    public ModelMap getListExportSlip(@RequestParam("pageIndex") Long pageIndex,
-                                      @RequestParam("pageSize") Long pageSize,
-                                      @RequestHeader("token") String token) throws InternalException {
-        System.out.println("pageIndex: " + pageIndex);
-        System.out.println("pageSize: " + pageSize);
-        System.out.println("token: " + token);
-
-        ModelMap modelMap = new ModelMap();
-        if (!userService.checkToken(token)){
-            modelMap.addAttribute("status", 0);
-            modelMap.addAttribute("status_code", "ERROR_TOKEN");
-            return modelMap;
-        }
-
-        modelMap.addAttribute("status", 1);
-        modelMap.addAttribute("status_code", "OK");
-        modelMap.addAttribute("result", exportSlipService.findExportSlips(pageIndex, pageSize));
-        return modelMap;
-    }
-
-    @CrossOrigin
     @RequestMapping(value = "listOrderAdvance", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap getListOrderAdvance(@RequestParam("dyehouseId") Long dyehouseId,

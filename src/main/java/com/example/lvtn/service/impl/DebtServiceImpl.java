@@ -167,9 +167,7 @@ public class DebtServiceImpl implements DebtService {
             Double oldDebt = 0.0;
             Double newDebt = 0.0;
 
-            if(oldDebts.size() == 0){
-                oldDebt = currentDyehouse.getDebt();
-            } else if (oldDebts.size() > 0){
+            if (oldDebts.size() > 0){
                 oldDebt = oldDebts.get(oldDebts.size()-1).getTotal();
             }
 

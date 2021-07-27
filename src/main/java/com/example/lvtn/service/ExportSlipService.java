@@ -15,5 +15,4 @@ public interface ExportSlipService {
 
     List<ExportSlipDTO> findRecentExportSlipDTOs(Long dyehouseId, Long pageIndex, Long pageSize) throws InternalException;
 
-    List<ModelMap> findExportSlips(Long pageIndex, Long pageSize) throws InternalException;
 }

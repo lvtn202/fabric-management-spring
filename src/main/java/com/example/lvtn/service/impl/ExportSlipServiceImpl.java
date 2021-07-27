@@ -101,4 +101,25 @@ public class ExportSlipServiceImpl implements ExportSlipService {
             throw new InternalException(e.getMessage());
         }
     }
+
+    @Override
+    public List<ModelMap> findExportSlips(Long pageIndex, Long pageSize) throws InternalException {
+        try {
+            List<ModelMap> modelMaps = new ArrayList<>();
+            List<ExportSlip> exportSlips = exportSlipRepository.findRecentExportSlips(pageIndex, pageSize);
+
+            for (ExportSlip exportSlip: exportSlips){
+                ModelMap modelMap = new ModelMap();
+
+
+
+                modelMaps.add(modelMap);
+            }
+
+            return modelMaps;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalException(e.getMessage());
+        }
+    }
 }

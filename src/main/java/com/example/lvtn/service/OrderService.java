@@ -19,7 +19,7 @@ public interface OrderService {
 
     List<OrderDTO> findOrderDTOsByFabricTypeAndColor(Long dyehouseId, String fabricType, String color) throws InternalException;
 
-    OrderDTO completeOrder(Long orderId) throws InternalException;
+    ModelMap completeOrder(Long orderId) throws InternalException;
 
-    OrderDTO cancelOrder(Long orderId) throws InternalException;
+    ModelMap cancelOrder(Long orderId) throws InternalException;
 }

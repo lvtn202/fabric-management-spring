@@ -165,7 +165,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO completeOrder(Long orderId) throws InternalException {
+    public ModelMap completeOrder(Long orderId) throws InternalException {
         try {
             if(orderId < 0L){
                 throw new InternalException("ERROR_ID");
@@ -176,7 +176,16 @@ public class OrderServiceImpl implements OrderService {
             } else {
                 order.setStatus(OrderStatus.COMPLETED);
                 orderRepository.save(order);
-                return OrderDTO.convertOrderToOrderDTO(order);
+                ModelMap modelMap = new ModelMap();
+                modelMap.addAttribute("id", order.getId());
+                modelMap.addAttribute("dyehouseName", order.getDyehouse().getName());
+                modelMap.addAttribute("fabricType", order.getColor().getFabricType().getType());
+                modelMap.addAttribute("color", order.getColor().getName());
+                modelMap.addAttribute("orderLength", String.format("%.1f", order.getOrderLength()));
+                modelMap.addAttribute("status", order.getStatus());
+                modelMap.addAttribute("createDate", String.format("%tQ", order.getCreateDate()));
+                modelMap.addAttribute("employee", order.getUser().getLastName());
+                return modelMap;
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -185,7 +194,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO cancelOrder(Long orderId) throws InternalException {
+    public ModelMap cancelOrder(Long orderId) throws InternalException {
         try {
             if(orderId < 0L){
                 throw new InternalException("ERROR_ID");
@@ -196,7 +205,16 @@ public class OrderServiceImpl implements OrderService {
             } else {
                 order.setStatus(OrderStatus.CANCELLED);
                 orderRepository.save(order);
-                return OrderDTO.convertOrderToOrderDTO(order);
+                ModelMap modelMap = new ModelMap();
+                modelMap.addAttribute("id", order.getId());
+                modelMap.addAttribute("dyehouseName", order.getDyehouse().getName());
+                modelMap.addAttribute("fabricType", order.getColor().getFabricType().getType());
+                modelMap.addAttribute("color", order.getColor().getName());
+                modelMap.addAttribute("orderLength", String.format("%.1f", order.getOrderLength()));
+                modelMap.addAttribute("status", order.getStatus());
+                modelMap.addAttribute("createDate", String.format("%tQ", order.getCreateDate()));
+                modelMap.addAttribute("employee", order.getUser().getLastName());
+                return modelMap;
             }
         } catch (Exception e){
             e.printStackTrace();

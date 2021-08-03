@@ -734,7 +734,7 @@ public class ApplicationController {
         modelMap.addAttribute("status", 1);
         modelMap.addAttribute("status_code", "OK");
 //        modelMap.addAttribute("result", fabricService.createData());
-//        modelMap.addAttribute("result", debtService.createData());
+        modelMap.addAttribute("result", debtService.createData());
 
 //        SimpleMailMessage message = new SimpleMailMessage();
 //        message.setTo("nguyenxuanhuy225@gmail.com");

@@ -37,6 +37,9 @@ public class DebtServiceImpl implements DebtService {
     private ReturnSlipRepository returnSlipRepository;
 
     @Autowired
+    private ReturnRepository returnRepository;
+
+    @Autowired
     private PaymentService paymentService;
 
     @Autowired
@@ -88,6 +91,61 @@ public class DebtServiceImpl implements DebtService {
     @Transactional(rollbackOn = Exception.class)
     public String createData() throws InternalException {
         try {
+
+            List<ImportSlip> importSlips = importSlipService.findAll();
+            List<ReturnSlip> returnSlips = returnSlipService.findAll();
+            List<Payment> payments = paymentService.findAll();
+
+            for (ImportSlip importSlip: importSlips){
+                Double price = 0.0;
+                Long number = 0L;
+                for (DyeBatch dyeBatch: importSlip.getDyeBatches()){
+                    for (Fabric fabric: dyeBatch.getFabrics()){
+                        price += fabric.getFinishedLength() * fabric.getColor().getPrice();
+                    }
+                    number += dyeBatch.getFabrics().size();
+                }
+                importSlip.setMoney(price);
+                importSlip.setFabricNumber(number);
+                importSlipRepository.save(importSlip);
+            }
+            for (ReturnSlip returnSlip: returnSlips){
+                Double price = 0.0;
+                for (Return aReturn: returnSlip.getReturns()){
+                    aReturn.setMoney(aReturn.getReturnLength() * aReturn.getFabric().getColor().getPrice());
+                    returnRepository.save(aReturn);
+                    price += aReturn.getMoney();
+                }
+                returnSlip.setMoney(price);
+                returnSlipRepository.save(returnSlip);
+            }
+            for (Payment payment: payments){
+                if (payment.getMoney() > 10000000){
+                    payment.setMoney(payment.getMoney()/10);
+                }
+                paymentRepository.save(payment);
+            }
+
+
+            List<Debt> debts1 = debtRepository.findAll();
+            for (Debt debt: debts1){
+                if(debt.getType().equals(1L)){
+                    ImportSlip importSlip = importSlipRepository.findImportSlipById(debt.getIdTransaction());
+                    debt.setAmount(importSlip.getMoney());
+                    debt.setCreateDate(importSlip.getCreateDate());
+                } else if(debt.getType().equals(2L)){
+                    ReturnSlip returnSlip = returnSlipRepository.findReturnSlipById(debt.getIdTransaction());
+                    debt.setAmount(returnSlip.getMoney());
+                    debt.setCreateDate(returnSlip.getReturnDate());
+                } else if(debt.getType().equals(3L)){
+                    Payment payment = paymentRepository.findPaymentById(debt.getIdTransaction());
+                    debt.setAmount(payment.getMoney());
+                    debt.setCreateDate(payment.getCreateDate());
+                }
+                debtRepository.save(debt);
+            }
+
+
             List<Dyehouse> dyehouses = dyehouseRepository.findAll();
             for (Dyehouse dyehouse: dyehouses){
                 dyehouse.setDebt(0.0);

@@ -14,10 +14,7 @@ import org.springframework.ui.ModelMap;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DebtServiceImpl implements DebtService {
@@ -91,6 +88,7 @@ public class DebtServiceImpl implements DebtService {
     @Transactional(rollbackOn = Exception.class)
     public String createData() throws InternalException {
         try {
+            Random random = new Random();
 
             List<ImportSlip> importSlips = importSlipService.findAll();
             List<ReturnSlip> returnSlips = returnSlipService.findAll();
@@ -112,6 +110,11 @@ public class DebtServiceImpl implements DebtService {
             for (ReturnSlip returnSlip: returnSlips){
                 Double price = 0.0;
                 for (Return aReturn: returnSlip.getReturns()){
+                    if(aReturn.getReturnLength() > 150){
+                        aReturn.setReturnLength(1.0*(random.nextInt(10) + 1));
+                    }
+
+
                     aReturn.setMoney(aReturn.getReturnLength() * aReturn.getFabric().getColor().getPrice());
                     returnRepository.save(aReturn);
                     price += aReturn.getMoney();

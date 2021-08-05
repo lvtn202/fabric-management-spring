@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -132,13 +135,15 @@ public class OrderServiceImpl implements OrderService {
                 name += " ";
             }
             name += newOrder.getUser().getLastName();
+            Instant timestamp = order.getCreateDate().toInstant();
+            ZonedDateTime zonedDateTime = timestamp.atZone(ZoneId.of("Asia/Ho_Chi_Minh"));
             String content = "Xin chào,\n\n"
                     + "Đơn đặt hàng được tạo thành công.\n"
                     + "Mã đơn: " + newOrder.getId().toString() + "\n"
                     + "Loại vải: " + newOrder.getColor().getFabricType().getType() + "\n"
                     + "Màu: " + newOrder.getColor().getName() + "\n"
-                    + "Độ dài đặt: " + String.format("%.1f", newOrder.getOrderLength()) + "\n"
-                    + "Ngày đặt: " + newOrder.getCreateDate() + "\n"
+                    + "Độ dài đặt: " + String.format("%,.1f", newOrder.getOrderLength()) + "\n"
+                    + "Ngày đặt: " + zonedDateTime + "\n"
                     + "Người thực hiện: " + name + "\n\n"
                     + "Trân trọng !";
             emailSender.sendEmail(email, subject, content);
@@ -213,13 +218,15 @@ public class OrderServiceImpl implements OrderService {
                     name += " ";
                 }
                 name += order.getUser().getLastName();
+                Instant timestamp = order.getCreateDate().toInstant();
+                ZonedDateTime zonedDateTime = timestamp.atZone(ZoneId.of("Asia/Ho_Chi_Minh"));
                 String content = "Xin chào,\n\n"
                         + "Đơn đặt hàng đã hoàn thành.\n"
                         + "Mã đơn: " + order.getId().toString() + "\n"
                         + "Loại vải: " + order.getColor().getFabricType().getType() + "\n"
                         + "Màu: " + order.getColor().getName() + "\n"
-                        + "Độ dài đặt: " + String.format("%.1f", order.getOrderLength()) + "\n"
-                        + "Ngày đặt: " + order.getCreateDate() + "\n"
+                        + "Độ dài đặt: " + String.format("%,.1f", order.getOrderLength()) + "\n"
+                        + "Ngày đặt: " + zonedDateTime + "\n"
                         + "Người thực hiện: " + name + "\n\n"
                         + "Trân trọng !";
                 emailSender.sendEmail(email, subject, content);
@@ -262,13 +269,15 @@ public class OrderServiceImpl implements OrderService {
                     name += " ";
                 }
                 name += order.getUser().getLastName();
+                Instant timestamp = order.getCreateDate().toInstant();
+                ZonedDateTime zonedDateTime = timestamp.atZone(ZoneId.of("Asia/Ho_Chi_Minh"));
                 String content = "Xin chào,\n\n"
                         + "Đơn đặt hàng đã được hủy thành công.\n"
                         + "Mã đơn: " + order.getId().toString() + "\n"
                         + "Loại vải: " + order.getColor().getFabricType().getType() + "\n"
                         + "Màu: " + order.getColor().getName() + "\n"
-                        + "Độ dài đặt: " + String.format("%.1f", order.getOrderLength()) + "\n"
-                        + "Ngày đặt: " + order.getCreateDate() + "\n"
+                        + "Độ dài đặt: " + String.format("%,.1f", order.getOrderLength()) + "\n"
+                        + "Ngày đặt: " + zonedDateTime + "\n"
                         + "Người thực hiện: " + name + "\n\n"
                         + "Trân trọng !";
                 emailSender.sendEmail(email, subject, content);

@@ -10,12 +10,16 @@ import com.example.lvtn.dto.CreateOrderForm;
 import com.example.lvtn.dto.OrderDTO;
 import com.example.lvtn.service.OrderService;
 import com.example.lvtn.service.UserService;
+import com.example.lvtn.utils.EmailSender;
 import com.example.lvtn.utils.InternalException;
 import com.example.lvtn.utils.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +37,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ColorRepository colorRepository;
+
+    @Autowired
+    public EmailSender emailSender;
 
     @Override
     public List<Order> findAll() {
@@ -102,6 +109,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public ModelMap createOrder(CreateOrderForm createOrderForm) throws InternalException {
         try {
             Order order = new Order(
@@ -115,6 +123,26 @@ public class OrderServiceImpl implements OrderService {
                     new HashSet<ImportSlip>()
             );
             Order newOrder = orderRepository.save(order);
+
+            String email = dyehouseRepository.findDyehouseById(createOrderForm.getDyehouseId()).getEmail();
+            String subject = "Tạo đơn đặt hàng thành công !";
+            String name = "";
+            if (newOrder.getUser().getFirstName() != null){
+                name += newOrder.getUser().getFirstName();
+                name += " ";
+            }
+            name += newOrder.getUser().getLastName();
+            String content = "Xin chào,\n\n"
+                    + "Đơn đặt hàng được tạo thành công.\n"
+                    + "Mã đơn: " + newOrder.getId().toString() + "\n"
+                    + "Loại vải: " + newOrder.getColor().getFabricType().getType() + "\n"
+                    + "Màu: " + newOrder.getColor().getName() + "\n"
+                    + "Độ dài đặt: " + String.format("%.1f", newOrder.getOrderLength()) + "\n"
+                    + "Ngày đặt: " + newOrder.getCreateDate() + "\n"
+                    + "Người thực hiện: " + name + "\n\n"
+                    + "Trân trọng !";
+            emailSender.sendEmail(email, subject, content);
+
             ModelMap modelMap = new ModelMap();
             modelMap.addAttribute("id", newOrder.getId());
             modelMap.addAttribute("dyehouseName", newOrder.getDyehouse().getName());
@@ -176,6 +204,26 @@ public class OrderServiceImpl implements OrderService {
             } else {
                 order.setStatus(OrderStatus.COMPLETED);
                 orderRepository.save(order);
+
+                String email = order.getDyehouse().getEmail();
+                String subject = "Đơn đặt hàng hoàn thành !";
+                String name = "";
+                if (order.getUser().getFirstName() != null){
+                    name += order.getUser().getFirstName();
+                    name += " ";
+                }
+                name += order.getUser().getLastName();
+                String content = "Xin chào,\n\n"
+                        + "Đơn đặt hàng đã hoàn thành.\n"
+                        + "Mã đơn: " + order.getId().toString() + "\n"
+                        + "Loại vải: " + order.getColor().getFabricType().getType() + "\n"
+                        + "Màu: " + order.getColor().getName() + "\n"
+                        + "Độ dài đặt: " + String.format("%.1f", order.getOrderLength()) + "\n"
+                        + "Ngày đặt: " + order.getCreateDate() + "\n"
+                        + "Người thực hiện: " + name + "\n\n"
+                        + "Trân trọng !";
+                emailSender.sendEmail(email, subject, content);
+
                 ModelMap modelMap = new ModelMap();
                 modelMap.addAttribute("id", order.getId());
                 modelMap.addAttribute("dyehouseName", order.getDyehouse().getName());
@@ -205,6 +253,26 @@ public class OrderServiceImpl implements OrderService {
             } else {
                 order.setStatus(OrderStatus.CANCELLED);
                 orderRepository.save(order);
+
+                String email = order.getDyehouse().getEmail();
+                String subject = "Đơn đặt hàng đã được hủy !";
+                String name = "";
+                if (order.getUser().getFirstName() != null){
+                    name += order.getUser().getFirstName();
+                    name += " ";
+                }
+                name += order.getUser().getLastName();
+                String content = "Xin chào,\n\n"
+                        + "Đơn đặt hàng đã được hủy thành công.\n"
+                        + "Mã đơn: " + order.getId().toString() + "\n"
+                        + "Loại vải: " + order.getColor().getFabricType().getType() + "\n"
+                        + "Màu: " + order.getColor().getName() + "\n"
+                        + "Độ dài đặt: " + String.format("%.1f", order.getOrderLength()) + "\n"
+                        + "Ngày đặt: " + order.getCreateDate() + "\n"
+                        + "Người thực hiện: " + name + "\n\n"
+                        + "Trân trọng !";
+                emailSender.sendEmail(email, subject, content);
+
                 ModelMap modelMap = new ModelMap();
                 modelMap.addAttribute("id", order.getId());
                 modelMap.addAttribute("dyehouseName", order.getDyehouse().getName());

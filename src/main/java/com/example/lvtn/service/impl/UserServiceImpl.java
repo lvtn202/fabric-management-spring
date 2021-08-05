@@ -190,13 +190,13 @@ public class UserServiceImpl implements UserService {
 
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
-            message.setSubject("Reset password !");
-            message.setText("Hi " + user.getLastName() + ",\n\n"
-            + "To reset your password, please click on the link below:\n"
+            message.setSubject("Đổi mật khẩu !");
+            message.setText("Xin chào " + user.getLastName() + ",\n\n"
+            + "Để thay đổi mật khẩu, vui lòng nhấn vào link dưới đây:\n"
             + "https://fabric-management.herokuapp.com/new-password?"
                     + "email=" + email + "&"
                     + "token=" + token + "\n\n"
-            + "Kind regards,");
+            + "Trân trọng !");
 
             // Send Message!
             this.emailSender.send(message);

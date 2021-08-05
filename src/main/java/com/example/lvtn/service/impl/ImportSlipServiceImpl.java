@@ -147,7 +147,7 @@ public class ImportSlipServiceImpl implements ImportSlipService {
                 }
             }
             String content = "Xin chào,\n\n"
-                    + "Phiếu xuất vải được tạo thành công.\n"
+                    + "Phiếu nhập vải được tạo thành công.\n"
                     + "Mã phiếu nhập: " + newImportSlip.getId().toString() + "\n"
                     + "Số lượng cây vải: " + newImportSlip.getFabricNumber().toString() + "\n"
                     + "Tổng độ dài: " + String.format("%,.1f", totalLength) + "\n"

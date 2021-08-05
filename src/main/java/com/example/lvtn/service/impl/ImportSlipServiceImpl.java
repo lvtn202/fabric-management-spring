@@ -8,6 +8,7 @@ import com.example.lvtn.dto.ImportSlipDTO;
 
 import com.example.lvtn.service.DebtService;
 import com.example.lvtn.service.ImportSlipService;
+import com.example.lvtn.utils.EmailSender;
 import com.example.lvtn.utils.FabricStatus;
 import com.example.lvtn.utils.InternalException;
 import com.example.lvtn.utils.OrderStatus;
@@ -16,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -46,6 +50,9 @@ public class ImportSlipServiceImpl implements ImportSlipService {
 
     @Autowired
     private DebtService debtService;
+
+    @Autowired
+    public EmailSender emailSender;
 
     @Override
     public List<ImportSlip> findAll() {
@@ -122,6 +129,33 @@ public class ImportSlipServiceImpl implements ImportSlipService {
             dyeBatchRepository.save(newDyeBatch);
 
             debtService.createDebt(1L, currentDyehouse, newImportSlip.getId(), newImportSlip.getMoney(), newImportSlip.getCreateDate(), oldDebt);
+
+            String email = dyehouseRepository.findDyehouseById(createImportSlipForm.getDyehouseId()).getEmail();
+            String subject = "Tạo phiếu nhập thành công !";
+            String name = "";
+            if (newImportSlip.getUser().getFirstName() != null){
+                name += newImportSlip.getUser().getFirstName();
+                name += " ";
+            }
+            name += newImportSlip.getUser().getLastName();
+            Instant timestamp = newImportSlip.getCreateDate().toInstant();
+            ZonedDateTime zonedDateTime = timestamp.atZone(ZoneId.of("Asia/Ho_Chi_Minh"));
+            Double totalLength = 0.0;
+            for (DyeBatch dyeBatch: newImportSlip.getDyeBatches()){
+                for (Fabric fabric: dyeBatch.getFabrics()){
+                    totalLength += fabric.getRawLength();
+                }
+            }
+            String content = "Xin chào,\n\n"
+                    + "Phiếu xuất vải được tạo thành công.\n"
+                    + "Mã phiếu nhập: " + newImportSlip.getId().toString() + "\n"
+                    + "Số lượng cây vải: " + newImportSlip.getFabricNumber().toString() + "\n"
+                    + "Tổng độ dài: " + String.format("%,.1f", totalLength) + "\n"
+                    + "Người giao hàng: " + newImportSlip.getDriver() + "\n"
+                    + "Ngày tạo: " + zonedDateTime + "\n"
+                    + "Người thực hiện: " + name + "\n\n"
+                    + "Trân trọng !";
+            emailSender.sendEmail(email, subject, content);
 
             ModelMap modelMap = new ModelMap();
             modelMap.addAttribute("importSlipId", newImportSlip.getId());

@@ -17,13 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import javax.transaction.Transactional;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ImportSlipServiceImpl implements ImportSlipService {
@@ -131,29 +130,16 @@ public class ImportSlipServiceImpl implements ImportSlipService {
             debtService.createDebt(1L, currentDyehouse, newImportSlip.getId(), newImportSlip.getMoney(), newImportSlip.getCreateDate(), oldDebt);
 
             String email = dyehouseRepository.findDyehouseById(createImportSlipForm.getDyehouseId()).getEmail();
-            String subject = "Tạo phiếu nhập thành công !";
-            String name = "";
-            if (newImportSlip.getUser().getFirstName() != null){
-                name += newImportSlip.getUser().getFirstName();
-                name += " ";
-            }
-            name += newImportSlip.getUser().getLastName();
-            Instant timestamp = newImportSlip.getCreateDate().toInstant();
-            ZonedDateTime zonedDateTime = timestamp.atZone(ZoneId.of("Asia/Ho_Chi_Minh"));
-            Double totalLength = 0.0;
-            for (DyeBatch dyeBatch: newImportSlip.getDyeBatches()){
-                for (Fabric fabric: dyeBatch.getFabrics()){
-                    totalLength += fabric.getRawLength();
-                }
-            }
-            String content = "Xin chào,\n\n"
-                    + "Phiếu nhập vải được tạo thành công.\n"
+            String subject = "Phiếu nhập vải mới";
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+            String content = "Xin chào xưởng " + dyehouseRepository.findDyehouseById(createImportSlipForm.getDyehouseId()).getName() + ",\n\n"
+                    + "Phiếu nhập vải mới đã được tạo.\n"
                     + "Mã phiếu nhập: " + newImportSlip.getId().toString() + "\n"
                     + "Số lượng cây vải: " + newImportSlip.getFabricNumber().toString() + "\n"
-                    + "Tổng độ dài: " + String.format("%,.1f", totalLength) + "\n"
+                    + "Tổng độ dài: " + String.format("%,.1f", importLength) + "\n"
                     + "Người giao hàng: " + newImportSlip.getDriver() + "\n"
-                    + "Ngày tạo: " + zonedDateTime + "\n"
-                    + "Người thực hiện: " + name + "\n\n"
+                    + "Ngày tạo: " + dateFormat.format(newImportSlip.getCreateDate()) + "\n"
                     + "Trân trọng !";
             emailSender.sendEmail(email, subject, content);
 

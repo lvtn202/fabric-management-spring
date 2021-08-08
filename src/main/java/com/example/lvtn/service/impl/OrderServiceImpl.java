@@ -20,12 +20,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import javax.transaction.Transactional;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -127,24 +130,17 @@ public class OrderServiceImpl implements OrderService {
             );
             Order newOrder = orderRepository.save(order);
 
-            String email = dyehouseRepository.findDyehouseById(createOrderForm.getDyehouseId()).getEmail();
-            String subject = "Tạo đơn đặt hàng thành công !";
-            String name = "";
-            if (newOrder.getUser().getFirstName() != null){
-                name += newOrder.getUser().getFirstName();
-                name += " ";
-            }
-            name += newOrder.getUser().getLastName();
-            Instant timestamp = order.getCreateDate().toInstant();
-            ZonedDateTime zonedDateTime = timestamp.atZone(ZoneId.of("Asia/Ho_Chi_Minh"));
-            String content = "Xin chào,\n\n"
-                    + "Đơn đặt hàng được tạo thành công.\n"
+            String email = newOrder.getDyehouse().getEmail();
+            String subject = "Đơn đặt hàng mới";
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+            String content = "Xin chào xưởng " + newOrder.getDyehouse().getName() + ",\n\n"
+                    + "Đơn đặt hàng mới đã được tạo.\n"
                     + "Mã đơn: " + newOrder.getId().toString() + "\n"
                     + "Loại vải: " + newOrder.getColor().getFabricType().getType() + "\n"
                     + "Màu: " + newOrder.getColor().getName() + "\n"
-                    + "Độ dài đặt: " + String.format("%,.1f", newOrder.getOrderLength()) + "\n"
-                    + "Ngày đặt: " + zonedDateTime + "\n"
-                    + "Người thực hiện: " + name + "\n\n"
+                    + "Độ dài đặt: " + String.format("%,.1f", newOrder.getOrderLength()) + " (m)\n"
+                    + "Ngày đặt: " + dateFormat.format(newOrder.getCreateDate()) + "\n\n"
                     + "Trân trọng !";
             emailSender.sendEmail(email, subject, content);
 
@@ -211,23 +207,16 @@ public class OrderServiceImpl implements OrderService {
                 orderRepository.save(order);
 
                 String email = order.getDyehouse().getEmail();
-                String subject = "Đơn đặt hàng hoàn thành !";
-                String name = "";
-                if (order.getUser().getFirstName() != null){
-                    name += order.getUser().getFirstName();
-                    name += " ";
-                }
-                name += order.getUser().getLastName();
-                Instant timestamp = order.getCreateDate().toInstant();
-                ZonedDateTime zonedDateTime = timestamp.atZone(ZoneId.of("Asia/Ho_Chi_Minh"));
-                String content = "Xin chào,\n\n"
+                String subject = "Đơn đặt hàng hoàn thành";
+                DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+                String content = "Xin chào xưởng " + order.getDyehouse().getName() + ",\n\n"
                         + "Đơn đặt hàng đã hoàn thành.\n"
                         + "Mã đơn: " + order.getId().toString() + "\n"
                         + "Loại vải: " + order.getColor().getFabricType().getType() + "\n"
                         + "Màu: " + order.getColor().getName() + "\n"
                         + "Độ dài đặt: " + String.format("%,.1f", order.getOrderLength()) + "\n"
-                        + "Ngày đặt: " + zonedDateTime + "\n"
-                        + "Người thực hiện: " + name + "\n\n"
+                        + "Ngày đặt: " + dateFormat.format(order.getCreateDate()) + "\n\n"
                         + "Trân trọng !";
                 emailSender.sendEmail(email, subject, content);
 
@@ -262,23 +251,16 @@ public class OrderServiceImpl implements OrderService {
                 orderRepository.save(order);
 
                 String email = order.getDyehouse().getEmail();
-                String subject = "Đơn đặt hàng đã được hủy !";
-                String name = "";
-                if (order.getUser().getFirstName() != null){
-                    name += order.getUser().getFirstName();
-                    name += " ";
-                }
-                name += order.getUser().getLastName();
-                Instant timestamp = order.getCreateDate().toInstant();
-                ZonedDateTime zonedDateTime = timestamp.atZone(ZoneId.of("Asia/Ho_Chi_Minh"));
-                String content = "Xin chào,\n\n"
-                        + "Đơn đặt hàng đã được hủy thành công.\n"
+                String subject = "Đơn đặt hàng đã được hủy";
+                DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+                String content = "Xin chào xưởng " + order.getDyehouse().getName() +",\n\n"
+                        + "Đơn đặt hàng đã được hủy.\n"
                         + "Mã đơn: " + order.getId().toString() + "\n"
                         + "Loại vải: " + order.getColor().getFabricType().getType() + "\n"
                         + "Màu: " + order.getColor().getName() + "\n"
                         + "Độ dài đặt: " + String.format("%,.1f", order.getOrderLength()) + "\n"
-                        + "Ngày đặt: " + zonedDateTime + "\n"
-                        + "Người thực hiện: " + name + "\n\n"
+                        + "Ngày đặt: " + dateFormat.format(order.getCreateDate()) + "\n\n"
                         + "Trân trọng !";
                 emailSender.sendEmail(email, subject, content);
 

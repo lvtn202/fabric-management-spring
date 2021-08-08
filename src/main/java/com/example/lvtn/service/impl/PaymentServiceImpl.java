@@ -16,11 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -89,26 +92,16 @@ public class PaymentServiceImpl implements PaymentService {
 
             String email = newPayment.getDyehouse().getEmail();
             String subject = "Thanh toán thành công !";
-            String name = "";
-            if (newPayment.getUser().getFirstName() != null){
-                name += newPayment.getUser().getFirstName();
-                name += " ";
-            }
-            name += newPayment.getUser().getLastName();
-//            ZoneId asiaHCM = ZoneId.of("Asia/Ho_Chi_Minh");
-//            ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(newPayment.getCreateDate().toInstant(), asiaHCM);
-            Instant timestamp = newPayment.getCreateDate().toInstant();
-            ZonedDateTime zonedDateTime = timestamp.atZone(ZoneId.of("Asia/Ho_Chi_Minh"));
-            System.out.println(zonedDateTime);
-            String content = "Xin chào,\n\n"
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+            String content = "Xin chào xưởng " + dyehouse.getName() +",\n\n"
                     + "Thanh toán đã được tạo thành công.\n"
                     + "Mã thanh toán: " + newPayment.getId().toString() + "\n"
                     + "Số tiền thanh toán: " + String.format("%,.1f", newPayment.getMoney()) + " (vnd)\n"
                     + (newPayment.getBankName() == null ? "" : "Ngân hàng: " + newPayment.getBankName() + "\n")
                     + "Phương thức thanh toán: " + newPayment.getPaymentMethod().getName() + "\n"
                     + "Người nhận: " + newPayment.getRecipientName() + "\n"
-                    + "Ngày thanh toán: " + zonedDateTime + "\n"
-                    + "Người thanh toán: " + name + "\n\n"
+                    + "Ngày thanh toán: " + dateFormat.format(newPayment.getCreateDate()) + "\n\n"
                     + "Trân trọng !";
             emailSender.sendEmail(email, subject, content);
 

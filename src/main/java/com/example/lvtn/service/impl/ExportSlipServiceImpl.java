@@ -19,13 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import javax.transaction.Transactional;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ExportSlipServiceImpl implements ExportSlipService {
@@ -75,26 +74,19 @@ public class ExportSlipServiceImpl implements ExportSlipService {
             }
 
             String email = dyehouseRepository.findDyehouseById(createExportSlipForm.getDyehouseId()).getEmail();
-            String subject = "Tạo phiếu xuất thành công !";
-            String name = "";
-            if (exportSlip.getUser().getFirstName() != null){
-                name += exportSlip.getUser().getFirstName();
-                name += " ";
-            }
-            name += exportSlip.getUser().getLastName();
-            Instant timestamp = exportSlip.getCreateDate().toInstant();
-            ZonedDateTime zonedDateTime = timestamp.atZone(ZoneId.of("Asia/Ho_Chi_Minh"));
+            String subject = "Phiếu xuất vải mới";
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+7"));
             Double totalLength = 0.0;
             for (Fabric fabric: exportSlip.getFabrics()){
                 totalLength += fabric.getRawLength();
             }
-            String content = "Xin chào,\n\n"
-                    + "Phiếu xuất vải được tạo thành công.\n"
+            String content = "Xin chào xưởng " + exportSlip.getDyehouse().getName() + ",\n\n"
+                    + "Phiếu xuất vải mới đã được tạo.\n"
                     + "Mã phiếu xuất: " + exportSlip.getId().toString() + "\n"
                     + "Số lượng cây vải: " + exportSlip.getFabricNumber().toString() + "\n"
                     + "Tổng độ dài: " + String.format("%,.1f", totalLength) + "\n"
-                    + "Ngày tạo: " + zonedDateTime + "\n"
-                    + "Người thực hiện: " + name + "\n\n"
+                    + "Ngày tạo: " + dateFormat.format(exportSlip.getCreateDate()) + "\n\n"
                     + "Trân trọng !";
             emailSender.sendEmail(email, subject, content);
 

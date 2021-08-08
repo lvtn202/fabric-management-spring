@@ -98,7 +98,7 @@ public class PaymentServiceImpl implements PaymentService {
                     + "Thanh toán đã được tạo thành công.\n"
                     + "Mã thanh toán: " + newPayment.getId().toString() + "\n"
                     + "Số tiền thanh toán: " + String.format("%,.1f", newPayment.getMoney()) + " (vnd)\n"
-                    + (newPayment.getBankName() == null ? "" : "Ngân hàng: " + newPayment.getBankName() + "\n")
+                    + (newPayment.getPaymentMethod().getId().equals(1L) ? "" : "Ngân hàng: " + newPayment.getBankName() + "\n")
                     + "Phương thức thanh toán: " + newPayment.getPaymentMethod().getName() + "\n"
                     + "Người nhận: " + newPayment.getRecipientName() + "\n"
                     + "Ngày thanh toán: " + dateFormat.format(newPayment.getCreateDate()) + "\n\n"

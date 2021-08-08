@@ -137,7 +137,7 @@ public class ImportSlipServiceImpl implements ImportSlipService {
                     + "Phiếu nhập vải mới đã được tạo.\n"
                     + "Mã phiếu nhập: " + newImportSlip.getId().toString() + "\n"
                     + "Số lượng cây vải: " + newImportSlip.getFabricNumber().toString() + "\n"
-                    + "Tổng độ dài: " + String.format("%,.1f", importLength) + "\n"
+                    + "Tổng độ dài: " + String.format("%,.1f", importLength) + " (m)\n"
                     + "Người giao hàng: " + newImportSlip.getDriver() + "\n"
                     + "Ngày tạo: " + dateFormat.format(newImportSlip.getCreateDate()) + "\n"
                     + "Trân trọng !";
